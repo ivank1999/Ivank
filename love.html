@@ -96,37 +96,56 @@ body {
 }
 
 /* Tombol balas */
+
 #replyBtn {
   position: absolute;
-  bottom: 50px; /* jarak dari bawah layar */
+  bottom: 110px;
   left: 50%;
   transform: translateX(-50%);
-  padding:10px 20px;
-  background:#ff1493;
+  padding:6px 12px;
+  background:#25D366;
   border:none;
-  border-radius:8px;
+  border-radius:20px;
   color:white;
-  cursor:pointer;
+  font-weight:bold;
   font-size:16px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.2);
+  cursor:pointer;
+  text-align:center;
+  transition:0.3s;
 }
+
 #replyBox {
   display:none;
   margin-top:15px;
 }
+/* Input teks seperti chat bubble */
 #replyInput {
-  padding:10px;
+  padding:5px 10px;
   width:70%;
-  border-radius:6px;
+  border-radius:20px;
   border:1px solid #ccc;
+  box-shadow:0 2px 4px rgba(0,0,0,0.1);
+  outline:none;
+  font-size:11px;
 }
+
+/* Tombol kirim seperti chat bubble */
 #sendBtn {
-  padding:10px 15px;
+  padding:8px 16px;
   margin-left:8px;
-  background:#25d366;
+  background:#25D366;
   border:none;
-  border-radius:6px;
+  border-radius:15px;
   color:white;
+  font-weight:bold;
+  box-shadow:0 2px 4px rgba(0,0,0,0.2);
   cursor:pointer;
+  transition:0.3s;
+}
+#sendBtn:hover {
+  background:#1ebe57;
+  box-shadow:0 4px 6px rgba(0,0,0,0.25);
 }
 </style>
 </head>
@@ -138,7 +157,7 @@ body {
   <button id="loveBtn">Coba Klik️ ️</button>
 
   <!-- Balasan -->
-  <button id="replyBtn" style="display:none;">💌 Klik disini untuk membalas</button>
+  <button id="replyBtn" style="display:none;">💌Klik disini untuk membalas💌</button>
   <div id="replyBox">
     <input type="text" id="replyInput" placeholder="Tulis pesanmu..." />
     <button id="sendBtn">Kirim</button>
