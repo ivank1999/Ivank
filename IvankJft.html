@@ -191,7 +191,7 @@
           </style>
         </head>
         <body>
-           <div id="author">Made by: <span>Ade Ivank</span></div>
+           <div id="author">Made by: <span>Ivank</span></div>
           <!-- 🔹 Halaman input username -->
             <div id="username-screen">
               <h2>Masukkan Username</h2>
@@ -1517,7 +1517,7 @@
                     perfectNormal.push(currentSession);
                     localStorage.setItem('perfectNormal', JSON.stringify(perfectNormal));
                 }
-            }else if (score >= 70) {
+            }else if (score >= 85) {
                 resultText = `🎉 Selamat <span style="color:#ff1493; font-weight:bold;">${username}</span>, Kamu lulus sesi ! 🏆<br>
                 Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
                 Skor: <span style="color:lime; font-size:24px; font-weight:bold;">${score}%</span>`;
@@ -1533,13 +1533,13 @@
             document.getElementById('final-result-text').innerHTML = resultText;
         
             const retryBtn = document.getElementById('retry-btn');
-            retryBtn.textContent = score >= 70 ? "Lanjut Sesi Berikutnya" : "Belajar Ulang";
+            retryBtn.textContent = score >= 85 ? "Lanjut Sesi Berikutnya" : "Belajar Ulang";
             retryBtn.onclick = () => {
                 document.getElementById('final-result-container').style.display = 'none';
                 restartQuiz();
             };
         
-            if (score >= 70 && currentSession < totalSessions) {
+            if (score >= 85 && currentSession < totalSessions) {
                 const nextButton = sessionsContainer.children[currentSession];
                 nextButton.disabled = false; // cukup aktifkan tombol, jangan ubah warnanya
             }
@@ -1575,7 +1575,7 @@
             perfectFinal.push(currentSession);
             localStorage.setItem('perfectFinal', JSON.stringify(perfectFinal));
         }
-    } else if (score >= 70) {
+    } else if (score >= 85) {
                         resultText = `🎉 Selamat <span style="color:#ff1493; font-weight:bold;">${username}</span>, Kamu lulus sesi ! 🏆<br>
                         Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
         Skor: <span style="color:lime; font-size:24px; font-weight:bold;">${score}%</span>`;
@@ -1591,7 +1591,7 @@
     document.getElementById('final-result-text').innerHTML = resultText;
 
     const retryBtn = document.getElementById('retry-btn');
-    retryBtn.textContent = score >= 70 ? "Kembali ke Sesi Final" : "Coba Lagi";
+    retryBtn.textContent = score >= 85 ? "Kembali ke Sesi Final" : "Coba Lagi";
     retryBtn.onclick = () => {
         // reset supaya soal tidak nambah
         currentQuestionCount = 0;
@@ -1605,7 +1605,7 @@
         restorePerfectButtons();
     };
 
-            if (!isFinalMode && score >= 70 && currentSession < totalSessions) {
+            if (!isFinalMode && score >= 85 && currentSession < totalSessions) {
                 const nextButton = sessionsContainer.children[currentSession];
                 if (nextButton) nextButton.disabled = false;
             }
