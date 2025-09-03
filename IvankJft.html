@@ -127,21 +127,22 @@
         cursor: pointer;
       }
 #author {
-        position: fixed;
-        top: 10px;
-        right: 15px;
-        font-size: 11px;            /* kecilin dikit */
-        color: black;               /* warna hitam */
-        font-weight: normal;        /* biar nggak terlalu tebal */
-        background: rgba(0,0,0,0.05); /* abu tipis biar soft */
-        padding: 4px 8px;           
-        border-radius: 5px;
-        font-family: Arial, sans-serif;
-      }
-      
-      #author span {
-        color: black; /* nama juga hitam */
-      }
+  position: fixed;       /* selalu nempel di layar */
+  top: 10px;             /* jarak dari atas */
+  right: 15px;           /* jarak dari kanan */
+  font-size: 11px;
+  color: black;
+  font-weight: normal;
+  background: rgba(0,0,0,0.05);
+  padding: 4px 8px;
+  border-radius: 5px;
+  font-family: Arial, sans-serif;
+  z-index: 9999;         /* biar nggak ketiban elemen lain */
+}
+
+#author span {
+  color: black;
+}
             .next-btn:hover {
               background-color: #005f73;
             }
@@ -1056,11 +1057,11 @@
         let username = "";
         // ==================== Sesi ====================
         const sessionsContainer = document.getElementById('sessions');
-        const totalSessions = 19;
+        const totalSessions = 50;
         const sessionSize = Math.ceil(kanjiList.length / totalSessions);
         let sessionStartIndex = 0;
         function getSessionSlice(i) {
-        const QUESTIONS_PER_SESSION = 20; // jumlah soal per sesi
+        const QUESTIONS_PER_SESSION = 3; // jumlah soal per sesi
         const start = (i - 1) * QUESTIONS_PER_SESSION;
         const end = i === totalSessions ? kanjiList.length : start + QUESTIONS_PER_SESSION;
         return kanjiList.slice(start, end);
@@ -1140,14 +1141,14 @@
           document.getElementById("username-screen").style.display = "none";
           document.getElementById("session-container").style.display = "block";
         }
-              function goBack() {
-  // Sembunyikan layar game
-  document.getElementById("question-container").style.display = "none";
-  document.getElementById("final-result-container").style.display = "none";
-
-  // Tampilkan menu sesi
-  document.getElementById("session-container").style.display = "block";
-}
+        function goBack() {
+          // Sembunyikan layar game
+          document.getElementById("question-container").style.display = "none";
+          document.getElementById("final-result-container").style.display = "none";
+        
+          // Tampilkan menu sesi
+          document.getElementById("session-container").style.display = "block";
+        }
         // ==================== Kode kuis ====================
         function generateChoices(question) {
             const correct = question.romaji;
@@ -1398,34 +1399,40 @@
             
                 // 🔹 tombol hapu
             // 🔹 tombol hapus (hapus semua, bukan cuma terakhir)
+            // 🔹 tombol hapus (hapus satu huruf terakhir)
             const deleteBtn = document.createElement('button');
-            deleteBtn.textContent = "⌫ Hapus Semua";
+            deleteBtn.textContent = "⌫ Hapus";
             deleteBtn.style.marginLeft = "10px";
             deleteBtn.style.padding = "10px 18px";
             deleteBtn.style.borderRadius = "8px";
+            
             deleteBtn.onclick = () => {
                 if (userAnswer.length > 0) {
-                    userAnswer = '';
-                    document.getElementById('result').textContent = '';
-                    
-                    // aktifkan kembali semua tombol yang dipilih
-                    clickedLetters.forEach(btn => {
-                        btn.style.backgroundColor = "";
-                        btn.disabled = false;
-                    });
-                    
-                    clickedLetters = []; // kosongkan daftar tombol yang sudah dipilih
+                    // ambil huruf terakhir
+                    userAnswer = userAnswer.slice(0, -1);
+            
+                    // update tampilan teks jawaban
+                    document.getElementById('result').textContent = userAnswer;
+            
+                    // ambil tombol terakhir yang diklik
+                    const lastBtn = clickedLetters.pop();
+                    if (lastBtn) {
+                        lastBtn.style.backgroundColor = "";
+                        lastBtn.disabled = false;
+                    }
                 }
             };
+            
             choicesContainer.appendChild(deleteBtn);
         }
         
         function typeFinalAnswer(char, question, btn) {
             userAnswer += char;
             document.getElementById('result').textContent = userAnswer;
-        
+            
             clickedLetters.push(btn);
             btn.style.backgroundColor = "#FFFF00"; // kuning
+            btn.disabled = true; // 🔒 tombol langsung terkunci setelah diklik
             if (userAnswer.length === question.romaji.length) {
                 const resultDiv = document.getElementById('result');
                 const isCorrect = userAnswer === question.romaji;
@@ -1513,11 +1520,11 @@
             }else if (score >= 70) {
                 resultText = `🎉 Selamat <span style="color:#ff1493; font-weight:bold;">${username}</span>, Kamu lulus sesi ! 🏆<br>
                 Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
-                Skor: <span style="color:lime; font-size:24px; font-weight:bold;">%</span>`;
+                Skor: <span style="color:lime; font-size:24px; font-weight:bold;">${score}%</span>`;
             } else {
                 resultText = `😢 Sayang sekali <span style="color:#ff1493; font-weight:bold;">${username}</span>, sesi  belum lulus.<br>
                 Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
-                Skor: <span style="color:red; font-size:24px; font-weight:bold;">%</span><br>
+                Skor: <span style="color:red; font-size:24px; font-weight:bold;">${score}%</span><br>
                 Coba lagi ya! 💪`;
             }
         
@@ -1546,7 +1553,7 @@
             let resultText = "";
             if (score === 100) {
                 resultText = `
-                💖  Woooow <span style="color:ff1493; font-weight:bold;">${username}</span> !!! 💖<br>
+                💖 Woooow <span style="color:ff1493; font-weight:bold;">${username}</span> !!! 💖<br>
                         Kamu PERFECT banget!! 🎉<br>
                         Semua soal benar 100%! 🏆<br><br>
                         Aku bangga banget sama kamu 😘<br>
