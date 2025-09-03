@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -14,14 +15,13 @@ body {
   display:flex;
   justify-content:center;
   align-items:center;
-  background:#000; /* hitam polos */
+  background:#000;
   overflow:hidden;
   color:white;
   flex-direction: column;
   position: relative;
 }
 
-/* Bintang kecil */
 .star {
   position: absolute;
   width: 2px;
@@ -35,6 +35,7 @@ body {
   from { opacity: 0.2; transform: scale(1); }
   to { opacity: 1; transform: scale(1.5); }
 }
+
 #message {
   font-size:28px;
   font-weight:bold;
@@ -44,9 +45,10 @@ body {
   z-index:10;
   position:relative;
   margin-top:20px;
-  animation: breathe 1s ease-in-out infinite alternate;
+  animation: breathe 2s ease-in-out infinite alternate;
 }
-#loveBtn {
+
+#loveBtn, #fakeBtn {
   padding:15px 25px;
   font-size:20px;
   border-radius:12px;
@@ -57,9 +59,9 @@ body {
   margin-top:30px;
   transition:0.3s;
 }
-#loveBtn:hover { background-color:#ff69b4; }
+#loveBtn:hover, #fakeBtn:hover { background-color:#ff69b4; }
+#fakeBtn { position:absolute; }
 
-/* Foto */
 #mainPhoto {
   width:200px;
   height:250px;
@@ -80,7 +82,6 @@ body {
   100% { transform: scale(1); }
 }
 
-/* Efek sparkle */
 .sparkle {
   position: absolute;
   font-size: 20px;
@@ -94,8 +95,6 @@ body {
   50% { transform: scale(1.2) translateY(-30px); opacity: 0.8; }
   100% { transform: scale(1) translateY(-60px); opacity: 0; }
 }
-
-/* Tombol balas */
 
 #replyBtn {
   position: absolute;
@@ -115,11 +114,7 @@ body {
   transition:0.3s;
 }
 
-#replyBox {
-  display:none;
-  margin-top:15px;
-}
-/* Input teks seperti chat bubble */
+#replyBox { display:none; margin-top:15px; }
 #replyInput {
   padding:5px 10px;
   width:70%;
@@ -129,8 +124,6 @@ body {
   outline:none;
   font-size:11px;
 }
-
-/* Tombol kirim seperti chat bubble */
 #sendBtn {
   padding:8px 16px;
   margin-left:8px;
@@ -143,28 +136,26 @@ body {
   cursor:pointer;
   transition:0.3s;
 }
-#sendBtn:hover {
-  background:#1ebe57;
-  box-shadow:0 4px 6px rgba(0,0,0,0.25);
-}
+#sendBtn:hover { background:#1ebe57; box-shadow:0 4px 6px rgba(0,0,0,0.25); }
 </style>
 </head>
 <body>
-  <div id="photoContainer"></div>
-  <div id="message"></div>
-  <!-- Musik -->
-  <audio id="bgMusic" src="https://ivank1999.github.io/Ivank/Lagu.mp3" loop></audio>
-  <button id="loveBtn">Coba Klik️ ️</button>
+<div id="photoContainer"></div>
+<div id="message"></div>
+<audio id="bgMusic" src="https://ivank1999.github.io/Ivank/Lagu.mp3" loop></audio>
 
-  <!-- Balasan -->
-  <button id="replyBtn" style="display:none;">💌Klik disini untuk membalas💌</button>
-  <div id="replyBox">
-    <input type="text" id="replyInput" placeholder="Tulis pesanmu..." />
-    <button id="sendBtn">Kirim</button>
-  </div>
+<button id="loveBtn" style="display:none;">Coba Klik️ ️</button>
+<button id="fakeBtn">Coba Klik️ ️</button>
+
+<button id="replyBtn" style="display:none;">💌Klik disini untuk membalas💌</button>
+<div id="replyBox">
+  <input type="text" id="replyInput" placeholder="Tulis pesanmu..." />
+  <button id="sendBtn">Kirim</button>
+</div>
 
 <script>
 const btn = document.getElementById('loveBtn');
+const fakeBtn = document.getElementById('fakeBtn');
 const msg = document.getElementById('message');
 const photoContainer = document.getElementById('photoContainer');
 const music = document.getElementById('bgMusic');
@@ -173,33 +164,93 @@ const replyBox = document.getElementById('replyBox');
 const sendBtn = document.getElementById('sendBtn');
 const replyInput = document.getElementById('replyInput');
 
-// Ganti dengan nomor WA kamu
 const targetNumber = "6288214400708"; 
+let clickCount = 0;
+const maxClicks = 10;
+const buffer = 150; // jarak sensitif
 
-const photos = [
-  "https://ivank1999.github.io/Ivank/599c0f21-cd86-45c5-b8fe-e4d9de9e0da9.jpeg",
-  "https://ivank1999.github.io/Ivank/a2327b4f-b5f2-4c19-a098-cc564bfc784f.jpeg",
-  "https://ivank1999.github.io/Ivank/d129bd98-0c59-42b9-abb6-c565d9115e9c.jpeg",
-  "https://ivank1999.github.io/Ivank/184d8118-a949-421b-a77f-92eb500c4e42.jpeg",
-  "https://ivank1999.github.io/Ivank/399d54c6-d05f-4469-9fff-e367ba40bc60.jpeg",
-  "https://ivank1999.github.io/Ivank/4091985d-1aa0-47de-bd3f-977978d9873f.jpeg",
-  "https://ivank1999.github.io/Ivank/63bcbde9-b344-4b6f-9f61-64d8954a8579.jpeg",
-  "https://ivank1999.github.io/Ivank/7dccf6b5-ca28-487f-83bd-efdff9bd53b0.jpeg",
-  "https://ivank1999.github.io/Ivank/8135800b-db30-4d40-a369-bcef035c0303.jpeg",
-  "https://ivank1999.github.io/Ivank/88096556-3abe-4f37-af0e-c12a3e84c139.jpeg",
-  "https://ivank1999.github.io/Ivank/8d3fd142-ee44-4d29-992a-a5ec4e45aca0.jpeg",
-  "https://ivank1999.github.io/Ivank/b5ae5e0c-9326-4bab-9c8c-6fba6971aee7.jpeg",
-  "https://ivank1999.github.io/Ivank/c77ac5e0-38f5-49e3-93be-a302baa7cab4.jpeg",
-  "https://ivank1999.github.io/Ivank/d3fd35e9-1a09-47d8-b75d-202712c2f0a3.jpeg",
-  "https://ivank1999.github.io/Ivank/e7aa8500-6d7c-490e-ba37-cbbd0ac368d1.jpeg",
-  "https://ivank1999.github.io/Ivank/f808eec4-40d0-491a-972a-33966add2deb.jpeg"
-];
+function moveFakeButton(event) {
+    const rect = fakeBtn.getBoundingClientRect();
+    const btnWidth = rect.width;
+    const btnHeight = rect.height;
 
-btn.addEventListener('click', () => {
-  music.play(); 
-  msg.innerHTML = "I LOVE YOU SAYANG 😘";
-  btn.style.display="none";
-  replyBtn.style.display="block";
+    const minDistance = 150; // jarak minimum dari posisi lama
+    const buffer = 120; // jarak minimum dari cursor
+    const safeBottomMargin = 100; // jarak aman dari bawah layar
+    let newLeft, newTop;
+    let distance = 0;
+    let tries = 0;
+
+    do {
+        // Acak posisi baru
+        newLeft = Math.random() * (window.innerWidth - btnWidth - 10);
+        newTop = Math.random() * (window.innerHeight - btnHeight - safeBottomMargin);
+
+        // hitung jarak posisi lama
+        const dx = (newLeft + btnWidth/2) - (rect.left + btnWidth/2);
+        const dy = (newTop + btnHeight/2) - (rect.top + btnHeight/2);
+        distance = Math.sqrt(dx*dx + dy*dy);
+
+        tries++;
+        if (tries > 50) break; // safety loop
+    } while (
+        distance < minDistance || 
+        Math.abs(newLeft + btnWidth/2 - event.clientX) < buffer ||
+        Math.abs(newTop + btnHeight/2 - event.clientY) < buffer
+    );
+
+    // Animasi smooth pindah tombol
+    fakeBtn.style.transition = "left 0.3s ease, top 0.3s ease";
+    fakeBtn.style.left = newLeft + "px";
+    fakeBtn.style.top = newTop + "px";
+}
+
+// Teleport tombol setiap cursor mendekat
+// Ganti listener click dengan mousedown / touchstart
+fakeBtn.addEventListener('mousedown', handleFakeClick);
+fakeBtn.addEventListener('touchstart', handleFakeClick);
+
+function handleFakeClick(e) {
+    e.preventDefault(); // penting supaya tidak ada efek default klik/tap
+    if(clickCount >= maxClicks){
+        fakeBtn.style.display = 'none';
+        msg.textContent = "Ngga bisa di klik ya?..🤣";
+        setTimeout(()=>{
+            msg.textContent = "Yaudah ini";
+            btn.style.display = 'block';
+            clickCount = 0;
+        }, 5000);
+    } else {
+        moveFakeButton(e); // tombol langsung teleport
+        clickCount++;
+    }
+}
+
+// Tombol asli klik
+btn.addEventListener('click', ()=>{
+  music.play();
+  msg.innerHTML = "I LOVE YOU SAYANG 😘🤍";
+  btn.style.display = 'none';
+  replyBtn.style.display = 'block';
+
+  const photos = [
+    "https://ivank1999.github.io/Ivank/599c0f21-cd86-45c5-b8fe-e4d9de9e0da9.jpeg",
+    "https://ivank1999.github.io/Ivank/a2327b4f-b5f2-4c19-a098-cc564bfc784f.jpeg",
+    "https://ivank1999.github.io/Ivank/d129bd98-0c59-42b9-abb6-c565d9115e9c.jpeg",
+    "https://ivank1999.github.io/Ivank/184d8118-a949-421b-a77f-92eb500c4e42.jpeg",
+    "https://ivank1999.github.io/Ivank/399d54c6-d05f-4469-9fff-e367ba40bc60.jpeg",
+    "https://ivank1999.github.io/Ivank/4091985d-1aa0-47de-bd3f-977978d9873f.jpeg",
+    "https://ivank1999.github.io/Ivank/63bcbde9-b344-4b6f-9f61-64d8954a8579.jpeg",
+    "https://ivank1999.github.io/Ivank/7dccf6b5-ca28-487f-83bd-efdff9bd53b0.jpeg",
+    "https://ivank1999.github.io/Ivank/8135800b-db30-4d40-a369-bcef035c0303.jpeg",
+    "https://ivank1999.github.io/Ivank/88096556-3abe-4f37-af0e-c12a3e84c139.jpeg",
+    "https://ivank1999.github.io/Ivank/8d3fd142-ee44-4d29-992a-a5ec4e45aca0.jpeg",
+    "https://ivank1999.github.io/Ivank/b5ae5e0c-9326-4bab-9c8c-6fba6971aee7.jpeg",
+    "https://ivank1999.github.io/Ivank/c77ac5e0-38f5-49e3-93be-a302baa7cab4.jpeg",
+    "https://ivank1999.github.io/Ivank/d3fd35e9-1a09-47d8-b75d-202712c2f0a3.jpeg",
+    "https://ivank1999.github.io/Ivank/e7aa8500-6d7c-490e-ba37-cbbd0ac368d1.jpeg",
+    "https://ivank1999.github.io/Ivank/f808eec4-40d0-491a-972a-33966add2deb.jpeg"
+  ];
 
   const mainPhoto = document.createElement('img');
   mainPhoto.id = "mainPhoto";
@@ -208,46 +259,40 @@ btn.addEventListener('click', () => {
 
   let idx = 0;
   setInterval(()=>{
-    idx = (idx + 1) % photos.length;
+    idx = (idx+1)%photos.length;
     mainPhoto.src = photos[idx];
-  }, 2000);
-  
-  // Bintang
-  function createStars(num) {
-    for(let i=0; i<num; i++) {
-      const star = document.createElement('div');
-      star.className = 'star';
-      star.style.top = Math.random() * 100 + 'vh';
-      star.style.left = Math.random() * 100 + 'vw';
-      star.style.animationDuration = (1 + Math.random() * 3) + 's';
-      document.body.appendChild(star);
-    }
-  }
-  createStars(50);
+  },2000);
 
-  // Sparkle
-  function createSparkle() {
+  for(let i=0;i<50;i++){
+    const star = document.createElement('div');
+    star.className = 'star';
+    star.style.top = Math.random()*100+'vh';
+    star.style.left = Math.random()*100+'vw';
+    star.style.animationDuration = (1 + Math.random()*3)+'s';
+    document.body.appendChild(star);
+  }
+
+  setInterval(()=>{
     const sparkle = document.createElement('div');
     sparkle.className = 'sparkle';
-    sparkle.style.left = Math.random() * 100 + 'vw';
-    sparkle.style.top = Math.random() * 100 + 'vh';
-    sparkle.innerHTML = Math.random() > 0.5 ? '✨' : '💖';
+    sparkle.style.left = Math.random()*100+'vw';
+    sparkle.style.top = Math.random()*100+'vh';
+    sparkle.innerHTML = Math.random()>0.5?'✨':'💖';
     document.body.appendChild(sparkle);
-    setTimeout(()=> sparkle.remove(), 5000);
-  }
-  setInterval(createSparkle, 1500);
+    setTimeout(()=> sparkle.remove(),5000);
+  },1500);
 });
 
 // Balas
-replyBtn.addEventListener('click', () => {
-  replyBox.style.display = "block";
-  replyBtn.style.display = "none";
+replyBtn.addEventListener('click', ()=>{
+  replyBox.style.display = 'block';
+  replyBtn.style.display = 'none';
 });
 
-sendBtn.addEventListener('click', () => {
-  const text = replyInput.value.trim();  // trim dulu
-  if(text !== ""){
-    const encodedText = encodeURIComponent(text); // baru encode
+sendBtn.addEventListener('click', ()=>{
+  const text = replyInput.value.trim();
+  if(text!==""){
+    const encodedText = encodeURIComponent(text);
     window.location.href = `https://wa.me/${targetNumber}?text=${encodedText}`;
   } else {
     alert("Pesan masih kosong sayang 😘");
