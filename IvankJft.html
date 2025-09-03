@@ -1,0 +1,1649 @@
+<html lang="id">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Tebak Kanji</title>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap">
+          <style>
+            body {
+              background: linear-gradient(180deg, #fbc2eb 0%, #a6c1ee 100%);
+              background-size: 400% 400%;
+              animation: sunrise 20s ease infinite;
+            }
+            @keyframes sunrise {
+              0% { background-position: 50% 0%; }
+              50% { background-position: 50% 100%; }
+              100% { background-position: 50% 0%; }
+            }
+      
+            h1 {
+              color: #FFFF00;
+              font-size: 50px;
+              font-weight: bold;
+              text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+            }
+      
+            #question-container {
+               background-color: rgba(0, 0, 0, 0.2);
+               padding: 5% 3%;
+               border-radius: 15px;
+               display: flex;                /* aktifkan flexbox */
+               flex-direction: column;       /* biar elemen bertumpuk vertikal */
+               justify-content: center;      /* center vertikal */
+               align-items: center;          /* center horizontal */
+               min-height: auto;             /* tinggi kontainer cukup */
+               text-align: center;           /* pastikan semua teks center */
+             }
+             
+             .kanji {
+                  font-size: 15vw;   /* 15% dari lebar layar */
+                   
+               font-weight: bold;           /* ganti 5 jadi bold */
+               font-family: "Yu Gothic UI", "Meiryo", "MS PGothic", "MS Gothic", sans-serif;
+               margin-bottom: 80px;
+               color: black;
+               -webkit-text-stroke: 1px white;  /* outline supaya jelas */
+               text-stroke: 2px black;
+               text-align: center;          /* pastikan center horizontal */
+             }
+             
+             .question {
+               font-size: 39px;
+               margin-bottom: 20px;
+               color: yellow;
+               font-weight: bold;
+               text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+               text-align: center;          /* center horizontal */
+             }
+      
+            .choices {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+            }
+      
+            .choice {
+              background-color: pink;       /* Kotak putih default */
+              color: black;                  /* Huruf kana hitam */
+              font-weight: bold;             /* Huruf tebal */
+              padding: 10px;
+              margin: 10px;
+              width: 90%;
+              max-width: 350px;
+              border: none;
+              border-radius: 25px;
+              cursor: pointer;
+              font-size: 26px;
+              transition: transform 0.2s ease, background-color 0.2s ease;
+            }
+            
+            .choice:hover {
+              transform: scale(1.05);
+            }
+      
+            .choice:active {
+              transform: scale(0.95);
+            }
+      
+            .result {
+              font-size: 25px;
+              margin-top: 20px;
+            }
+      
+            .next-btn {
+              margin-top: 10px;
+              background-color: #008CBA;
+              color: white;
+              padding: 10px 15px;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+            }
+       #username-screen {
+        display: flex;
+        flex-direction: column;   /* biar susunannya tetap vertikal */
+        justify-content: center;  /* vertikal center */
+        align-items: center;      /* horizontal center */
+        height: 100vh;            /* penuh 1 layar */
+        text-align: center;       /* teks ke tengah */
+      }
+      
+      #username-screen input {
+        padding: 10px 15px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+      }
+      
+      #username-screen button {
+        margin-top: 15px;
+        padding: 10px 20px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: none;
+        background: #ff69b4; /* pink terang */
+        color: white;
+        cursor: pointer;
+      }
+#author {
+        position: fixed;
+        top: 10px;
+        right: 15px;
+        font-size: 11px;            /* kecilin dikit */
+        color: black;               /* warna hitam */
+        font-weight: normal;        /* biar nggak terlalu tebal */
+        background: rgba(0,0,0,0.05); /* abu tipis biar soft */
+        padding: 4px 8px;           
+        border-radius: 5px;
+        font-family: Arial, sans-serif;
+      }
+      
+      #author span {
+        color: black; /* nama juga hitam */
+      }
+            .next-btn:hover {
+              background-color: #005f73;
+            }
+      
+            .lives {
+              font-size: 24px;
+              color: red;
+              margin-bottom: 20px;
+            }
+      
+            .back-btn {
+              position: fixed;
+              bottom: 50px;
+              right: 20px;
+              background-color: #008CBA;
+              color: white;
+              padding: 15px 20px;
+              border: none;
+              border-radius: 20px;
+              cursor: pointer;
+            }
+      
+            .back-btn:hover {
+              background-color: #d32f2f;
+            }
+      
+            @media (max-width: 600px) {
+              h1 { font-size: 36px; }
+              .question { font-size: 30px; }
+
+              .choice { font-size: 20px; width: 80%; }
+              .result { font-size: 25px; }
+              .next-btn { font-size: 18px; padding: 8px 12px; }
+              .back-btn { font-size: 18px; padding: 8px 12px; }
+            }
+      
+            @media (max-width: 375px) {
+              h1 { font-size: 30px; }
+              .question { font-size: 26px; }
+              .kanji { font-size: 5% 3%; }
+              .choice { font-size: 18px; width: 90%; }
+              .result { font-size: 20px; }
+              .next-btn { font-size: 16px; padding: 8px 10px; }
+              .back-btn { font-size: 16px; padding: 8px 10px; }
+            }
+          </style>
+        </head>
+        <body>
+           <div id="author">Made by: <span>Ade Ivank</span></div>
+          <!-- 🔹 Halaman input username -->
+            <div id="username-screen">
+              <h2>Masukkan Username</h2>
+              <input type="text" id="usernameInput" placeholder="Tulis namamu...">
+              <button onclick="saveUsername()">Mulai</button>
+            </div>
+          
+            <!-- 🔹 Menu sesi (disembunyikan dulu) -->
+            <div id="session-screen" style="display:none;">
+              <h2>Pilih Sesi</h2>
+              <button onclick="startSession(1)">Sesi 1</button>
+              <button onclick="startSession(2)">Sesi 2</button>
+              <!-- dst -->
+            </div>
+          
+          <div id="game-container" style="display:none;">
+            <!-- isi game kamu di sini -->
+          </div>
+          <div id="final-sessions-container" style="display:none; text-align:center; margin-top:20px;"></div>
+          <div id="session-container" style="display:none; margin-bottom:20px;">
+            <h2>Pilih Sesi</h2>
+            <div id="sessions" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px;"></div>
+          
+          </div>
+      
+          <h1>KANJINE</h1>
+          <div id="question-container" style="display:none;">
+            <p class="question" id="question"> <span id="kanji" class="kanji"></span></p>
+            <div class="choices" id="choices"></div>
+            <div class="result" id="result"></div>
+            <button class="back-btn" onclick="window.location.href='https://durmad21.github.io/musik/JFTA2.html';">Kembali</button>
+            <button class="next-btn" id="next-btn" style="display: none;">Lanjut</button>
+      
+            <audio id="background-audio" loop>
+              <source src="https://adewij.github.io/Adewij/backsound.mp3" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          </div> <!-- tutup #question-container -->
+
+          <!-- Tambahkan div untuk hasil akhir sesi -->
+          <div id="final-result-container" style="display:none; text-align:center; margin-top:20px;">
+            <div id="final-result-text" style="font-size:20px; font-weight:bold; margin-bottom:15px;"></div>
+            <button id="retry-btn">Belajar Ulang</button>
+          </div>
+
+      <script>
+        const correctAudio = new Audio('https://adewij.github.io/Adewij/correct.mp3');
+        const wrongAudio = new Audio('https://adewij.github.io/Adewij/wrong.mp3');
+        const backgroundAudio = document.getElementById('background-audio');
+        
+        // Mute semua audio
+        correctAudio.muted = true;
+        wrongAudio.muted = true;
+        backgroundAudio.muted = true;
+      
+        document.body.addEventListener('click', () => {
+          if (backgroundAudio.paused) {
+            backgroundAudio.play().catch((error) => { console.error(error); });
+          }
+        });
+      
+        const kanjiList = [
+          { kanji: '魚', answer: 'Ikan ', romaji: 'さかな' },
+                    { kanji: '肉', answer: 'Daging ', romaji: 'にく' },
+                    { kanji: '卵', answer: 'Telur ', romaji: 'たまご' },
+                    { kanji: '水', answer: 'Air ', romaji: 'みず' },
+                    { kanji: '食べます', answer: 'Makan ', romaji: 'たべます' },
+                    { kanji: '飲みます', answer: 'Minum ', romaji: 'のみます' },
+                    { kanji: '大きい', answer: 'Besar ', romaji: 'おおきい' },
+                    { kanji: '小さい', answer: 'Kecil ', romaji: 'ちいさい' },
+                    { kanji: '新しい', answer: 'Baru ', romaji: 'あたらしい' },
+                    { kanji: '古い', answer: 'Lama, usang ', romaji: 'ふるい' },
+                    { kanji: '～時', answer: 'jam ~ ', romaji: '～じ' },
+                    { kanji: '～分', answer: '~ menit ', romaji: '～ふん、ぷん、ぶん' },
+                    { kanji: '～半', answer: '~ setengah ', romaji: '～はん' },
+                      { kanji: '月曜日', answer: 'Senin', romaji: 'げつようび' },
+                      { kanji: '火曜日', answer: 'Selasa', romaji: 'かようび' },
+                      { kanji: '水曜日', answer: 'Rabu', romaji: 'すいようび' },
+                      { kanji: '木曜日', answer: 'Kamis', romaji: 'もくようび' },
+                      { kanji: '金曜日', answer: 'Jumat', romaji: 'きんようび' },
+                      { kanji: '土曜日', answer: 'Sabtu', romaji: 'どようび' },
+                      { kanji: '日曜日', answer: 'Minggu', romaji: 'にちようび' },
+                    { kanji: '言います', answer: 'Berkata ', romaji: 'いいます' },
+                    { kanji: '話します', answer: 'Berbicara ', romaji: 'はなします' },
+                    { kanji: '読みます', answer: 'Membaca ', romaji: 'よみます' },
+                    { kanji: '見ます', answer: 'Melihat ', romaji: 'みます' },
+                    { kanji: '聞きます', answer: 'Mendengarkan ', romaji: 'ききます' },
+                    { kanji: '書きます', answer: 'Menulis ', romaji: 'かきます' },
+                    { kanji: '一', answer: 'Satu ', romaji: 'いち' },
+                    { kanji: '二', answer: 'Dua ', romaji: 'に' },
+                    { kanji: '三', answer: 'Tiga ', romaji: 'さん' },
+                    { kanji: '四', answer: 'Empat ', romaji: 'よん、し' },
+                    { kanji: '五', answer: 'Lima ', romaji: 'ご' },
+                    { kanji: '六', answer: 'Enam ', romaji: 'ろく' },
+                    { kanji: '七', answer: 'Tujuh ', romaji: 'なな、しち' },
+                    { kanji: '八', answer: 'Delapan ', romaji: 'はち' },
+                    { kanji: '九', answer: 'Sembilan ', romaji: 'きゅう' },
+                    { kanji: '十', answer: 'Sepuluh ', romaji: 'じゅう' },
+                    { kanji: '～年', answer: '~ tahun ', romaji: '～ねん' },
+                    { kanji: '～月', answer: '~ bulan ', romaji: '～がつ' },
+                    { kanji: '～日', answer: '~ tanggal ', romaji: '～にち' },
+                    { kanji: '東', answer: 'Timur ', romaji: 'ひがし' },
+                    { kanji: '西', answer: 'Barat ', romaji: 'にし' },
+                    { kanji: '南', answer: 'Selatan ', romaji: 'みなみ' },
+                    { kanji: '北', answer: 'Utara ', romaji: 'きた' },
+                    { kanji: '～口', answer: 'pintu ~ ', romaji: '～ぐち' },
+                    { kanji: '東口', answer: 'Pintu timur ', romaji: 'ひがしぐち' },
+                    { kanji: '西口', answer: 'Pintu barat ', romaji: 'にしぐち' },
+                    { kanji: '南口', answer: 'Pintu selatan ', romaji: 'みなみぐち' },
+                    { kanji: '北口', answer: 'Pintu utara ', romaji: 'きたぐち' },
+                    { kanji: '買います', answer: 'Membeli ', romaji: 'かいます' },
+                    { kanji: '買い物', answer: 'Belanja ', romaji: 'かいもの' },
+                    { kanji: 'お金', answer: 'Uang ', romaji: 'おかね' },
+                    { kanji: '円', answer: 'Yen ', romaji: 'えん' },
+                    { kanji: '百', answer: '100 ', romaji: 'ひゃく' },
+                    { kanji: '千', answer: 'Ribuan/1000 ', romaji: 'せん' },
+                    { kanji: '万', answer: 'Puluh ribuan ', romaji: 'まん' },
+                    { kanji: '百円', answer: '100 yen ', romaji: 'ひゃくえん' },
+                    { kanji: '千円', answer: 'Ribuan/1000 yen ', romaji: 'せんえん' },
+                    { kanji: '一万円', answer: '10000 yen ', romaji: 'いちまんえん' },
+                    { kanji: '行きます', answer: 'Pergi ', romaji: 'いきます' },
+                    { kanji: '来ます', answer: 'Datang ', romaji: 'きます' },
+                    { kanji: '会います', answer: 'Bertemu ', romaji: 'あいます' },
+                    { kanji: '休みます', answer: 'Libur,istirahat ', romaji: 'やすみます' },
+                    { kanji: '日本', answer: 'Jepang ', romaji: 'にほん' },
+                    { kanji: '東京', answer: 'Tokyo ', romaji: 'とうきょう' },
+                    { kanji: '私', answer: 'Saya ', romaji: 'わたし' },
+                    { kanji: '父', answer: 'Ayah ', romaji: 'ちち' },
+                    { kanji: '母', answer: 'Ibu ', romaji: 'はは' },
+                    { kanji: '子供', answer: 'Anak ', romaji: 'こども' },
+                    { kanji: '男', answer: 'Laki-laki ', romaji: 'おとこ' },
+                    { kanji: '女', answer: 'Perempuan ', romaji: 'おんな' },
+                    { kanji: '人', answer: 'Orang ', romaji: 'ひと' },
+                    { kanji: 'お父さん', answer: 'Ayah (orang lain) ', romaji: 'おとうさん' },
+                    { kanji: 'お母さん', answer: 'Ibu (orang lain) ', romaji: 'おかあさん' },
+                    { kanji: '何人', answer: 'Berapa orang? ', romaji: 'なんにん' },
+                    { kanji: '国', answer: 'Negara ', romaji: 'くに' },
+                    { kanji: '外国', answer: 'Luar negri ', romaji: 'がいこく' },
+                    { kanji: '～語', answer: 'Bahasa ~ ', romaji: '～ご' },
+                    { kanji: '日本語', answer: 'Bahasa jepang ', romaji: 'にほんご' },
+                    { kanji: '英語', answer: 'Bahasa inggris ', romaji: 'えいご' },
+                    { kanji: '中国語', answer: 'Bahasa china ', romaji: 'ちゅうごくご' },
+                    { kanji: '~人', answer: ' orang ~ ', romaji: '～じん' },
+                    { kanji: '日本人', answer: 'Orang jepang ', romaji: 'にほんじん' },
+                    { kanji: '好き', answer: 'Suka ', romaji: 'すき' },
+                    { kanji: '本', answer: 'Buku ', romaji: 'ほん' },
+                    { kanji: '読書', answer: 'Bacaan ', romaji: 'どくしょ' },
+                    { kanji: '何', answer: 'Apa? ', romaji: 'なに' },
+                    { kanji: '春', answer: 'Musim semi ', romaji: 'はる' },
+                    { kanji: '夏', answer: 'Musim panas ', romaji: 'なつ' },
+                    { kanji: '秋', answer: 'Musim gugur ', romaji: 'あき' },
+                    { kanji: '冬', answer: 'Musim dingin ', romaji: 'ふゆ' },
+                    { kanji: '今', answer: 'Sekarang ', romaji: 'いま' },
+                    { kanji: '花', answer: 'Bunga ', romaji: 'はな' },
+                    { kanji: '海', answer: 'Laut ', romaji: 'うみ' },
+                    { kanji: '山', answer: 'Gunung ', romaji: 'やま' },
+                    { kanji: '川', answer: 'Sungai ', romaji: 'かわ' },
+                    { kanji: '今日', answer: 'Hari ini ', romaji: 'きょう' },
+                    { kanji: '天気', answer: 'Cuaca ', romaji: 'てんき' },
+                    { kanji: '晴れ', answer: 'Cerah ', romaji: 'はれ' },
+                    { kanji: '雨', answer: 'Hujan ', romaji: 'あめ' },
+                    { kanji: '雪', answer: 'Salju ', romaji: 'ゆき' },
+                    { kanji: '雲', answer: 'Mendung ', romaji: 'くも' },
+                    { kanji: '風', answer: 'Angin ', romaji: 'かぜ' },
+                    { kanji: '空', answer: 'Langit ', romaji: 'そら' },
+                    { kanji: '町', answer: 'Kota ', romaji: 'まち' },
+                    { kanji: '店', answer: 'Toko ', romaji: 'みせ' },
+                    { kanji: '人気', answer: 'Popularitas, ketenaran ', romaji: 'にんき' },
+                    { kanji: '多い', answer: 'Banyak ', romaji: 'おおい' },
+                    { kanji: '少ない', answer: 'Sedikit ', romaji: 'すくない' },
+                    { kanji: '高い', answer: 'Mahal ', romaji: 'たかい' },
+                    { kanji: '安い', answer: 'Murah ', romaji: 'やすい' },
+                    { kanji: '広い', answer: 'Luas ', romaji: 'ひろい' },
+                    { kanji: '道', answer: 'Jalan ', romaji: 'みち' },
+                    { kanji: '通り', answer: 'Jalan ', romaji: 'とおり' },
+                    { kanji: '右', answer: 'Kanan ', romaji: 'みぎ' },
+                    { kanji: '左', answer: 'Kiri ', romaji: 'ひだり' },
+                    { kanji: '一つ', answer: 'Satu buah ', romaji: 'ひとつ' },
+                    { kanji: '二つ', answer: 'Dua buah ', romaji: 'ふたつ' },
+                    { kanji: '赤い', answer: 'Merah ', romaji: 'あかい' },
+                    { kanji: '青い', answer: 'Biru ', romaji: 'あおい' },
+                    { kanji: '黒い', answer: 'Hitam ', romaji: 'くろい' },
+                    { kanji: '白い', answer: 'Putih ', romaji: 'しろい' },
+                    { kanji: '時間', answer: 'Waktu ', romaji: 'じかん' },
+                    { kanji: '場所', answer: 'Tempat ', romaji: 'ばしょ' },
+                    { kanji: '駅', answer: 'Stasiun ', romaji: 'えき' },
+                    { kanji: '生年月日 ', answer: 'Tanggal lahir ', romaji: 'せいねんがっぴ' },
+                    { kanji: '出かけます', answer: 'Meninggalkan rumah ', romaji: 'でかけます' },
+                    { kanji: '待ちます', answer: 'Menunggu ', romaji: 'まちます' },
+                    { kanji: '止まります', answer: 'Menginap , berhenti ', romaji: 'とまります' },
+                    { kanji: '食事', answer: 'Makan bersama ', romaji: 'しょくじ' },
+                    { kanji: '仕事', answer: 'Pekerjaan ', romaji: 'しごと' },
+                    { kanji: '前', answer: 'Sebelum ', romaji: 'まえ' },
+                    { kanji: '後', answer: 'Setelah ', romaji: 'あと' },
+                    { kanji: '朝', answer: 'Pagi ', romaji: 'あさ' },
+                    { kanji: '昼', answer: 'Siang ', romaji: 'ひる' },
+                    { kanji: '夜', answer: 'Malam ', romaji: 'よる' },
+                    { kanji: '乗ります', answer: 'Naik ', romaji: 'のります' },
+                    { kanji: '学校', answer: 'Sekolahan ', romaji: 'がっこう' },
+                    { kanji: '小学校', answer: 'SD ', romaji: 'しょうがっこう' },
+                    { kanji: '中学校', answer: 'SMP ', romaji: 'ちゅうがっこう' },
+                    { kanji: '高校', answer: 'SMA ', romaji: 'こうこう' },
+                    { kanji: '大学', answer: 'Universitas ', romaji: 'だいがく' },
+                    { kanji: '先生', answer: 'Guru ', romaji: 'せんせい' },
+                    { kanji: '学生', answer: 'Murid , siswa ', romaji: 'がくせい' },
+                    { kanji: '～年生', answer: 'Kelas ~ ', romaji: '～ねんせい' },
+                    { kanji: '勉強', answer: 'Pelajaran ', romaji: 'べんきょう' },
+                    { kanji: '文化', answer: 'Kebudayaan ', romaji: 'ぶんか' },
+                    { kanji: '音楽', answer: 'Musik ', romaji: 'おんがく' },
+                    { kanji: '旅行', answer: 'Wisata ', romaji: 'りょこう' },
+                    { kanji: '留学', answer: 'Belajar di luar negri ', romaji: 'りゅうがく' },
+                    { kanji: '友達', answer: 'Teman ', romaji: 'ともだち' },
+                    { kanji: '楽しい', answer: 'Senang ', romaji: 'たのしい' },
+                    { kanji: '週', answer: 'Minggu ', romaji: 'しゅう' },
+                    { kanji: '～回', answer: '~kali ', romaji: '～かい' },
+                    { kanji: '食べ物', answer: 'Makanan ', romaji: 'たべもの' },
+                    { kanji: '飲物', answer: 'Minuman ', romaji: 'のみもの' },
+                    { kanji: 'お茶', answer: 'Teh hijau ', romaji: 'おちゃ' },
+                    { kanji: 'お酒', answer: 'Sake ', romaji: 'おさけ' },
+                    { kanji: '作ります', answer: 'Membuat ', romaji: 'つくります' },
+                    { kanji: '持っていきます', answer: 'Membawa pergi ', romaji: 'もっていきます' },
+                    { kanji: 'お願いします', answer: 'Tolong ', romaji: 'おねがいします' },
+                    { kanji: '料理', answer: 'Masakan ', romaji: 'りょうり' },
+                    { kanji: '味', answer: 'Rasa ', romaji: 'あじ' },
+                    { kanji: '色', answer: 'Warna ', romaji: 'いろ' },
+                    { kanji: '野菜', answer: 'Sayur ', romaji: 'やさい' },
+                    { kanji: '少し', answer: 'Sedikit ', romaji: 'すこし' },
+                    { kanji: '中', answer: 'Dalam ', romaji: 'なか' },
+                    { kanji: '入る', answer: 'Masuk ', romaji: 'はいる' },
+                    { kanji: '会社', answer: 'Perusahaan ', romaji: 'かいしゃ' },
+                    { kanji: '本社', answer: 'Kantor pusat ', romaji: 'ほんしゃ' },
+                    { kanji: '支社', answer: 'Kantor cabang ', romaji: 'ししゃ' },
+                    { kanji: '出張', answer: 'Dinas luar kota ', romaji: 'しゅっちょう' },
+                    { kanji: '空港', answer: 'Bandara ', romaji: 'くうこう' },
+                    { kanji: '出発', answer: 'Keberangkatan ', romaji: 'しゅっぱつ' },
+                    { kanji: '到着', answer: 'Kedatangan ', romaji: 'とうちゃく' },
+                    { kanji: '午前', answer: 'AM ', romaji: 'ごぜん' },
+                    { kanji: '午後', answer: 'PM ', romaji: 'ごご' },
+                    { kanji: '自分', answer: 'Sendiri ', romaji: 'じぶん' },
+                    { kanji: '電話', answer: 'Telepon ', romaji: 'でんわ' },
+                    { kanji: '電気', answer: 'Listrik ', romaji: 'でんき' },
+                    { kanji: '電車', answer: 'Kereta ', romaji: 'でんしゃ' },
+                    { kanji: '車', answer: 'Mobil ', romaji: 'くるま' },
+                    { kanji: '送ります', answer: 'Mengirim ', romaji: 'おくります' },
+                    { kanji: '使います', answer: 'Menggunakan ', romaji: 'つかいます' },
+                    { kanji: '借ります', answer: 'Meminjam ', romaji: 'かります' },
+                    { kanji: '体', answer: 'Badan ', romaji: 'からだ' },
+                    { kanji: '頭', answer: 'Kepala ', romaji: 'あたま' },
+                    { kanji: '目', answer: 'Mata ', romaji: 'め' },
+                    { kanji: '口', answer: 'Mulut ', romaji: 'くち' },
+                    { kanji: '耳', answer: 'Telinga ', romaji: 'みみ' },
+                    { kanji: '手', answer: 'Tangan ', romaji: 'て' },
+                    { kanji: '足', answer: 'Kaki ', romaji: 'あし' },
+                    { kanji: '上', answer: 'Atas ', romaji: 'うえ' },
+                    { kanji: '下', answer: 'Bawah ', romaji: 'した' },
+                    { kanji: '毎～', answer: ' setiap ~', romaji: 'まい～' },
+                    { kanji: '毎朝', answer: 'setiap pagi ', romaji: 'まいあさ' },
+                    { kanji: '毎日', answer: 'Setiap hari ', romaji: 'まいにち' },
+                    { kanji: '週末', answer: 'Akhir pekan ', romaji: 'しゅうまつ' },
+                    { kanji: '元気', answer: 'Sehat ', romaji: 'げんき' },
+                    { kanji: '外', answer: 'Luar ', romaji: 'そと' },
+                    { kanji: '起きます', answer: 'Bangun tidur ', romaji: 'おきます' },
+                    { kanji: '歩きます', answer: 'Berjalan ', romaji: 'あるきます' },
+                    { kanji: '走ります', answer: 'Berlari ', romaji: 'はしります' },
+                    { kanji: '泳ぎます', answer: 'Berenang ', romaji: 'およぎます' },
+                    { kanji: 'お祝い', answer: 'Perayaan ', romaji: 'おいわい' },
+                    { kanji: '誕生日', answer: 'Ulang tahun ', romaji: 'たんじょうび' },
+                    { kanji: '結婚', answer: 'Pernikahan ', romaji: 'けっこん' },
+                    { kanji: '絵', answer: 'Gambar , lukisan ', romaji: 'え' },
+                    { kanji: '写真', answer: 'Foto ', romaji: 'しゃしん' },
+                    { kanji: '時計', answer: 'Jam ', romaji: 'とけい' },
+                    { kanji: '着ます', answer: 'Memakai pakaian ', romaji: 'きます' },
+                    { kanji: '先～', answer: '~lalu ', romaji: 'せん～' },
+                    { kanji: '先週', answer: 'Minggu lalu ', romaji: 'せんしゅう' },
+                    { kanji: '今～', answer: '~ini ', romaji: 'こん～' },
+                    { kanji: '今月', answer: 'Bulan ini ', romaji: 'こんげつ' },
+                    { kanji: '来～', answer: '~depan ', romaji: 'らい～' },
+                    { kanji: '来年', answer: 'Tahun depan ', romaji: 'らいねん' },
+                    { kanji: '今年', answer: 'Tahun ini ', romaji: 'ことし' },
+                    { kanji: '去年', answer: 'Tahun lalu ', romaji: 'きょねん' },
+                    { kanji: '家', answer: 'Rumah ', romaji: 'いえ' },
+                    { kanji: '思います', answer: 'Berpikir/merasa/menurut saya ', romaji: 'おもいます' },
+                    { kanji: '自己紹介', answer: 'Perkenalan ', romaji: 'じこしょうかい' },
+                    { kanji: '名前', answer: 'Nama ', romaji: 'なまえ' },
+                    { kanji: '意味', answer: 'Arti ', romaji: 'いみ' },
+                    { kanji: '本屋', answer: 'Toko buku ', romaji: 'ほんや' },
+                    { kanji: '近く', answer: 'Dekat ', romaji: 'ちかく' },
+                    { kanji: '住みます', answer: 'Tinggal ', romaji: 'すみます' },
+                    { kanji: '働きます', answer: 'Bekerja ', romaji: 'はたらきます' },
+                    { kanji: '～番目', answer: 'Urutan yang ~ ', romaji: '～ばんめ' },
+                    { kanji: '兄', answer: 'Kakak laki2 (sendiri) ', romaji: 'あに' },
+                    { kanji: '兄いさん', answer: 'Kakak laki2 (orang lain) ', romaji: 'おにいさん' },
+                    { kanji: '姉', answer: 'Kakak perempuan (sendiri) ', romaji: 'あね' },
+                    { kanji: 'お姉さん', answer: 'Kakak perempuan (orang lain) ', romaji: 'おねえさん' },
+                    { kanji: '弟', answer: 'Adik laki2 (sendiri) ', romaji: 'おとうと' },
+                    { kanji: '妹', answer: 'Adik perempuan (sendiri) ', romaji: 'いもうと' },
+                    { kanji: '家族', answer: 'Keluarga ', romaji: 'かぞく' },
+                    { kanji: '長い', answer: 'Panjang ', romaji: 'ながい' },
+                    { kanji: '短い', answer: 'Pendek ', romaji: 'みじかい' },
+                    { kanji: '低い', answer: 'Rendah ', romaji: 'ひくい' },
+                    { kanji: '上手', answer: 'Pandai ', romaji: 'じょうず' },
+                    { kanji: '歌', answer: 'Lagu ', romaji: 'うた' },
+                    { kanji: '歌います', answer: 'Menyanyi ', romaji: 'うたいます' },
+                    { kanji: '客', answer: 'Tamu ', romaji: 'きゃく' },
+                    { kanji: '注文', answer: 'Pesanan ', romaji: 'ちゅうもん' },
+                    { kanji: '洋食', answer: 'Makanan barat ', romaji: 'ようしょく' },
+                    { kanji: '和食', answer: 'Makanan jepang ', romaji: 'わしょく' },
+                    { kanji: '牛肉', answer: 'Daging sapi ', romaji: 'ぎゅうにく' },
+                    { kanji: '地方', answer: 'Daerah ,wilayah ', romaji: 'ちほう' },
+                    { kanji: '有名', answer: 'Terkenal ', romaji: 'ゆうめい' },
+                    { kanji: '生', answer: 'Mentah ', romaji: 'なま' },
+                    { kanji: '冷たい', answer: 'Dingin (benda) ', romaji: 'つめたい' },
+                    { kanji: 'ご飯', answer: 'Nasi ', romaji: 'ごはん' },
+                    { kanji: '塩', answer: 'Garam ', romaji: 'しお' },
+                    { kanji: '全部', answer: 'Semua ', romaji: 'ぜんぶ' },
+                    { kanji: '～方', answer: 'Cara~ ', romaji: '～かた' },
+                    { kanji: '食べ方', answer: 'Cara makan ', romaji: 'たべかた' },
+                    { kanji: '熱い', answer: 'Panas ', romaji: 'あつい' },
+                    { kanji: '苦手', answer: 'Susah, berat,tidak begitu suka ', romaji: 'にがて' },
+                    { kanji: '入れます', answer: 'Memasukkan ', romaji: 'いれます' },
+                    { kanji: '木', answer: 'Pohon ', romaji: 'き' },
+                    { kanji: '森', answer: 'Hutan ', romaji: 'もり' },
+                    { kanji: '島', answer: 'Pulau ', romaji: 'しま' },
+                    { kanji: '自然', answer: 'Alam ', romaji: 'しぜん' },
+                    { kanji: '船', answer: 'Kapal ', romaji: 'ふね' },
+                    { kanji: '暑い', answer: 'Panas ', romaji: 'あつい' },
+                    { kanji: '帰ります', answer: 'Pulang ', romaji: 'かえります' },
+                    { kanji: '予約します', answer: 'Memesan ', romaji: 'よやくします' },
+                    { kanji: '運転します', answer: 'Menyetir ', romaji: 'うんてんします' },
+                    { kanji: '～中', answer: 'Sedang/dalam ~ ', romaji: 'ちゅう/じゅう/なか' },
+                    { kanji: '旅行中', answer: 'Sedang wisata ', romaji: 'りょこうちゅう' },
+                    { kanji: '観光地', answer: 'Tempat wisata ', romaji: 'かんこうち' },
+                    { kanji: '女性', answer: 'Wanita ', romaji: 'じょせい' },
+                    { kanji: '男性', answer: 'Pria ', romaji: 'だんせい' },
+                    { kanji: '動物', answer: 'Hewan ', romaji: 'どうぶつ' },
+                    { kanji: '空気', answer: 'Udara ', romaji: 'くうき' },
+                    { kanji: '料金', answer: 'Biaya / tarif ', romaji: 'りょうきん' },
+                    { kanji: '無料', answer: 'Tanpa biaya/Gratis ', romaji: 'むりょう' },
+                    { kanji: '明るい', answer: 'Terang ', romaji: 'あかるい' },
+                    { kanji: '便利', answer: 'Praktis ', romaji: 'べんり' },
+                    { kanji: '一年中', answer: 'Dalam satu tahun ', romaji: 'いちねんじゅう' },
+                    { kanji: '受付', answer: 'Penerima tamu ', romaji: 'うけつけ' },
+                    { kanji: '広場', answer: 'Lapangan ', romaji: 'ひろば' },
+                    { kanji: '問題', answer: 'Soal, masalah ', romaji: 'もんだい' },
+                    { kanji: '同じ', answer: 'Sama ', romaji: 'おなじ' },
+                    { kanji: '集まります', answer: 'Berkumpul ', romaji: 'あつまります' },
+                    { kanji: '始まります', answer: 'Mulai ', romaji: 'はじまります' },
+                    { kanji: '終わります', answer: 'Selesai ', romaji: 'おわります' },
+                    { kanji: '中止します', answer: 'Mengurungkan ,membatalkan ', romaji: 'ちゅうしします' },
+                    { kanji: '教えます', answer: 'Memberitahu ', romaji: 'おしえます' },
+                    { kanji: '祭り', answer: 'Perayaan ', romaji: 'まつり' },
+                    { kanji: '日本祭り', answer: 'Perayaan jepang ', romaji: 'にほんまつり' },
+                    { kanji: '会場', answer: 'Ruang pertemuan ', romaji: 'かいじょう' },
+                    { kanji: '入場料', answer: 'Tarif masuk ', romaji: 'にゅうじょうりょう' },
+                    { kanji: '参加者', answer: 'Peserta ', romaji: 'さんかしゃ' },
+                    { kanji: '急ぎます', answer: 'Buru-buru ', romaji: 'いそぎます' },
+                    { kanji: '決めます', answer: 'Menentukan ', romaji: 'きめます' },
+                    { kanji: '知ります', answer: 'Kenal, tahu ', romaji: 'しります' },
+                    { kanji: '正月', answer: 'Tahun baru ', romaji: 'しょうがつ' },
+                    { kanji: '年末', answer: 'Akhir tahun ', romaji: 'ねんまつ' },
+                    { kanji: '年始', answer: 'Awal tahun ', romaji: 'ねんし' },
+                    { kanji: '親', answer: 'Orang tua ', romaji: 'おや' },
+                    { kanji: '忙しい', answer: 'Sibuk ', romaji: 'いそがしい' },
+                    { kanji: '特別', answer: 'Istimewa, special ', romaji: 'とくべつ' },
+                    { kanji: '帰国', answer: 'Pulang ke negara ', romaji: 'きこく' },
+                    { kanji: '喜びます', answer: 'Merasa senang/gembira ', romaji: 'よろこびます' },
+                    { kanji: '幸せ', answer: 'Bahagia ', romaji: 'しあわせ' },
+                    { kanji: '成長', answer: 'Pertumbuhan, perkembangan ', romaji: 'せいちょう' },
+                    { kanji: '長生き', answer: 'Umur panjang, hidup lama ', romaji: 'ながいき' },
+                    { kanji: '願い事', answer: 'Keinginan, kemauan, harapan ', romaji: 'ねがいこと' },
+                    { kanji: '合格', answer: 'Lulus ', romaji: 'ごうかく' },
+                    { kanji: '試験', answer: 'Ujian ', romaji: 'しけん' },
+                    { kanji: '大人', answer: 'Orang Dewasa ', romaji: 'おとな' },
+                    { kanji: '～式（成人式）', answer: 'Upacara ~(upacara kedewasaan) ', romaji: '～しき（せいじんしき）' },
+                    { kanji: '～市（さいたま市）', answer: 'Kota~(kota saitama) ', romaji: '～し（さいたまし）' },
+                    { kanji: '商品', answer: 'Barang dagangan ', romaji: 'しょうひん' },
+                    { kanji: '市場', answer: 'Pasar ', romaji:'いちば' },
+                    { kanji: '電気製品', answer: 'Peralatan listrik ', romaji: 'でんきせいひん' },
+                    { kanji: '電子レンジ', answer: 'Kompor gas ', romaji: 'でんしレンジ' },
+                    { kanji: '～機（そうじ機）', answer: 'Mesin~(mesin penghisap debu) ', romaji: '～き（そうじき）' },
+                    { kanji: '店員', answer: 'Penjaga toko ', romaji: 'てんいん' },
+                    { kanji: '調子', answer: 'Nada, irama ', romaji: 'ちょうし' },
+                    { kanji: '悪い', answer: 'Jelek ', romaji: 'わるい' },
+                    { kanji: '動きます', answer: 'Bergerak ', romaji: 'うごきます' },
+                    { kanji: '考えます', answer: 'Berfikir ', romaji: 'かんがえます' },
+                    { kanji: '音', answer: 'Suara ', romaji: 'おと' },
+                    { kanji: '出ます', answer: 'Keluar ', romaji: 'でます' },
+                    { kanji: '機能', answer: 'Fungsi ', romaji: 'きのう' },
+                    { kanji: '省エネ', answer: 'Penghematan energy ', romaji: 'しょうエネ' },
+                    { kanji: '日本製', answer: 'Produk/buatan jepang ', romaji: 'にほんせい' },
+                    { kanji: '重い', answer: 'Berat ', romaji: 'おもい' },
+                    { kanji: '軽い', answer: 'Ringan ', romaji: 'かるい' },
+                    { kanji: '静か', answer: 'Tenang ', romaji: 'しずか' },
+                    { kanji: '早く', answer: 'Cepat ', romaji: 'はやく' },
+                    { kanji: '方（こっちの方）', answer: 'Arah(arah disini) ', romaji: 'ほう（こっちのほう）' },
+                    { kanji: '洗います', answer: 'Mencuci ', romaji: 'あらいます' },
+                    { kanji: '満足します', answer: 'Puas, merasa puas ', romaji: 'まんぞくします' },
+                    { kanji: '京都', answer: 'Kyoto ', romaji: 'きょうと' },
+                    { kanji: '神社', answer: 'Kuil sinto ', romaji: 'じんじゃ' },
+                    { kanji: 'お寺', answer: 'Kuil ', romaji: 'おてら' },
+                    { kanji: '仏教', answer: 'Agama budha ', romaji: 'ぶっきょう' },
+                    { kanji: '歴史', answer: 'Sejarah ', romaji: 'れきし' },
+                    { kanji: '世界', answer: 'Dunia ', romaji: 'せかい' },
+                    { kanji: '中心', answer: 'Pusat ', romaji: 'ちゅうしん' },
+                    { kanji: '～世紀（８世紀）', answer: 'Abad~ ', romaji: '～せいき（はっせいき）' },
+                    { kanji: '～的', answer: 'Berbau~ / ke~ an ', romaji: '～てき' },
+                    { kanji: '日本的', answer: 'Berbau jepang ', romaji: 'にほんてき' },
+                    { kanji: '歴史的', answer: 'Bersejarah ', romaji: 'れきしてき' },
+                    { kanji: '飲食', answer: 'Makan minum ', romaji: 'いんしょく' },
+                    { kanji: '禁止', answer: 'Larangan ', romaji: 'きんし' },
+                    { kanji: '説明', answer: 'Penjelasan ', romaji: 'せつめい' },
+                    { kanji: '道具', answer: 'Peralatan ', romaji: 'どうぐ' },
+                    { kanji: '博物館', answer: 'Museum ', romaji: 'はくぶつかん' },
+                    { kanji: '必要', answer: 'Keperluan, kebutuhan ', romaji: 'ひつよう' },
+                    { kanji: '～階（２階）', answer: 'Lantai ~ ( lantai 2 ) ', romaji: '～かい（にかい）' },
+                    { kanji: '油', answer: 'Minyak , oli ', romaji: 'あぶら' },
+                    { kanji: '紙', answer: 'Kertas ', romaji: 'かみ' },
+                    { kanji: '温度', answer: 'Suhu , derajat  ', romaji: 'おんど' },
+                    { kanji: '活動', answer: 'Kegiatan , aktivitas ', romaji: 'かつどう' },
+                    { kanji: '会議室', answer: 'Ruang rapat ', romaji: 'かいぎしつ' },
+                    { kanji: '寒い', answer: 'Dingin ( suhu ) ', romaji: 'さむい' },
+                    { kanji: '出します', answer: 'Mengeluarkan , mengirim (surat ) ', romaji: 'だします' },
+                    { kanji: '～度（２８度）', answer: '~derajat ( 28 derajat ) ', romaji: '～ど（にじゅうはちど）' },
+                    { kanji: '～点（１００点）', answer: 'Nilai ~ ( nilai 100 ) ', romaji: '～てん（１００てん）' },
+                    { kanji: '服', answer: 'Baju , pakaian ', romaji: 'ふく' },
+                    { kanji: '自転車', answer: 'Sepeda ', romaji: 'じてんしゃ' },
+                    { kanji: '自動車', answer: 'Mobil ', romaji: 'じどうしゃ' },
+                    { kanji: '売ります', answer: 'Menjual ', romaji: 'うります' },
+                    { kanji: '貸します', answer: 'Meminjamkan ', romaji: 'かします' },
+                    { kanji: '返します', answer: 'Mengembalikan ', romaji: 'かえします' },
+                    { kanji: '変わります', answer: 'Mengganti ', romaji: 'かわります' },
+                    { kanji: '～用', answer: 'Urusan , keperluan ~ ', romaji: '～よう' },
+                    { kanji: '子供用', answer: 'Urusan anak ', romaji: 'こどもよう' },
+                    { kanji: '人生', answer: 'Kehidupan  ', romaji: 'じんせい' },
+                    { kanji: '歌手', answer: 'Penyanyi ', romaji: 'かしゅ' },
+                    { kanji: '選手', answer: 'Atlit, pemain ', romaji: 'せんしゅ' },
+                    { kanji: '画家', answer: 'Pelukis ', romaji: 'がか' },
+                    { kanji: '作家', answer: 'Pengarang ', romaji: 'さっか' },
+                    { kanji: '入学', answer: 'Masuk sekolah ', romaji: 'にゅうがく' },
+                    { kanji: '卒業', answer: 'Lulus ', romaji: 'そつぎょう' },
+                    { kanji: '病気', answer: 'Sakit ', romaji: 'びょうき' },
+                    { kanji: '若い', answer: 'Muda ', romaji: 'わかい' },
+                    { kanji: '生まれます', answer: 'Lahir ', romaji: 'うまれます' },
+                    { kanji: '思い出', answer: 'Kenang-kenangan, kenangan ', romaji: 'おもいで' },
+                    { kanji: '生活', answer: 'Kehidupan ', romaji: 'せいかつ' },
+                    { kanji: '映画', answer: 'Film ', romaji: 'えいが' },
+                    { kanji: '夫', answer: 'Suami ( sendiri ) ', romaji: 'おっと' },
+                    { kanji: '妻', answer: 'Istri ( sendiri ) ', romaji: 'つま' },
+                    { kanji: '両親', answer: 'Orang tua ', romaji: 'りょうしん' },
+                    { kanji: '不便', answer: 'Tidak praktis/Merepotkan ', romaji: 'ふべん' },
+                    { kanji: '選びます', answer: 'Memilih ', romaji: 'えらびます' },
+                    { kanji: '寝ます', answer: 'Tidur ', romaji: 'ねます' },
+                    { kanji: 'サッカー場', answer: 'Lapangan sepak bola ', romaji: 'サッカーじょう' },
+                    { kanji: '試合', answer: 'Pertandingan ', romaji: 'しあい' },
+                    { kanji: '日曜日', answer: 'Minggu ', romaji: 'にちようび' },
+                    { kanji: '強い', answer: 'Kuat ', romaji: 'つよい' },
+                    { kanji: '弱い', answer: 'Lemah ', romaji: 'よわい' },
+                    { kanji: '勝つ', answer: 'Menang ', romaji: 'かつ' },
+                    { kanji: '負ける', answer: 'Kalah ', romaji: 'まける' },
+                    { kanji: '～対～（２対１）', answer: '~lawan~ ( 2 lawan 1 ) ', romaji: '～たい～（にたいいち）' },
+                    { kanji: '庭', answer: 'Halaman ', romaji: 'にわ' },
+                    { kanji: '公園', answer: 'Taman ', romaji: 'こうえん' },
+                    { kanji: '病院', answer: 'Rumah sakit ', romaji: 'びょういん' },
+                    { kanji: '交通', answer: 'Lalu lintas ', romaji: 'こうつう' },
+                    { kanji: '通勤', answer: 'Perjalanan ke kantor ', romaji: 'つうきん' },
+                    { kanji: '安全', answer: 'Keselamatan ', romaji: 'あんぜん' },
+                    { kanji: '危ない', answer: 'Bahaya ', romaji: 'あぶない' },
+                    { kanji: '遠い', answer: 'Jauh ', romaji: 'とおい' },
+                    { kanji: '努める', answer: 'Bekerja ', romaji: 'つとめる' },
+                    { kanji: '～以上（２時間以上）', answer: '~ lebih ( 2 jam lebih ) ', romaji: '～いじょう（にじかんいじょう）' },
+                    { kanji: '～以下（６万円以下）', answer: '~kurang ( kurang dari 6 man yen ) ', romaji: '～いか（ろくまんえんいか）' },
+                    { kanji: '海外', answer: 'Luar negri ', romaji: 'かいがい' },
+                    { kanji: '食生活', answer: 'Susunan makanan ', romaji: 'しょくせいかつ' },
+                    { kanji: '健康', answer: 'Kesehatan ', romaji: 'けんこう' },
+                    { kanji: '家庭料理', answer: 'Masakan rumah tangga ', romaji: 'かていりょうり' },
+                    { kanji: '材料', answer: 'Bahan ', romaji: 'ざいりょう' },
+                    { kanji: '量', answer: 'Jumlah, kuantitas, banyaknya ', romaji: 'りょう' },
+                    { kanji: '米', answer: 'Beras ', romaji: 'こめ' },
+                    { kanji: '～食', answer: 'Makan ~ ', romaji: '～しょく' },
+                    { kanji: '朝食', answer: 'Makan pagi ', romaji: 'ちょうしょく' },
+                    { kanji: '昼食', answer: 'Makan siang ', romaji: 'ちゅうしょく' },
+                    { kanji: '夕食', answer: 'Makan malam ', romaji: 'ゆうしょく' },
+                    { kanji: '外食', answer: 'Makan di luar ', romaji: 'がいしょく' },
+                    { kanji: '定食', answer: 'Makanan dengan menu tetap ', romaji: 'ていしょく' },
+                    { kanji: '住所', answer: 'Alamat ', romaji: 'じゅうしょ' },
+                    { kanji: '訪問', answer: 'Kunjungan ', romaji: 'ほうもん' },
+                    { kanji: '経験', answer: 'Pengalaman ', romaji: 'けいけん' },
+                    { kanji: '親切', answer: 'Ramah ', romaji: 'しんせつ' },
+                    { kanji: '座る', answer: 'Duduk ', romaji: 'すわる' },
+                    { kanji: '立つ', answer: 'Berdiri ', romaji: 'たつ' },
+                    { kanji: '～観（人生観）', answer: 'Pandangan ~ ( pandangan hidup ) ', romaji: '～かん（じんせいかん）' },
+                    { kanji: '約～（約６年間）', answer: 'Kira2, sekitar ( sekitar 6 tahun ) ', romaji: 'やく～（やくろくねんかん）' },
+                    { kanji: '計画', answer: 'Rencana , program ', romaji: 'けいかく' },
+                    { kanji: '自信', answer: 'Percaya diri ', romaji: 'じしん' },
+                    { kanji: '方法', answer: 'Cara ', romaji: 'ほうほう' },
+                    { kanji: '目的', answer: 'Tujuan ', romaji: 'もくてき' },
+                    { kanji: '難しい', answer: 'Sulit ', romaji: 'むずかしい' },
+                    { kanji: '通じる', answer: 'Mengalirkan,menguasai,berhubungan ', romaji: 'つうじる' },
+                    { kanji: '習う', answer: 'Belajar kepada ', romaji: 'ならう' },
+                    { kanji: '学ぶ', answer: 'Belajar ', romaji: 'まなぶ' },
+                    { kanji: '～級', answer: 'Kelas ,tingkat ~ ', romaji: '～きゅう' },
+                    { kanji: '初級', answer: 'Kelas dasar ', romaji: 'しょきゅう' },
+                    { kanji: '中級', answer: 'Kelas menengah ', romaji: 'ちゅうきゅう' },
+                    { kanji: '上級', answer: 'Kelas atas ', romaji: 'じょうきゅう' },
+                    { kanji: '相手', answer: 'Pasangan, lawan ', romaji: 'あいて' },
+                    { kanji: '気持ち', answer: 'Perasaan/Mood ', romaji: 'きもち' },
+                    { kanji: '恋人', answer: 'Pacar ', romaji: 'こいびと' },
+                    { kanji: '出会い', answer: 'Pertemuan ', romaji: 'であい' },
+                    { kanji: '最近', answer: 'Akhir-akhir ini ', romaji: 'さいきん' },
+                    { kanji: '最高', answer: 'Teratas, tertinggi ', romaji: 'さいこう' },
+                    { kanji: '出席', answer: 'Kehadiran ', romaji: 'しゅっせき' },
+                    { kanji: '招待', answer: 'Undangan ', romaji: 'しょうたい' },
+                    { kanji: '～合う（知り合う）', answer: 'Cocok ~ ( kenal mengenal ) ', romaji: '～あう（しりあう）' },
+                    { kanji: '社会人', answer: 'Anggota masyarakat ', romaji: 'しゃかいじん' },
+                    { kanji: '職場', answer: 'Tempat kerja ', romaji: 'しょくば' },
+                    { kanji: '給料', answer: 'Gaji ', romaji: 'きゅうりょう' },
+                    { kanji: '人間関係', answer: 'Hubungan antar manusia ', romaji: 'にんげんかんけい' },
+                    { kanji: '親友', answer: 'Teman karib ', romaji: 'しんゆう' },
+                    { kanji: '恋愛', answer: 'Percintaan , asmara ', romaji: 'れんあい' },
+                    { kanji: '相談', answer: 'Musyawarah ', romaji: 'そうだん' },
+                    { kanji: '心', answer: 'Hati ', romaji: 'こころ' },
+                    { kanji: '心配', answer: 'Khawatir ', romaji: 'しんぱい' },
+                    { kanji: '不安', answer: 'Kegelisahan, kekhawatiran ', romaji: 'ふあん' },
+                    { kanji: 'お客様', answer: 'Tamu ', romaji: 'おきゃく' },
+                    { kanji: '手続き', answer: 'Prosedur ', romaji: 'てつづき' },
+                    { kanji: '飛行機', answer: 'Pesawat terbang ', romaji: 'ひこうき' },
+                    { kanji: '変更', answer: 'Perubahan ', romaji: 'へんこう' },
+                    { kanji: '予定', answer: 'Rencana ', romaji: 'よてい' },
+                    { kanji: '利用', answer: 'Penggunaan, pemakaian ', romaji: 'りよう' },
+                    { kanji: '忘れ物', answer: 'Benda yang tertinggal ', romaji: 'わすれもの' },
+                    { kanji: '助ける', answer: 'Menolong ', romaji: 'たすける' },
+                    { kanji: '～航空（ＪＦ航空）', answer: 'Penerbangan ~ ( penerbangan JF ) ', romaji: '～こうくう（ＪＦこうくう）' },
+                    { kanji: '～便（１１５便）', answer: 'Penerbangan , pos ( pos 115 ) ', romaji: '～びん（いちいちごびん）' },
+                    { kanji: '体力', answer: 'Kekuatan ', romaji: 'たいりょく' },
+                    { kanji: '協力', answer: 'Kerjasama ', romaji: 'きょうりょく' },
+                    { kanji: '担当', answer: 'Petugas ', romaji: 'たんとう' },
+                    { kanji: '報告', answer: 'Melapor ', romaji: 'ほうこく' },
+                    { kanji: '連絡', answer: 'Menghubungi ', romaji: 'れんらく' },
+                    { kanji: '募集', answer: 'Penerimaan, perekrutan ', romaji: 'ぼしゅう' },
+                    { kanji: '輸出', answer: 'Ekspor ', romaji: 'ゆしゅつ' },
+                    { kanji: '輸入', answer: 'Impor ', romaji: 'ゆにゅう' },
+                    { kanji: '会話', answer: 'Percakapan ', romaji: 'かいわ' },
+                    { kanji: '形', answer: 'Bentuk ', romaji: 'かたち' },
+                    { kanji: '漢字', answer: 'Kanji ', romaji: 'かんじ' },
+                    { kanji: '答え', answer: 'Jawaban ', romaji: 'こたえ' },
+                    { kanji: '質問', answer: 'Pertanyaan ', romaji: 'しつもん' },
+                    { kanji: '正しい', answer: 'Benar ', romaji: 'ただしい' },
+                    { kanji: '読解', answer: 'Bacaan ', romaji: 'どっかい' },
+                    { kanji: '表現', answer: 'Pengucapan ', romaji: 'ひょうげん' },
+                    { kanji: '文', answer: 'Kalimat ', romaji: 'ぶん' },
+                    { kanji: '文型', answer: 'Pola kalimat ', romaji: 'ぶんけい' },
+                    { kanji: '文法', answer: 'Tata Bahasa ', romaji: 'ぶんぽう' },
+                    { kanji: 'もう一度', answer: 'Sekali lagi ', romaji: 'もういちど' },
+                    { kanji: '例', answer: 'Contoh ', romaji: 'れい' }, 
+                    { kanji: '練習', answer: 'latihan ', romaji: 'れんしゅう' },
+                    { kanji: '自転車', answer: 'Sepeda ', romaji: 'じてんしゃ' },
+                 
+        ];
+        
+        const kanjiReadings = [
+                  { kanji: '人', kun: 'ひと', on: 'ジン, ニン' },
+                  { kanji: '一', kun: 'ひと(つ)', on: 'イチ, イツ' },
+                  { kanji: '日', kun: 'ひ, か', on: 'ニチ, ジツ' },
+                  { kanji: '大', kun: 'おお(きい)', on: 'ダイ, タイ' },
+                  { kanji: '年', kun: 'とし', on: 'ネン' },
+                  { kanji: '出', kun: 'で(る), だ(す)', on: 'シュツ, スイ' },
+                  { kanji: '本', kun: 'もと', on: 'ホン' },
+                  { kanji: '中', kun: 'なか', on: 'チュウ' },
+                  { kanji: '子', kun: 'こ', on: 'シ, ス' },
+                  { kanji: '見', kun: 'み(る), み(える), み(せる)', on: 'ケン' },
+                  { kanji: '国', kun: 'くに', on: 'コク' },
+                  { kanji: '上', kun: 'うえ, あ(がる), のぼ(る)', on: 'ジョウ, ショウ' },
+                  { kanji: '分', kun: 'わ(ける), わ(かる)', on: 'ブン, フン, ブ' },
+                  { kanji: '生', kun: 'い(きる), う(まれる), なま', on: 'セイ, ショウ' },
+                  { kanji: '行', kun: 'い(く), ゆ(く), おこな(う)', on: 'コウ, ギョウ' },
+                  { kanji: '二', kun: 'ふた(つ)', on: 'ニ' },
+                  { kanji: '間', kun: 'あいだ, ま', on: 'カン, ケン' },
+                  { kanji: '時', kun: 'とき', on: 'ジ' },
+                  { kanji: '気', kun: '-', on: 'キ, ケ' },
+                  { kanji: '十', kun: 'とお', on: 'ジュウ, ジッ' },
+                  { kanji: '女', kun: 'おんな, め', on: 'ジョ, ニョ, ニョウ' },
+                  { kanji: '三', kun: 'みっ(つ)', on: 'サン' },
+                  { kanji: '前', kun: 'まえ', on: 'ゼン' },
+                  { kanji: '入', kun: 'はい(る), い(れる)', on: 'ニュウ' },
+                  { kanji: '小', kun: 'ちい(さい), こ, お', on: 'ショウ' },
+                  { kanji: '後', kun: 'のち, うし(ろ), あと', on: 'ゴ, コウ' },
+                  { kanji: '長', kun: 'なが(い)', on: 'チョウ' },
+                  { kanji: '下', kun: 'した, さ(がる), くだ(る)', on: 'カ, ゲ' },
+                  { kanji: '学', kun: 'まな(ぶ)', on: 'ガク' },
+                  { kanji: '月', kun: 'つき', on: 'ゲツ, ガツ' },
+                  { kanji: '何', kun: 'なに, なん', on: 'カ' },
+                  { kanji: '来', kun: 'く(る), きた(る), き(ます)', on: 'ライ' },
+                  { kanji: '話', kun: 'はな(す), はなし', on: 'ワ' },
+                  { kanji: '山', kun: 'やま', on: 'サン' },
+                  { kanji: '高', kun: 'たか(い)', on: 'コウ' },
+                  { kanji: '今', kun: 'いま', on: 'コン, キン' },
+                  { kanji: '書', kun: 'か(く)', on: 'ショ' },
+                  { kanji: '五', kun: 'いつ(つ)', on: 'ゴ' },
+                  { kanji: '名', kun: 'な', on: 'メイ, ミョウ' },
+                  { kanji: '金', kun: 'かね, かな', on: 'キン, コン' },
+                  { kanji: '男', kun: 'おとこ', on: 'ダン, ナン' },
+                  { kanji: '外', kun: 'そと, はず(す), はず(れる)', on: 'ガイ, ゲ' },
+                  { kanji: '四', kun: 'よっ(つ), よん', on: 'シ' },
+                  { kanji: '先', kun: 'さき', on: 'セン' },
+                  { kanji: '川', kun: 'かわ', on: 'セン' },
+                  { kanji: '東', kun: 'ひがし', on: 'トウ' },
+                  { kanji: '聞', kun: 'き(く), き(こえる)', on: 'ブン, モン' },
+                  { kanji: '語', kun: 'かた(る), かた(らう)', on: 'ゴ' },
+                  { kanji: '九', kun: 'ここの(つ)', on: 'キュウ, ク' },
+                  { kanji: '食', kun: 'た(べる), く(う)', on: 'ショク, ジキ' },
+                  { kanji: '八', kun: 'やっ(つ)', on: 'ハチ' },
+                  { kanji: '水', kun: 'みず', on: 'スイ' },
+                  { kanji: '天', kun: 'あま, あめ', on: 'テン' },
+                  { kanji: '木', kun: 'き, こ', on: 'ボク, モク' },
+                  { kanji: '六', kun: 'むっ(つ)', on: 'ロク' },
+                  { kanji: '万', kun: 'よろず', on: 'マン, バン' },
+                  { kanji: '白', kun: 'しろ, しら', on: 'ハク, ビャク' },
+                  { kanji: '七', kun: 'なな(つ)', on: 'シチ' },
+                  { kanji: '円', kun: 'まる, まる(い)', on: 'エン' },
+                  { kanji: '電', kun: '-', on: 'デン' },
+                  { kanji: '父', kun: 'ちち', on: 'フ' },
+                  { kanji: '北', kun: 'きた', on: 'ホク' },
+                  { kanji: '車', kun: 'くるま', on: 'シャ' },
+                  { kanji: '母', kun: 'はは', on: 'ボ' },
+                  { kanji: '半', kun: 'なか(ば)', on: 'ハン' },
+                  { kanji: '百', kun: 'もも', on: 'ヒャク' },
+                  { kanji: '土', kun: 'つち', on: 'ド, ト' },
+                  { kanji: '西', kun: 'にし', on: 'セイ, サイ' },
+                  { kanji: '読', kun: 'よ(む)', on: 'ドク, トク, トウ' },
+                  { kanji: '千', kun: 'ち', on: 'セン' },
+                  { kanji: '校', kun: '-', on: 'コウ' },
+                  { kanji: '右', kun: 'みぎ', on: 'ウ, ユウ' },
+                  { kanji: '南', kun: 'みなみ', on: 'ナン, ナ' },
+                  { kanji: '左', kun: 'ひだり', on: 'サ' },
+                  { kanji: '友', kun: 'とも', on: 'ユウ' },
+                  { kanji: '火', kun: 'ひ', on: 'カ' },
+                  { kanji: '毎', kun: '-', on: 'マイ' },
+                  { kanji: '雨', kun: 'あめ, あま', on: 'ウ' },
+                  { kanji: '休', kun: 'やす(む), やす(まる)', on: 'キュウ' },
+                  { kanji: '午', kun: '-', on: 'ゴ' },
+                  { kanji: '言', kun: 'い(う), こと', on: 'ゲン, ゴン' },
+                  { kanji: '手', kun: 'て, た', on: 'シュ' },
+                  { kanji: '自', kun: 'みずか(ら)', on: 'ジ, シ' },
+                  { kanji: '者', kun: 'もの', on: 'シャ' },
+                  { kanji: '事', kun: 'こと', on: 'ジ' },
+                  { kanji: '思', kun: 'おも(う)', on: 'シ' },
+                  { kanji: '会', kun: 'あ(う)', on: 'カイ, エ' },
+                  { kanji: '家', kun: 'いえ, や', on: 'カ, ケ' },
+                  { kanji: '的', kun: 'まと', on: 'テキ' },
+                  { kanji: '方', kun: 'かた, かたち', on: 'ホウ' },
+                  { kanji: '地', kun: '-', on: 'チ, ジ' },
+                  { kanji: '目', kun: 'め, ま', on: 'モク, ボク' },
+                  { kanji: '場', kun: 'ば', on: 'ジョウ' },
+                  { kanji: '代', kun: 'か(わる), か(える), よ, しろ', on: 'ダイ, タイ' },
+                  { kanji: '私', kun: 'わたし, わたくし', on: 'シ' },
+                  { kanji: '立', kun: 'た(つ), た(てる)', on: 'リツ, リュウ' },
+                  { kanji: '物', kun: 'もの', on: 'ブツ, モツ' },
+                  { kanji: '田', kun: 'た', on: 'デン' },
+                  { kanji: '体', kun: 'からだ', on: 'タイ, テイ' },
+                  { kanji: '動', kun: 'うご(く), うご(かす)', on: 'ドウ' },
+                  { kanji: '社', kun: 'やしろ', on: 'シャ' },
+                  { kanji: '知', kun: 'し(る)', on: 'チ' },
+                  { kanji: '理', kun: 'ことわり', on: 'リ' },
+                  { kanji: '同', kun: 'おな(じ)', on: 'ドウ' },
+                  { kanji: '心', kun: 'こころ', on: 'シン' },
+                  { kanji: '発', kun: 'た(つ), あば(く)', on: 'ハツ, ホツ' },
+                  { kanji: '作', kun: 'つく(る)', on: 'サク, サ' },
+                  { kanji: '新', kun: 'あたら(しい), あら(た), にい', on: 'シン' },
+                  { kanji: '世', kun: 'よ', on: 'セイ, セ, ソウ' },
+                  { kanji: '度', kun: 'たび', on: 'ド, ト, タク' },
+                  { kanji: '明', kun: 'あか(るい), あき(らか)', on: 'メイ, ミョウ' },
+                  { kanji: '力', kun: 'ちから', on: 'リョク, リキ' },
+                  { kanji: '意', kun: '-', on: 'イ' },
+                  { kanji: '用', kun: 'もち(いる)', on: 'ヨウ' },
+                  { kanji: '主', kun: 'ぬし, おも', on: 'シュ, ス' },
+                  { kanji: '通', kun: 'とお(る), かよ(う)', on: 'ツウ' },
+                  { kanji: '文', kun: 'ふみ', on: 'ブン, モン' },
+                  { kanji: '屋', kun: 'や', on: 'オク' },
+                  { kanji: '業', kun: 'わざ', on: 'ギョウ, ゴウ' },
+                  { kanji: '持', kun: 'も(つ)', on: 'ジ' },
+                  { kanji: '道', kun: 'みち', on: 'ドウ, トウ' },
+                  { kanji: '身', kun: 'み', on: 'シン' },
+                  { kanji: '不', kun: '-', on: 'フ, ブ' },
+                  { kanji: '口', kun: 'くち', on: 'コウ, ク' },
+                  { kanji: '多', kun: 'おお(い)', on: 'タ' },
+                  { kanji: '野', kun: 'の', on: 'ヤ' },
+                  { kanji: '考', kun: 'かんが(える)', on: 'コウ' },
+                  { kanji: '開', kun: 'ひら(く), あ(く), あ(ける)', on: 'カイ' },
+                  { kanji: '教', kun: 'おし(える), おそ(わる)', on: 'キョウ' },
+                  { kanji: '近', kun: 'ちか(い)', on: 'キン' },
+                  { kanji: '以', kun: '-', on: 'イ' },
+                  { kanji: '問', kun: 'と(う), とん', on: 'モン' },
+                  { kanji: '正', kun: 'ただ(しい), まさ', on: 'セイ, ショウ' },
+                  { kanji: '真', kun: 'ま, まこと', on: 'シン' },
+                  { kanji: '味', kun: 'あじ, あじ(わう)', on: 'ミ' },
+                  { kanji: '界', kun: '-', on: 'カイ' },
+                  { kanji: '無', kun: 'な(い)', on: 'ム, ブ' },
+                  { kanji: '少', kun: 'すく(ない), すこ(し)', on: 'ショウ' },
+                  { kanji: '海', kun: 'うみ', on: 'カイ' },
+                  { kanji: '切', kun: 'き(る), き(れる)', on: 'セツ, サイ' },
+                  { kanji: '重', kun: 'おも(い), かさ(なる)', on: 'ジュウ, チョウ' },
+                  { kanji: '集', kun: 'あつ(まる), あつ(める)', on: 'シュウ' },
+                  { kanji: '員', kun: '-', on: 'イン' },
+                  { kanji: '公', kun: 'おおやけ', on: 'コウ' },
+                  { kanji: '画', kun: '-', on: 'ガ, カク' },
+                  { kanji: '死', kun: 'し(ぬ)', on: 'シ' },
+                  { kanji: '安', kun: 'やす(い)', on: 'アン' },
+                  { kanji: '親', kun: 'おや, した(しい)', on: 'シン' },
+                  { kanji: '強', kun: 'つよ(い), し(いる)', on: 'キョウ, ゴウ' },
+                  { kanji: '使', kun: 'つか(う)', on: 'シ' },
+                  { kanji: '朝', kun: 'あさ', on: 'チョウ' },
+                  { kanji: '題', kun: '-', on: 'ダイ' },
+                  { kanji: '仕', kun: 'つか(える)', on: 'シ, ジ' },
+                  { kanji: '京', kun: '-', on: 'キョウ, ケイ' },
+                  { kanji: '足', kun: 'あし, た(りる), た(す)', on: 'ソク' },
+                  { kanji: '品', kun: 'しな', on: 'ヒン' },
+                  { kanji: '着', kun: 'き(る), つ(く)', on: 'チャク, ジャク' },
+                  { kanji: '別', kun: 'わか(れる)', on: 'ベツ' },
+                  { kanji: '音', kun: 'おと, ね', on: 'オン, イン' },
+                  { kanji: '元', kun: 'もと', on: 'ゲン, ガン' },
+                  { kanji: '特', kun: '-', on: 'トク' },
+                  { kanji: '風', kun: 'かぜ, かざ', on: 'フウ, フ' },
+                  { kanji: '夜', kun: 'よる, よ', on: 'ヤ' },
+                  { kanji: '空', kun: 'そら, あ(く), から', on: 'クウ' },
+                  { kanji: '有', kun: 'あ(る)', on: 'ユウ, ウ' },
+                  { kanji: '起', kun: 'お(きる), お(こす)', on: 'キ' },
+                  { kanji: '運', kun: 'はこ(ぶ)', on: 'ウン' },
+                  { kanji: '料', kun: '-', on: 'リョウ' },
+                  { kanji: '楽', kun: 'たの(しい), たの(しむ)', on: 'ガク, ラク' },
+                  { kanji: '色', kun: 'いろ', on: 'ショク, シキ' },
+                  { kanji: '帰', kun: 'かえ(る), かえ(す)', on: 'キ' },
+                  { kanji: '歩', kun: 'ある(く), あゆ(む)', on: 'ホ, ブ' },
+                  { kanji: '悪', kun: 'わる(い)', on: 'アク' },
+                  { kanji: '広', kun: 'ひろ(い), ひろ(まる)', on: 'コウ' },
+                  { kanji: '店', kun: 'みせ', on: 'テン' },
+                  { kanji: '町', kun: 'まち', on: 'チョウ' },
+                  { kanji: '住', kun: 'す(む), す(まう)', on: 'ジュウ' },
+                  { kanji: '売', kun: 'う(る), う(れる)', on: 'バイ' },
+                  { kanji: '待', kun: 'ま(つ)', on: 'タイ' },
+                  { kanji: '古', kun: 'ふる(い)', on: 'コ' },
+                  { kanji: '始', kun: 'はじ(める), はじ(まる)', on: 'シ' },
+                  { kanji: '終', kun: 'お(わる), お(える)', on: 'シュウ' },
+                  { kanji: '計', kun: 'はか(る)', on: 'ケイ' },
+                  { kanji: '院', kun: '-', on: 'イン' },
+                  { kanji: '送', kun: 'おく(る)', on: 'ソウ' },
+                  { kanji: '族', kun: '-', on: 'ゾク' },
+                  { kanji: '映', kun: 'うつ(す), うつ(る), は(える)', on: 'エイ' },
+                  { kanji: '買', kun: 'か(う)', on: 'バイ' },
+                  { kanji: '病', kun: 'やまい', on: 'ビョウ, ヘイ' },
+                  { kanji: '早', kun: 'はや(い), はや(まる), はや(める)', on: 'ソウ, サッ' },
+                  { kanji: '質', kun: 'たち, ただ(す), もと', on: 'シツ, シチ, チ' },
+                  { kanji: '台', kun: '-', on: 'ダイ, タイ' },
+                  { kanji: '室', kun: 'むろ', on: 'シツ' },
+                  { kanji: '可', kun: '-', on: 'カ' },
+                  { kanji: '建', kun: 'た(てる), た(つ)', on: 'ケン, コン' },
+                  { kanji: '転', kun: 'ころ(ぶ), ころ(がす)', on: 'テン' },
+                  { kanji: '医', kun: '-', on: 'イ' },
+                  { kanji: '止', kun: 'と(まる), と(める), や(む), や(める)', on: 'シ' },
+                  { kanji: '字', kun: 'あざ, あざな', on: 'ジ' },
+                  { kanji: '工', kun: '-', on: 'コウ, ク' },
+                  { kanji: '急', kun: 'いそ(ぐ)', on: 'キュウ' },
+                  { kanji: '図', kun: 'はか(る)', on: 'ズ, ト' },
+                  { kanji: '黒', kun: 'くろ, くろ(い)', on: 'コク' },
+                  { kanji: '花', kun: 'はな', on: 'カ' },
+                  { kanji: '英', kun: '-', on: 'エイ' },
+                  { kanji: '走', kun: 'はし(る)', on: 'ソウ' },
+                  { kanji: '青', kun: 'あお, あお(い)', on: 'セイ, ショウ' },
+                  { kanji: '答', kun: 'こた(える), こた(え)', on: 'トウ' },
+                  { kanji: '紙', kun: 'かみ', on: 'シ' },
+                  { kanji: '歌', kun: 'うた, うた(う)', on: 'カ' },
+                  { kanji: '注', kun: 'そそ(ぐ)', on: 'チュウ' },
+                  { kanji: '赤', kun: 'あか, あか(い), あか(らむ)', on: 'セキ, シャク' },
+                  { kanji: '春', kun: 'はる', on: 'シュン' },
+                  { kanji: '館', kun: 'やかた', on: 'カン' },
+                  { kanji: '旅', kun: 'たび', on: 'リョ' },
+                  { kanji: '験', kun: 'ため(す), こころ(みる)', on: 'ケン, ゲン' },
+                  { kanji: '写', kun: 'うつ(す), うつ(る)', on: 'シャ' },
+                  { kanji: '去', kun: 'さ(る)', on: 'キョ, コ' },
+                  { kanji: '研', kun: 'と(ぐ)', on: 'ケン' },
+                  { kanji: '飲', kun: 'の(む)', on: 'イン' },
+                  { kanji: '肉', kun: '-', on: 'ニク' },
+                  { kanji: '服', kun: '-', on: 'フク' },
+                  { kanji: '銀', kun: 'しろがね', on: 'ギン' },
+                  { kanji: '茶', kun: '-', on: 'チャ, サ' },
+                  { kanji: '究', kun: 'きわ(める)', on: 'キュウ' },
+                  { kanji: '洋', kun: '-', on: 'ヨウ' },
+                  { kanji: '兄', kun: 'あに', on: 'ケイ, キョウ' },
+                  { kanji: '秋', kun: 'あき', on: 'シュウ' },
+                  { kanji: '堂', kun: '-', on: 'ドウ' },
+                  { kanji: '週', kun: '-', on: 'シュウ' },
+                  { kanji: '習', kun: 'なら(う)', on: 'シュウ' },
+                  { kanji: '試', kun: 'こころ(みる), ため(す)', on: 'シ' },
+                  { kanji: '夏', kun: 'なつ', on: 'カ, ゲ' },
+                  { kanji: '弟', kun: 'おとうと', on: 'テイ, ダイ, デ' },
+                  { kanji: '鳥', kun: 'とり', on: 'チョウ' },
+                  { kanji: '犬', kun: 'いぬ', on: 'ケン' },
+                  { kanji: '夕', kun: 'ゆう', on: 'セキ' },
+                  { kanji: '魚', kun: 'さかな, うお', on: 'ギョ' },
+                  { kanji: '借', kun: 'か(りる)', on: 'シャク' },
+                  { kanji: '飯', kun: 'めし', on: 'ハン' },
+                  { kanji: '駅', kun: '-', on: 'エキ' },
+                  { kanji: '昼', kun: 'ひる', on: 'チュウ' },
+                  { kanji: '冬', kun: 'ふゆ', on: 'トウ' },
+                  { kanji: '姉', kun: 'あね', on: 'シ' },
+                  { kanji: '曜', kun: '-', on: 'ヨウ' },
+                  { kanji: '漢', kun: '-', on: 'カン' },
+                  { kanji: '牛', kun: 'うし', on: 'ギュウ' },
+                  { kanji: '妹', kun: 'いもうと', on: 'マイ' },
+                  { kanji: '貸', kun: 'か(す)', on: 'タイ' },
+                  { kanji: '勉', kun: 'つと(める)', on: 'ベン' }
+                ];
+      
+        const wrongAnswers = [
+          // 100 kata sebelumnya
+          'さかな', 'にく', 'ふく', 'じてんしゃ', 'くるま', 'いえ', 'つき', 'たいよう', 'ひ', 'ひる',
+          'よる', 'にちようび', 'げつようび', 'かようび', 'すいようび', 'もくようび', 'きんようび', 'どようび', 'とし', 'つき',
+          'おんな', 'おとこ', 'ともだち', 'かぞく', 'こども', 'ちち', 'はは', 'ばしょ', 'ひと', 'どうぐ',
+          'しごと', 'せいかつ', 'あける', 'しめる', 'たべる', 'のむ', 'ねる', 'はたらく', 'べんきょうする', 'はなす',
+          'きく', 'みる', 'いく', 'くる', 'かえる', 'みる', 'あるく', 'つかう', 'もつ', 'かく',
+          'よむ', 'たずねる', 'うける', 'てつだう', 'あう', 'さがす', 'なる', 'いる', 'ある', 'ない',
+          'まで', 'あと', 'まえ', 'いま', 'あした', 'きのう', 'らいしゅう', 'さっき', 'まい', 'つぎ',
+          'ぴったり', 'おなじ', 'ちがう', 'ちいさい', 'おおきい', 'たかい', 'ひくい', 'ひろい', 'せまい', 'ながい',
+          'みじかい', 'いっぱい', 'から', 'かんぺき', 'まちがい', 'ただしい', 'よい', 'わるい', 'はやい', 'おそい',
+          'つめたい', 'あつい', 'やわらかい', 'かたい', 'やさしい', 'むずかしい', 'たかい', 'やすい', 'とおい', 'ちかい',
+        
+          // tambahan 300 kata kana
+          'あお', 'あか', 'きいろ', 'みどり', 'しろ', 'くろ', 'ちゃいろ', 'むらさき', 'ピンク', 'グレー',
+          'あさ', 'ばん', 'ひる', 'よる', 'けさ', 'こんばん', 'まえ', 'あと', 'なか', 'そと',
+          'うえ', 'した', 'みぎ', 'ひだり', 'まんなか', 'となり', 'ちかく', 'とおく', 'まる', 'さんかく',
+          'しかく', 'ながい', 'みじかい', 'おもい', 'かるい', 'あつい', 'うすい', 'たかい', 'ひくい', 'ふかい',
+          'あさい', 'おおい', 'すくない', 'はやい', 'おそい', 'あかるい', 'くらい', 'たのしい', 'かなしい', 'おいしい',
+          'まずい', 'あまい', 'からい', 'にがい', 'すっぱい', 'しおからい', 'やさしい', 'むずかしい', 'おおきい', 'ちいさい',
+          'ながい', 'みじかい', 'ひろい', 'せまい', 'たかい', 'ひくい', 'まるい', 'しかくい', 'さんかく', 'まがる',
+          'まっすぐ', 'ひだりまがり', 'みぎまがり', 'まっくら', 'あかるい', 'くらい', 'ふるい', 'あたらしい', 'きれい', 'きたない',
+          'ながれる', 'とまる', 'あるく', 'はしる', 'とぶ', 'およぐ', 'ねる', 'おきる', 'たべる', 'のむ',
+          'みる', 'きく', 'はなす', 'よむ', 'かく', 'あう', 'さがす', 'まつ', 'つかう', 'もつ',
+          'うたう', 'おどる', 'あそぶ', 'はたらく', 'べんきょうする', 'うる', 'かう', 'かりる', 'かえす', 'もらう',
+          'あげる', 'つくる', 'つかう', 'きる', 'ぬぐ', 'はく', 'かぶる', 'つける', 'けす', 'はいる',
+          'でる', 'はい', 'いいえ', 'わかる', 'しる', 'おぼえる', 'わすれる', 'おもう', 'いう', 'きく',
+          'みせる', 'みる', 'ある', 'ない', 'なる', 'する', 'くる', 'いく', 'かえる', 'とぶ',
+          'のる', 'おりる', 'はしる', 'あるく', 'まつ', 'さわる', 'おす', 'ひく', 'おどろく', 'たすかる',
+          'あらう', 'きれい', 'よごれる', 'すき', 'きらい', 'あつまる', 'わかれる', 'つづく', 'やめる', 'はじめる',
+          'おわる', 'たのしむ', 'かなしい', 'くるしい', 'いたい', 'いたむ', 'すごい', 'おそろしい', 'うれしい', 'かなしい',
+          'やさしい', 'むずかしい', 'はやい', 'おそい', 'たかい', 'ひくい', 'おおい', 'すくない', 'あつい', 'つめたい',
+          'あたたかい', 'さむい', 'ちかい', 'とおい', 'はやい', 'おそい', 'ながい', 'みじかい', 'ふかい', 'あさい',
+          'あかるい', 'くらい', 'きれい', 'きたない', 'うすい', 'あつい', 'やわらかい', 'かたい', 'たのしい', 'つまらない',
+          'おいしい', 'まずい', 'あまい', 'からい', 'すっぱい', 'にがい', 'しおからい', 'きもちいい', 'きもちわるい', 'ふしぎ',
+          'ふつう', 'いそがしい', 'ひま', 'おおきい', 'ちいさい', 'たかい', 'ひくい', 'おおい', 'すくない', 'ふるい',
+          'あたらしい', 'つよい', 'よわい', 'ながい', 'みじかい', 'ひろい', 'せまい', 'はやい', 'おそい', 'あかるい'
+        ];
+      
+        
+        let currentQuestionIndex = 0;
+        let correctAnswersCount = 0;
+        let totalQuestions = kanjiList.length;
+        
+        let currentQuestionCount = 0;         // hitung soal yg sudah muncul di sesi ini
+        let currentSession = 1;               // sesi yang sedang dimainkan
+        let sessionKanji = [];                 // kanji sesi acak
+        let userInput = '';
+        let userAnswer = '';
+        let isFinalMode = false; // <— tambahkah
+        let username = "";
+        // ==================== Sesi ====================
+        const sessionsContainer = document.getElementById('sessions');
+        const totalSessions = 19;
+        const sessionSize = Math.ceil(kanjiList.length / totalSessions);
+        let sessionStartIndex = 0;
+        function getSessionSlice(i) {
+        const QUESTIONS_PER_SESSION = 20; // jumlah soal per sesi
+        const start = (i - 1) * QUESTIONS_PER_SESSION;
+        const end = i === totalSessions ? kanjiList.length : start + QUESTIONS_PER_SESSION;
+        return kanjiList.slice(start, end);
+      }
+    for (let i = 1; i <= totalSessions; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = `Sesi `;
+    btn.style.padding = "15px 20px";
+    btn.style.margin = "10px";
+    btn.style.borderRadius = "15px";
+    btn.style.cursor = "pointer"; // selalu bisa dipilih
+    btn.style.backgroundColor = "#008CBA"; // selalu biru
+    btn.style.color = "white";
+    btn.disabled = false; // jangan di-lock
+
+    btn.onclick = () => {
+        isFinalMode = false;     
+        sessionStartIndex = (i - 1) * sessionSize;
+        currentSession = i; // tandai sesi yang aktif
+
+        // ambil 30 kanji sesi ini & acak
+        sessionKanji = shuffle(getSessionSlice(i));
+        currentQuestionIndex = 0;
+        currentQuestionCount = 0;
+        correctAnswersCount = 0;
+
+        document.getElementById('session-container').style.display = 'none';
+        document.getElementById('question-container').style.display = 'block';
+        displayQuestion();
+    };
+
+    sessionsContainer.appendChild(btn);
+}
+        const finalBtn = document.createElement('button');
+        finalBtn.textContent = "Sesi Final";
+        finalBtn.style.padding = "15px 20px";
+        finalBtn.style.margin = "10px";
+        finalBtn.style.borderRadius = "15px";
+        finalBtn.style.cursor = "pointer";
+        finalBtn.style.backgroundColor = "#FF69B4"; // pink
+        finalBtn.style.color = "white";
+        finalBtn.onclick = () => {
+            document.getElementById('session-container').style.display = 'none';
+            document.getElementById('final-sessions-container').style.display = 'block';
+            createFinalSessionButtons();
+        };
+        sessionsContainer.appendChild(finalBtn);
+
+        
+        function startGame() {
+          const input = document.getElementById("username").value.trim();
+          if (!input) {
+            alert("Masukkan username dulu bro!");
+            return;
+          }
+        
+          username = input; // simpan
+          document.getElementById("username-container").style.display = "none";
+          document.getElementById("game-container").style.display = "block";
+        
+          // mulai game dari awal
+          currentQuestionCount = 0;
+          correctAnswersCount = 0;
+          displayFinalQuestion();
+        }
+        
+       function saveUsername() {
+          const input = document.getElementById("usernameInput").value.trim();
+          if (!input) {
+            alert("Masukkan username dulu bro!");
+            return;
+          }
+        
+          username = input; // simpan ke variabel global saja
+        
+          // sembunyikan input, tampilkan menu sesi
+          document.getElementById("username-screen").style.display = "none";
+          document.getElementById("session-container").style.display = "block";
+        }
+        // ==================== Kode kuis ====================
+        function generateChoices(question) {
+            const correct = question.romaji;
+            let wrongs = [];
+            const maxAttempts = 20; // batasi percobaan
+            let attempts = 0;
+        
+            while (wrongs.length < 3 && attempts < maxAttempts) {
+                attempts++;
+                let wrong = correct.split('');
+                const idx = Math.floor(Math.random() * wrong.length);
+                const vowels = ['あ','い','う','え','お'];
+        
+                if (vowels.includes(wrong[idx])) {
+                    let newV = vowels[Math.floor(Math.random() * vowels.length)];
+                    if (newV === wrong[idx]) newV = vowels[(vowels.indexOf(wrong[idx])+1)%vowels.length];
+                    wrong[idx] = newV;
+                } else {
+                    const shift = Math.random() < 0.5 ? -1 : 1;
+                    const newIdx = idx + shift;
+                    if (newIdx >= 0 && newIdx < wrong.length) {
+                        [wrong[idx], wrong[newIdx]] = [wrong[newIdx], wrong[idx]];
+                    }
+                }
+        
+                wrong = wrong.join('');
+                if (wrong !== correct && !wrongs.includes(wrong)) {
+                    wrongs.push(wrong);
+                }
+            }
+        
+            // Jika masih kurang, ambil jawaban random dari pool
+            while (wrongs.length < 3) {
+                const randomWrong = wrongAnswers[Math.floor(Math.random() * wrongAnswers.length)];
+                if (randomWrong !== correct && !wrongs.includes(randomWrong)) wrongs.push(randomWrong);
+            }
+        
+            const choices = shuffle([...wrongs, correct]);
+        
+            // ➕ Tambahin tombol kembali di akhir
+            const choicesContainer = document.getElementById("choices");
+            const backBtn = document.createElement("button");
+            backBtn.textContent = "⬅️ Kembali";
+            backBtn.style.padding = "8px 15px";
+            backBtn.style.marginTop = "15px";
+            backBtn.style.borderRadius = "8px";
+            backBtn.style.cursor = "pointer";
+            backBtn.style.backgroundColor = "#444";
+            backBtn.style.color = "white";
+        
+            backBtn.onclick = () => {
+                document.getElementById('question-container').style.display = 'none';
+                document.getElementById('final-sessions-container').style.display = 'block';
+            };
+        
+            // biar tidak dobel tombol kalau dipanggil ulang
+            if (!choicesContainer.querySelector(".back-btn")) {
+                backBtn.classList.add("back-btn");
+                choicesContainer.appendChild(backBtn);
+            }
+        
+            return choices;
+        }
+// 🔹 Fungsi ambil bacaan kun/on
+        function getKanjiInfo(word) {
+          let details = "";
+          for (const char of word) {
+            if (/[\u4E00-\u9FAF]/.test(char)) {
+              const found = kanjiReadings.find(k => k.kanji === char);
+              if (found) {
+                details += `${char}: 
+                  <span style="color:red;">Kun</span> = ${found.kun || "-"}, 
+                  <span style="color:red;">On</span> = ${found.on || "-"}<br>`;
+              } else {
+                details += `${char}: ❓ Data belum tersedia<br>`;
+              }
+            }
+          }
+          return details;
+        }
+                
+        
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+        
+        function displayQuestion() {
+            if (currentQuestionCount >= sessionKanji.length) {
+                showFinalResult();
+                return;
+            }
+        
+            const question = sessionKanji[currentQuestionCount];
+            document.getElementById('kanji').textContent = question.kanji;
+        
+            const choices = generateChoices(question);
+            const choicesContainer = document.getElementById('choices');
+            choicesContainer.innerHTML = '';
+            choices.forEach((choice) => {
+                const button = document.createElement('button');
+                button.classList.add('choice');
+                button.textContent = choice;
+                button.onclick = () => checkAnswer(choice, question, button);
+                choicesContainer.appendChild(button);
+            });
+        
+            currentQuestionCount++; // hitungan soal sesi
+        }
+        
+        function checkAnswer(selectedAnswer, question, button) {
+                    const choices = document.querySelectorAll('.choice');
+                    choices.forEach(btn => btn.disabled = true);
+                
+                    if (selectedAnswer === question.romaji) {
+                        correctAudio.play();
+                        button.style.backgroundColor = "#4CAF50"; // hijau
+                        document.getElementById('result').innerHTML = 
+                            `✅ Yeeay Benar...🥳<br><span style="color: black; font-weight: bold;"></span><br><br>` 
+                            + getKanjiInfo(question.kanji);
+                        correctAnswersCount++;
+                    } else {
+                        wrongAudio.play();
+                        button.style.backgroundColor = "#f44336"; // merah
+                        choices.forEach(btn => {
+                            if (btn.textContent === question.romaji) {
+                                btn.style.backgroundColor = "#4CAF50"; // tandai yang benar
+                            }
+                        });
+                        document.getElementById('result').innerHTML = 
+                            `❌ Uupps Salah...😔<br><span style="color: black; font-weight: bold;">${question.answer}</span><br><br>` 
+                            + getKanjiInfo(question.kanji);
+                    }
+                
+                    document.getElementById('next-btn').style.display = 'block';
+                }
+        
+            function nextQuestion() {
+            document.getElementById('result').textContent = '';
+            document.getElementById('next-btn').style.display = 'none';
+            if(currentSession === 'final'){
+                displayFinalQuestion();
+            } else {
+                displayQuestion();
+            }
+        }
+
+        function createFinalSessionButtons() {
+            const finalContainer = document.getElementById('final-sessions-container');
+            finalContainer.innerHTML = ''; // hapus tombol sesi lama
+            finalSessionButtons = []; // reset tombol final
+        
+            // tombol sesi final
+            for (let i = 1; i <= totalSessions; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = `Sesi Final ${i}`;
+                btn.style.padding = "20px 20px";
+                btn.style.margin = "5px";
+                btn.style.borderRadius = "15px";
+                btn.style.cursor = "pointer";
+                btn.style.backgroundColor = "#FF69B4"; // pink
+                btn.style.color = "white";
+        
+                btn.onclick = () => {
+                    isFinalMode = true;
+                    currentSession = i;
+                    sessionKanji = shuffle(getSessionSlice(i));
+                    currentQuestionCount = 0;
+                    correctAnswersCount = 0;
+        
+                    finalContainer.style.display = 'none';
+                    document.getElementById('question-container').style.display = 'block';
+                    displayFinalQuestion();
+                };
+        
+                finalContainer.appendChild(btn);
+                finalSessionButtons.push(btn);
+            }
+        
+            // 🔹 tombol kembali tetap di sini, tidak akan hilang
+            const backBtn = document.createElement('button');
+            backBtn.textContent = 'Kembali';
+            backBtn.style.padding = "10px 20px";
+            backBtn.style.margin = "10px";
+            backBtn.style.borderRadius = "10px";
+            backBtn.style.cursor = "pointer";
+            backBtn.style.backgroundColor = "#008CBA"; // biru
+            backBtn.style.color = "white";
+        
+            backBtn.onclick = () => {
+                finalContainer.style.display = 'none';        
+                document.getElementById('session-container').style.display = 'block';
+            };
+        
+            finalContainer.appendChild(backBtn);
+        
+            // 🔹 restore tombol perfect sesi final
+            restorePerfectButtons();
+        }
+        function displayFinalQuestion() {
+                if (currentQuestionCount >= sessionKanji.length) {
+                    showFinalResult();
+                    return;
+                }
+            
+                const question = sessionKanji[currentQuestionCount];
+                document.getElementById('kanji').textContent = question.kanji;
+            
+                const choicesContainer = document.getElementById('choices');
+                choicesContainer.innerHTML = '';
+            
+                const answer = question.romaji.split('');
+            
+                // 🔹 tambah 1 huruf kana random sebagai jawaban salah (pastikan beda dengan jawaban)
+                const kanaChars = ["あ","い","う","え","お","か","き","く","け","こ","さ","し","す","せ","そ",
+                                   "た","ち","つ","て","と","な","に","ぬ","ね","の","は","ひ","ふ","へ","ほ",
+                                   "ま","み","む","め","も","や","ゆ","よ","ら","り","る","れ","ろ","わ","を","ん"];
+                let randomKana;
+                do {
+                    randomKana = kanaChars[Math.floor(Math.random() * kanaChars.length)];
+                } while (answer.includes(randomKana)); // 🔹 pastikan bukan huruf jawaban
+            
+                const shuffledChoices = shuffle([...answer, randomKana]); 
+            
+                clickedLetters = [];
+                userAnswer = '';
+                document.getElementById('result').textContent = '';
+            
+                // 🔹 generate tombol pilihan
+                shuffledChoices.forEach(char => {
+                    const btn = document.createElement('button');
+                    btn.classList.add('choice');
+                    btn.textContent = char;
+            
+                    // tandai tombol dummy (yang random)
+                    if (char === randomKana) btn.dataset.dummy = "true";
+            
+                    btn.onclick = () => {
+                        if (btn.disabled) return; 
+                        typeFinalAnswer(char, question, btn); 
+                    };
+            
+                    choicesContainer.appendChild(btn);
+                });
+            
+                // 🔹 tombol hapu
+            // 🔹 tombol hapus (hapus semua, bukan cuma terakhir)
+            const deleteBtn = document.createElement('button');
+            deleteBtn.textContent = "⌫ Hapus Semua";
+            deleteBtn.style.marginLeft = "10px";
+            deleteBtn.style.padding = "10px 18px";
+            deleteBtn.style.borderRadius = "8px";
+            deleteBtn.onclick = () => {
+                if (userAnswer.length > 0) {
+                    userAnswer = '';
+                    document.getElementById('result').textContent = '';
+                    
+                    // aktifkan kembali semua tombol yang dipilih
+                    clickedLetters.forEach(btn => {
+                        btn.style.backgroundColor = "";
+                        btn.disabled = false;
+                    });
+                    
+                    clickedLetters = []; // kosongkan daftar tombol yang sudah dipilih
+                }
+            };
+            choicesContainer.appendChild(deleteBtn);
+        }
+        
+        function typeFinalAnswer(char, question, btn) {
+            userAnswer += char;
+            document.getElementById('result').textContent = userAnswer;
+        
+            clickedLetters.push(btn);
+            btn.style.backgroundColor = "#FFFF00"; // kuning
+            if (userAnswer.length === question.romaji.length) {
+                const resultDiv = document.getElementById('result');
+                const isCorrect = userAnswer === question.romaji;
+        
+                if (isCorrect) {
+                    correctAudio.play();
+                    resultDiv.innerHTML = `✅ Benar! Jawaban: ${question.romaji} (${question.answer})`;
+                    // semua tombol jadi hijau
+                                document.querySelectorAll("#choices button.choice").forEach(b => {
+                                        if (b.dataset.dummy === "true") {
+                                            b.style.backgroundColor = "red"; // huruf acak salah
+                                        } else {
+                                            b.style.backgroundColor = "limegreen"; // semua huruf jawaban → hijau
+                                        }
+                                    });
+                    correctAnswersCount++;
+                } else {
+                    wrongAudio.play();
+                    resultDiv.innerHTML = `❌ Salah! Jawaban: ${question.romaji} (${question.answer})`;
+                   // semua tombol jadi merah
+                                document.querySelectorAll("#choices button.choice").forEach(b => {
+                                    b.style.backgroundColor = "red";
+                                });
+                }
+        
+                // 🔒 Disable semua tombol pilihan
+                const allBtns = document.querySelectorAll("#choices button");
+                allBtns.forEach(b => b.disabled = true);
+        
+                // ⬅️ Tombol lanjut aja
+                const nextBtn = document.createElement("button");
+                nextBtn.textContent = "➡️ Lanjut";
+                nextBtn.style.marginTop = "10px";
+                nextBtn.style.padding = "8px 15px";
+                nextBtn.style.borderRadius = "8px";
+                nextBtn.style.cursor = "pointer";
+        
+                nextBtn.onclick = () => {
+                    currentQuestionCount++; // ✅ increment pindah ke sini saja!
+                    if (currentQuestionCount >= sessionKanji.length) {
+                        showSesiFinalResult(); 
+                    } else {
+                        userAnswer = '';
+                        displayFinalQuestion();
+                    }
+                };
+        
+                resultDiv.appendChild(document.createElement("br"));
+                resultDiv.appendChild(nextBtn);
+            }
+        }
+        function nextQuestion() {
+            document.getElementById('result').textContent = '';
+            document.getElementById('next-btn').style.display = 'none';
+            if (isFinalMode) {
+                displayFinalQuestion();
+            } else {
+                displayQuestion();
+            }
+        }
+        function showFinalResult() {
+            const score = Math.floor((correctAnswersCount / currentQuestionCount) * 100);
+        
+            let resultText = "";
+            if (score === 100) {
+                resultText = `
+                💖Woooow <span style="color:#ff1493; font-weight:bold;">${username}</span> !!! 💖<br>
+                                                Kamu PERFECT banget!! 🎉<br>
+                                                Semua soal benar 100%! 🏆<br><br>
+                                                Aku bangga banget sama kamu 😘<br>
+                                                Terus semangat ya sayangku, <span style="color:#ff1493; font-weight:bold;">${username}</span> 💕                                            `;
+                const sessionButton = sessionsContainer.children[currentSession - 1];
+                sessionButton.style.backgroundColor = "#FFFF00";
+                sessionButton.style.color = "black";
+                sessionButton.disabled = false;
+                sessionButton.style.cursor = "pointer";
+
+                // ➤ Tambahkan kode ini
+                
+                let perfectNormal = JSON.parse(localStorage.getItem('perfectNormal')) || [];
+                if (!perfectNormal.includes(currentSession)) {
+                    perfectNormal.push(currentSession);
+                    localStorage.setItem('perfectNormal', JSON.stringify(perfectNormal));
+                }
+            }else if (score >= 70) {
+                resultText = `🎉 Selamat <span style="color:#ff1493; font-weight:bold;">${username}</span>, Kamu lulus sesi ! 🏆<br>
+                Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
+                Skor: <span style="color:lime; font-size:24px; font-weight:bold;">%</span>`;
+            } else {
+                resultText = `😢 Sayang sekali <span style="color:#ff1493; font-weight:bold;">${username}</span>, sesi  belum lulus.<br>
+                Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
+                Skor: <span style="color:red; font-size:24px; font-weight:bold;">%</span><br>
+                Coba lagi ya! 💪`;
+            }
+        
+            document.getElementById('question-container').style.display = 'none';
+            document.getElementById('final-result-container').style.display = 'block';
+            document.getElementById('final-result-text').innerHTML = resultText;
+        
+            const retryBtn = document.getElementById('retry-btn');
+            retryBtn.textContent = score >= 70 ? "Lanjut Sesi Berikutnya" : "Belajar Ulang";
+            retryBtn.onclick = () => {
+                document.getElementById('final-result-container').style.display = 'none';
+                restartQuiz();
+            };
+        
+            if (score >= 70 && currentSession < totalSessions) {
+                const nextButton = sessionsContainer.children[currentSession];
+                nextButton.disabled = false; // cukup aktifkan tombol, jangan ubah warnanya
+            }
+        }
+
+       function showSesiFinalResult() {
+            // pakai answered untuk aman kalau sempat double-click
+            const answered = Math.min(currentQuestionCount, sessionKanji.length);
+            const score = Math.floor((correctAnswersCount / (answered || 1)) * 100);
+        
+            let resultText = "";
+            if (score === 100) {
+                resultText = `
+                💖  Woooow <span style="color:ff1493; font-weight:bold;">${username}</span> !!! 💖<br>
+                        Kamu PERFECT banget!! 🎉<br>
+                        Semua soal benar 100%! 🏆<br><br>
+                        Aku bangga banget sama kamu 😘<br>
+                        Terus semangat ya sayangku, <span style="color:ff1493; font-weight:bold;">${username}</span> 💕
+                        `;
+        
+                // 👉 Jangan warnai tombol sesi saat FINAL
+                if (isFinalMode && finalSessionButtons[currentSession - 1]) {
+            const btn = finalSessionButtons[currentSession - 1];
+            btn.style.backgroundColor = "#FFFF00";
+            btn.style.color = "black";
+            btn.disabled = false;
+        }
+
+        // simpan ke localStorage
+        
+        let perfectFinal = JSON.parse(localStorage.getItem('perfectFinal')) || [];
+        if (!perfectFinal.includes(currentSession)) {
+            perfectFinal.push(currentSession);
+            localStorage.setItem('perfectFinal', JSON.stringify(perfectFinal));
+        }
+    } else if (score >= 70) {
+                        resultText = `🎉 Selamat <span style="color:#ff1493; font-weight:bold;">${username}</span>, Kamu lulus sesi ! 🏆<br>
+                        Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
+        Skor: <span style="color:lime; font-size:24px; font-weight:bold;">${score}%</span>`;
+    } else {
+                        resultText = `😢 Sayang sekali <span style="color:#ff1493; font-weight:bold;">${username}</span>, sesi  belum lulus.<br>
+                        Benar: ${correctAnswersCount} dari ${currentQuestionCount} soal.<br>
+        Skor: <span style="color:red; font-size:24px; font-weight:bold;">${score}%</span><br>
+        Coba lagi ya! 💪`;
+    }
+
+    document.getElementById('question-container').style.display = 'none';
+    document.getElementById('final-result-container').style.display = 'block';
+    document.getElementById('final-result-text').innerHTML = resultText;
+
+    const retryBtn = document.getElementById('retry-btn');
+    retryBtn.textContent = score >= 70 ? "Kembali ke Sesi Final" : "Coba Lagi";
+    retryBtn.onclick = () => {
+        // reset supaya soal tidak nambah
+        currentQuestionCount = 0;
+        correctAnswersCount = 0;
+        userAnswer = '';
+    
+        document.getElementById('final-result-container').style.display = 'none';
+        document.getElementById('final-sessions-container').style.display = 'block';
+    
+        // restore warna tombol sesi final yang perfect
+        restorePerfectButtons();
+    };
+
+            if (!isFinalMode && score >= 70 && currentSession < totalSessions) {
+                const nextButton = sessionsContainer.children[currentSession];
+                if (nextButton) nextButton.disabled = false;
+            }
+        }
+
+
+        function restartQuiz() {
+        isFinalMode = false;  // <— tambahkan
+        sessionKanji = shuffle(getSessionSlice(currentSession));
+        currentQuestionCount = 0;
+        correctAnswersCount = 0;
+    
+        document.getElementById('next-btn').textContent = 'Lanjut';
+        document.getElementById('next-btn').onclick = nextQuestion;
+        document.getElementById('result').textContent = '';
+        document.getElementById('next-btn').style.display = 'none';
+    
+        document.getElementById('question-container').style.display = 'none';
+        document.getElementById('session-container').style.display = 'block';
+    
+        restorePerfectButtons();
+    }
+
+    function restorePerfectButtons() {
+        // sesi biasa
+        let perfectNormal = JSON.parse(localStorage.getItem('perfectNormal')) || [];
+        perfectNormal.forEach(sessionNum => {
+            const btn = sessionsContainer.children[sessionNum - 1];
+            if(btn){
+                btn.style.backgroundColor = "#FFFF00"; // kuning
+                btn.style.color = "black";
+                btn.disabled = false;
+                btn.style.cursor = "pointer";
+            }
+        });
+    
+        // sesi final
+        let perfectFinal = JSON.parse(localStorage.getItem('perfectFinal')) || [];
+        perfectFinal.forEach(sessionNum => {
+            const btn = finalSessionButtons[sessionNum - 1];
+            if(btn){
+                btn.style.backgroundColor = "#FFFF00"; // kuning
+                btn.style.color = "black";
+                btn.disabled = false;
+                btn.style.cursor = "pointer";
+            }
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+          document.getElementById('next-btn').onclick = nextQuestion;
+          restorePerfectButtons(); // restore tombol perfect saat pertama load
+      });
+        </script>
+      </body>
+      </html>
