@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Baper Pasangan</title>
+<style>
+body {
+  margin:0;
+  padding:0;
+  font-family:'Arial',sans-serif;
+  text-align:center;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#000; /* hitam polos */
+  overflow:hidden;
+  color:white;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Bintang kecil */
+.star {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  animation: twinkle 2s infinite ease-in-out alternate;
+}
+@keyframes twinkle {
+  from { opacity: 0.2; transform: scale(1); }
+  to { opacity: 1; transform: scale(1.5); }
+}
+#message {
+  font-size:28px;
+  font-weight:bold;
+  text-shadow:2px 2px 10px #ff69b4;
+  max-width:90vw;
+  word-wrap:break-word;
+  z-index:10;
+  position:relative;
+  margin-top:20px;
+  animation: breathe 1s ease-in-out infinite alternate;
+}
+#loveBtn {
+  padding:15px 25px;
+  font-size:20px;
+  border-radius:12px;
+  border:none;
+  background-color:#ff1493;
+  color:white;
+  cursor:pointer;
+  margin-top:30px;
+  transition:0.3s;
+}
+#loveBtn:hover { background-color:#ff69b4; }
+
+/* Foto */
+#mainPhoto {
+  width:200px;
+  height:250px;
+  border-radius:20px;
+  border: 4px solid #ff69b4;
+  object-fit:cover;
+  animation: pulse 2s infinite;
+  box-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493;
+}
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493; }
+  50% { transform: scale(1.1); box-shadow: 0 0 30px #ff69b4, 0 0 60px #ff1493; }
+  100% { transform: scale(1); box-shadow: 0 0 20px #ff69b4, 0 0 40px #ff1493; }
+}
+@keyframes breathe {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Efek sparkle */
+.sparkle {
+  position: absolute;
+  font-size: 20px;
+  opacity: 0;
+  animation: fadeFloat 5s ease-in-out forwards;
+  pointer-events: none;
+}
+@keyframes fadeFloat {
+  0% { transform: scale(0.5) translateY(0); opacity: 0; }
+  20% { opacity: 1; }
+  50% { transform: scale(1.2) translateY(-30px); opacity: 0.8; }
+  100% { transform: scale(1) translateY(-60px); opacity: 0; }
+}
+
+/* Tombol balas */
+#replyBtn {
+  position: absolute;
+  bottom: 50px; /* jarak dari bawah layar */
+  left: 50%;
+  transform: translateX(-50%);
+  padding:10px 20px;
+  background:#ff1493;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  font-size:16px;
+}
+#replyBox {
+  display:none;
+  margin-top:15px;
+}
+#replyInput {
+  padding:10px;
+  width:70%;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+#sendBtn {
+  padding:10px 15px;
+  margin-left:8px;
+  background:#25d366;
+  border:none;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+  <div id="photoContainer"></div>
+  <div id="message"></div>
+  <!-- Musik -->
+  <audio id="bgMusic" src="https://ivank1999.github.io/Ivank/Lagu.mp3" loop></audio>
+  <button id="loveBtn">Coba Klik️ ️</button>
+
+  <!-- Balasan -->
+  <button id="replyBtn" style="display:none;">💌 Klik disini untuk membalas</button>
+  <div id="replyBox">
+    <input type="text" id="replyInput" placeholder="Tulis pesanmu..." />
+    <button id="sendBtn">Kirim</button>
+  </div>
+
+<script>
+const btn = document.getElementById('loveBtn');
+const msg = document.getElementById('message');
+const photoContainer = document.getElementById('photoContainer');
+const music = document.getElementById('bgMusic');
+const replyBtn = document.getElementById('replyBtn');
+const replyBox = document.getElementById('replyBox');
+const sendBtn = document.getElementById('sendBtn');
+const replyInput = document.getElementById('replyInput');
+
+// Ganti dengan nomor WA kamu
+const targetNumber = "6288214400708"; 
+
+const photos = [
+  "https://ivank1999.github.io/Ivank/599c0f21-cd86-45c5-b8fe-e4d9de9e0da9.jpeg",
+  "https://ivank1999.github.io/Ivank/a2327b4f-b5f2-4c19-a098-cc564bfc784f.jpeg",
+  "https://ivank1999.github.io/Ivank/d129bd98-0c59-42b9-abb6-c565d9115e9c.jpeg",
+  "https://ivank1999.github.io/Ivank/184d8118-a949-421b-a77f-92eb500c4e42.jpeg",
+  "https://ivank1999.github.io/Ivank/399d54c6-d05f-4469-9fff-e367ba40bc60.jpeg",
+  "https://ivank1999.github.io/Ivank/4091985d-1aa0-47de-bd3f-977978d9873f.jpeg",
+  "https://ivank1999.github.io/Ivank/63bcbde9-b344-4b6f-9f61-64d8954a8579.jpeg",
+  "https://ivank1999.github.io/Ivank/7dccf6b5-ca28-487f-83bd-efdff9bd53b0.jpeg",
+  "https://ivank1999.github.io/Ivank/8135800b-db30-4d40-a369-bcef035c0303.jpeg",
+  "https://ivank1999.github.io/Ivank/88096556-3abe-4f37-af0e-c12a3e84c139.jpeg",
+  "https://ivank1999.github.io/Ivank/8d3fd142-ee44-4d29-992a-a5ec4e45aca0.jpeg",
+  "https://ivank1999.github.io/Ivank/b5ae5e0c-9326-4bab-9c8c-6fba6971aee7.jpeg",
+  "https://ivank1999.github.io/Ivank/c77ac5e0-38f5-49e3-93be-a302baa7cab4.jpeg",
+  "https://ivank1999.github.io/Ivank/d3fd35e9-1a09-47d8-b75d-202712c2f0a3.jpeg",
+  "https://ivank1999.github.io/Ivank/e7aa8500-6d7c-490e-ba37-cbbd0ac368d1.jpeg",
+  "https://ivank1999.github.io/Ivank/f808eec4-40d0-491a-972a-33966add2deb.jpeg"
+];
+
+btn.addEventListener('click', () => {
+  music.play(); 
+  msg.innerHTML = "I LOVE YOU SAYANG 😘";
+  btn.style.display="none";
+  replyBtn.style.display="block";
+
+  const mainPhoto = document.createElement('img');
+  mainPhoto.id = "mainPhoto";
+  mainPhoto.src = photos[0];
+  photoContainer.appendChild(mainPhoto);
+
+  let idx = 0;
+  setInterval(()=>{
+    idx = (idx + 1) % photos.length;
+    mainPhoto.src = photos[idx];
+  }, 2000);
+  
+  // Bintang
+  function createStars(num) {
+    for(let i=0; i<num; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.top = Math.random() * 100 + 'vh';
+      star.style.left = Math.random() * 100 + 'vw';
+      star.style.animationDuration = (1 + Math.random() * 3) + 's';
+      document.body.appendChild(star);
+    }
+  }
+  createStars(50);
+
+  // Sparkle
+  function createSparkle() {
+    const sparkle = document.createElement('div');
+    sparkle.className = 'sparkle';
+    sparkle.style.left = Math.random() * 100 + 'vw';
+    sparkle.style.top = Math.random() * 100 + 'vh';
+    sparkle.innerHTML = Math.random() > 0.5 ? '✨' : '💖';
+    document.body.appendChild(sparkle);
+    setTimeout(()=> sparkle.remove(), 5000);
+  }
+  setInterval(createSparkle, 1500);
+});
+
+// Balas
+replyBtn.addEventListener('click', () => {
+  replyBox.style.display = "block";
+  replyBtn.style.display = "none";
+});
+
+sendBtn.addEventListener('click', () => {
+  const text = replyInput.value.trim();  // trim dulu
+  if(text !== ""){
+    const encodedText = encodeURIComponent(text); // baru encode
+    window.location.href = `https://wa.me/${targetNumber}?text=${encodedText}`;
+  } else {
+    alert("Pesan masih kosong sayang 😘");
+  }
+});
+</script>
+</body>
+</html>
