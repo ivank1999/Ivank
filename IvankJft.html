@@ -221,7 +221,7 @@
             <p class="question" id="question"> <span id="kanji" class="kanji"></span></p>
             <div class="choices" id="choices"></div>
             <div class="result" id="result"></div>
-            <button class="back-btn" onclick="window.location.href='https://durmad21.github.io/musik/JFTA2.html';">Kembali</button>
+            <button class="back-btn" onclick="goBack()">Kembali</button>
             <button class="next-btn" id="next-btn" style="display: none;">Lanjut</button>
       
             <audio id="background-audio" loop>
@@ -1067,7 +1067,7 @@
       }
     for (let i = 1; i <= totalSessions; i++) {
     const btn = document.createElement('button');
-    btn.textContent = `Sesi `;
+    btn.textContent = `Sesi ${i}`;
     btn.style.padding = "15px 20px";
     btn.style.margin = "10px";
     btn.style.borderRadius = "15px";
@@ -1140,6 +1140,14 @@
           document.getElementById("username-screen").style.display = "none";
           document.getElementById("session-container").style.display = "block";
         }
+              function goBack() {
+  // Sembunyikan layar game
+  document.getElementById("question-container").style.display = "none";
+  document.getElementById("final-result-container").style.display = "none";
+
+  // Tampilkan menu sesi
+  document.getElementById("session-container").style.display = "block";
+}
         // ==================== Kode kuis ====================
         function generateChoices(question) {
             const correct = question.romaji;
