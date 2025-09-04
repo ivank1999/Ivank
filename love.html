@@ -148,6 +148,7 @@ body {
 <button id="fakeBtn">Coba Klik️ ️</button>
 
 <button id="replyBtn" style="display:none;">💌Klik disini untuk membalas💌</button>
+<button id="miniBtn" style="display:none; margin-top:15px; padding:8px 16px; font-size:16px; border-radius:12px; background:#ff1493; color:white; border:none; cursor:pointer;">Coba Klik Lagi</button>
 <div id="replyBox">
   <input type="text" id="replyInput" placeholder="Tulis pesanmu..." />
   <button id="sendBtn">Kirim</button>
@@ -166,7 +167,7 @@ const replyInput = document.getElementById('replyInput');
 
 const targetNumber = "6288214400708"; 
 let clickCount = 0;
-const maxClicks = 10;
+const maxClicks = 15;
 const buffer = 150; // jarak sensitif
 
 function moveFakeButton(event) {
@@ -213,8 +214,9 @@ fakeBtn.addEventListener('touchstart', handleFakeClick);
 function handleFakeClick(e) {
     e.preventDefault(); // penting supaya tidak ada efek default klik/tap
     if(clickCount >= maxClicks){
+
         fakeBtn.style.display = 'none';
-        msg.textContent = "Ngga bisa di klik ya?..🤣";
+        msg.textContent = "Ngga bisa di klik ya?..Haha..";
         setTimeout(()=>{
             msg.textContent = "Yaudah ini";
             btn.style.display = 'block';
@@ -225,7 +227,12 @@ function handleFakeClick(e) {
         clickCount++;
     }
 }
-
+miniBtn.addEventListener('click', ()=>{
+    msg.textContent = "AKU KANGEN SAYANG 🥹";
+    msg.className = "msg-normal"; // teks normal, tidak animasi
+    miniBtn.style.display = "none";
+    replyBtn.style.display = "block"; // tombol reply muncul setelah klik
+});
 // Tombol asli klik
 btn.addEventListener('click', ()=>{
   music.play();
@@ -256,7 +263,14 @@ btn.addEventListener('click', ()=>{
   mainPhoto.id = "mainPhoto";
   mainPhoto.src = photos[0];
   photoContainer.appendChild(mainPhoto);
-
+// Pastikan tombol reply tersembunyi saat awal
+  replyBtn.style.display = "none";
+  
+// Tampilkan miniBtn setelah 3 detik
+  // Tampilkan miniBtn setelah 3 detik
+  setTimeout(()=>{
+      miniBtn.style.display = "inline-block";
+  }, 5000);
   let idx = 0;
   setInterval(()=>{
     idx = (idx+1)%photos.length;
