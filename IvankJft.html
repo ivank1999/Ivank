@@ -1270,7 +1270,7 @@
                         correctAudio.play();
                         button.style.backgroundColor = "#4CAF50"; // hijau
                         document.getElementById('result').innerHTML = 
-                            `✅ Yeeay Benar...🥳<br><span style="color: black; font-weight: bold;"></span><br><br>` 
+                            `✅ Yeeay Benar...🥳<br><span style="color: black; font-weight: bold;">${question.answer}</span><br><br>` 
                             + getKanjiInfo(question.kanji);
                         correctAnswersCount++;
                     } else {
