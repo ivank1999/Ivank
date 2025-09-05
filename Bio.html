@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ivank Link Bio</title>
+  <title>Priwex Link Bio</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -81,6 +81,26 @@
       background: #333;
       color: white;
     }
+    button.btn {
+      display: block;
+      background: white;
+      color: #333;
+      text-decoration: none;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: 0.3s;
+      cursor: pointer;
+      width: 100%;       /* biar lebar sama */
+      font-size: 16px;   /* samain dengan <a class="btn"> */
+      font-family: Arial, sans-serif; /* samain font */
+    }
+    
+    button.btn:hover {
+      background: #333;
+      color: white;
+    }
     #formMessage {
       margin-top: 15px;
       font-weight: bold;
@@ -90,13 +110,17 @@
 <body>
   <div class="container">
     <h1>👋 Halo, saya Priwex</h1>
-    <p>Belajar Bahasa Jepang & Terima Request Script HTML</p>
+    <p>Game Belajar B.Jepang & Terima Request Script HTML</p>
 
-    <a class="btn" href="https://your-demo-game-link.com" target="_blank">🎮 Coba Demo Game Kanji</a>
+<button class="btn" onclick="window.location.href='https://ivank1999.github.io/Ivank/Trial.html';">
+  🎮 Coba Demo / Trial Game Kanji
+</button>
     <div class="btn" onclick="toggleForm()">📝 Request Script HTML</div>
 
     <a class="btn" href="https://tiktok.com/@priwexx.com" target="_blank">📱 TikTok Saya</a>
-
+    
+    <a class="btn" href="(link masih kosong)" target="_blank">📱 Instagram Saya</a>
+    
     <!-- FORM REQUEST -->
     <div id="requestForm" class="form-container">
       <h2>📝 Form Request Script</h2>
@@ -120,10 +144,11 @@
       <div id="formMessage"></div>
     </div>
 
-    <div class="footer">© 2025 Ivank | HTML Bio Page</div>
+    <div class="footer">© 2025 Priwex | HTML Bio Page</div>
   </div>
 
   <script>
+
     function toggleForm() {
       let form = document.getElementById("requestForm");
       form.style.display = (form.style.display === "block") ? "none" : "block";
