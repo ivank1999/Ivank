@@ -192,6 +192,16 @@
         </head>
         <body>
           <div id="timer"></div>
+                div id="trialPopup" style="display:none; position:fixed; top:0; left:0; 
+              width:100%; height:100%; background:rgba(0,0,0,0.8); 
+              color:white; font-size:20px; text-align:center; 
+              padding-top:200px; z-index:9999; pointer-events:auto;">
+            ⏰ Waktu trial habis! <br>
+            Jangan lupa Follow ya, Biar bisa main sepuasnya 🙌
+            <br><br>
+            <button onclick="redirectUser()" 
+              style="padding:10px 20px; font-size:18px; cursor:pointer;">OK</button>
+          </div>
            <div id="author">Made by: <span>Ivank</span></div>
           <!-- 🔹 Halaman input username -->
             <div id="username-screen">
@@ -1132,23 +1142,25 @@
 let timer = setInterval(() => {
   timeLeft--;
 
-  // kalau lo punya elemen buat nampilin waktu
+  // update tampilan waktu
   document.getElementById("timer").textContent = timeLeft + " detik";
 
   if (timeLeft <= 0) {
     clearInterval(timer);
 
-    // munculin pesan waktu habis
-    alert("⏰ Waktu trial habis! Untuk main lagi, silakan share dan follow TikTok Aku ya 🙌");
+    // munculin popup custom
+    document.getElementById("trialPopup").style.display = "block";
 
     // disable semua tombol game
     let buttons = document.querySelectorAll("button");
-    buttons.forEach(btn => btn.disabled = true);
-
-    // atau langsung redirect ke link lain
-     window.location.href = "https://ivank1999.github.io/Ivank/Bio.html";
+    buttons.forEach(btn => btn.disabled = false);
   }
 }, 1000);
+
+// fungsi buat redirect
+function redirectUser() {
+  window.location.href = "https://ivank1999.github.io/Ivank/Bio.html";
+}
        function saveUsername() {
           const input = document.getElementById("usernameInput").value.trim();
           if (!input) {
