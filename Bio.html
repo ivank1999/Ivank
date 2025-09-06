@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -118,6 +119,21 @@
 <button class="btn" onclick="window.location.href='https://ivank1999.github.io/Ivank/kana.html';">
   🎮 Coba Trial Game Hiragana & Katakana
 </button>
+<!-- Tambahin tombol Bucin Buat Pacar -->
+<button class="btn" onclick="toggleBucin()">💖 BUCIN BUAT PACAR</button>
+
+<!-- Daftar link Bucin -->
+<div id="bucinList" style="display:none; margin-top:15px;">
+  <button class="btn" onclick="window.location.href='https://ivank1999.github.io/Ivank/Love1.html';">
+    ✨ Bucin Script 1
+  </button>
+  <!-- Tambah link lain di bawah -->
+  <!--
+  <button class="btn" onclick="window.location.href='LINK_LAIN';">
+    ✨ Bucin Script 2
+  </button>
+  -->
+</div>
     <div class="btn" onclick="toggleForm()">📝 Request Script HTML</div>
 
     <a class="btn" href="https://tiktok.com/@priwexx.com" target="_blank">📱 TikTok Saya</a>
@@ -154,7 +170,10 @@
   </div>
 
   <script>
-
+function toggleBucin() {
+    let list = document.getElementById("bucinList");
+    list.style.display = (list.style.display === "block") ? "none" : "block";
+}
     function toggleForm() {
       let form = document.getElementById("requestForm");
       form.style.display = (form.style.display === "block") ? "none" : "block";
@@ -189,5 +208,4 @@
     });
   </script>
 </body>
-</html>
 </html>
