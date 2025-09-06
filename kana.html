@@ -321,6 +321,16 @@
         <button class="button" onclick="startLearning('hiragana', 'A')">Hiragana </button>
         <button class="button" onclick="startLearning('katakana', 'A')">Katakana </button>
     </div>
+<div id="trialPopup" style="display:none; position:fixed; top:0; left:0; 
+              width:100%; height:100%; background:rgba(0,0,0,0.8); 
+              color:white; font-size:20px; text-align:center; 
+              padding-top:200px; z-index:9999; pointer-events:auto;">
+            ⏰ Waktu trial habis! <br>
+            Untuk main lagi, silakan request script ke saya 🙌
+            <br><br>
+            <button onclick="redirectUser()" 
+              style="padding:10px 20px; font-size:18px; cursor:pointer;">OK</button>
+          </div>
     <div id="timer"></div>
     <div id="end-screen" class="end-screen">
         <h1>Permainan Selesai!</h1>
@@ -560,27 +570,29 @@
             
               startCountdown();
         }
-let timeLeft = 60; // 120 detik = 2 menit
+let timeLeft = 2; // 120 detik = 2 menit
 let timer = setInterval(() => {
   timeLeft--;
 
-  // kalau lo punya elemen buat nampilin waktu
+  // update tampilan waktu
   document.getElementById("timer").textContent = timeLeft + " detik";
 
   if (timeLeft <= 0) {
     clearInterval(timer);
 
-    // munculin pesan waktu habis
-    alert("⏰ Waktu trial habis! Untuk main lagi, silakan share dan follow TikTok Aku ya 🙌");
+    // munculin popup custom
+    document.getElementById("trialPopup").style.display = "block";
 
     // disable semua tombol game
     let buttons = document.querySelectorAll("button");
     buttons.forEach(btn => btn.disabled = true);
-
-    // atau langsung redirect ke link lain
-     window.location.href = "https://ivank1999.github.io/Ivank/Bio.html";
   }
 }, 1000);
+
+// fungsi buat redirect
+function redirectUser() {
+  window.location.href = "https://ivank1999.github.io/Ivank/Bio.html";
+}
         function startCountdown() {
           let timeLeft = 10; // Mulai dengan 10 detik
           const timerDiv = document.getElementById("timer");
