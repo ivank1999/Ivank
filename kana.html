@@ -301,8 +301,6 @@
 </head>
 <body>
 <body>
-
-
 <!-- Audio Background Music -->
         <audio id="background-audio" loop autoplay>
             <source src="https://adewij.github.io/Adewij/backsound.mp3" type="audio/mp3">
@@ -317,13 +315,13 @@
     
     <div class="menu active" id="menu">
         <h1>Pilih Mode</h1>
-        
+      
         </body>
         </html>
         <button class="button" onclick="startLearning('hiragana', 'A')">Hiragana </button>
         <button class="button" onclick="startLearning('katakana', 'A')">Katakana </button>
     </div>
-    
+    <div id="timer"></div>
     <div id="end-screen" class="end-screen">
         <h1>Permainan Selesai!</h1>
         <p id="final-score"></p>
@@ -562,7 +560,27 @@
             
               startCountdown();
         }
+let timeLeft = 60; // 120 detik = 2 menit
+let timer = setInterval(() => {
+  timeLeft--;
 
+  // kalau lo punya elemen buat nampilin waktu
+  document.getElementById("timer").textContent = timeLeft + " detik";
+
+  if (timeLeft <= 0) {
+    clearInterval(timer);
+
+    // munculin pesan waktu habis
+    alert("⏰ Waktu trial habis! Untuk main lagi, silakan share dan follow TikTok Aku ya 🙌");
+
+    // disable semua tombol game
+    let buttons = document.querySelectorAll("button");
+    buttons.forEach(btn => btn.disabled = true);
+
+    // atau langsung redirect ke link lain
+     window.location.href = "https://ivank1999.github.io/Ivank/Bio.html";
+  }
+}, 1000);
         function startCountdown() {
           let timeLeft = 10; // Mulai dengan 10 detik
           const timerDiv = document.getElementById("timer");
@@ -574,7 +592,7 @@
           }
         
           // Perbarui timer pertama
-          timerDiv.innerText = `Waktu: `;
+          timerDiv.innerText = `Waktu: ${timeLeft}`;
         
           // Jalankan interval countdown
           const countdownInterval = setInterval(() => {
@@ -591,7 +609,7 @@
               });
             // Perbarui timer dengan warna merah
             // Perbarui timer dengan warna merah dan tampilkan nilai detik yang tersisa
-                timerDiv.innerText = `Waktu: ; `; 
+                timerDiv.innerText = `Waktu: ; ${timeLeft}`; 
         
             if (timeLeft <= 0) {
               clearInterval(countdownInterval); // Berhentikan timer
@@ -784,7 +802,7 @@
              const percentage = (correctAnswers / totalQuestions) * 100;  // Persentase dari soal yang benar
              
              // Tampilkan skor akhir
-             document.getElementById("final-score").textContent = ` /  (%)`;
+             document.getElementById("final-score").textContent = `${correctAnswers} / ${totalQuestions} ${percentage.toFixed(2)}(%)`;
          
              // Tentukan lulus atau tidak lulus berdasarkan persentase
              let resultMessage = '';
@@ -802,8 +820,7 @@
              // Tampilkan layar akhir
              document.getElementById("end-screen").classList.add("active");
          }
-
-        backgroundAudio.muted = true;
+       backgroundAudio.muted = true;
         correctAudio.muted = true;
         wrongAudio.muted = true;
     
@@ -828,3 +845,4 @@
         }
     </script>
 </body>
+</html>
