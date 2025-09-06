@@ -1,154 +1,168 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Love Adventure</title>
+  <title>Bucin Journey</title>
   <style>
     body {
       margin: 0;
       padding: 0;
       height: 100vh;
-      background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      background: linear-gradient(135deg, #ff0844, #ffb199);
       display: flex;
       justify-content: center;
       align-items: center;
       flex-direction: column;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
+      font-family: 'Arial Rounded MT Bold', sans-serif;
       color: #fff;
       text-align: center;
       overflow: hidden;
-      transition: background 1s ease;
     }
     h1 {
-      font-size: 80px;
-      margin-bottom: 30px;
-      text-shadow: 3px 3px 18px rgba(0,0,0,0.6);
+      font-size: 70px;
+      margin-bottom: 20px;
+      text-shadow: 3px 3px 15px rgba(0,0,0,0.5);
     }
     p {
-      font-size: 45px;
+      font-size: 35px;
       margin-bottom: 40px;
     }
     button {
-      font-size: 35px;
-      padding: 25px 55px;
-      margin: 20px;
+      font-size: 28px;
+      padding: 20px 45px;
+      margin: 15px;
       border: none;
       border-radius: 50px;
       cursor: pointer;
       background: #fff;
       color: #ff3366;
       font-weight: bold;
-      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
       transition: transform 0.3s, background 0.3s, color 0.3s;
     }
     button:hover {
-      transform: scale(1.15);
+      transform: scale(1.1);
       background: #ff3366;
       color: #fff;
     }
+    #gifAnime {
+      width: 250px;
+      margin-bottom: 20px;
+      display: none;
+    }
     #pesan {
-      margin-top: 50px;
-      font-size: 50px;
+      margin-top: 20px;
+      font-size: 40px;
       font-weight: bold;
       display: none;
       max-width: 90%;
-      line-height: 1.6em;
-      animation: fadeIn 2s ease forwards, glow 1.5s infinite alternate;
+      animation: zoomIn 1s ease forwards, glow 1.5s infinite alternate;
     }
-    @keyframes fadeIn {
-      from {opacity: 0;}
-      to {opacity: 1;}
+    @keyframes zoomIn {
+      from { transform: scale(0.3); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
     @keyframes glow {
-      from { text-shadow: 0 0 20px #fff, 0 0 30px #ff99cc; }
-      to { text-shadow: 0 0 30px #fff, 0 0 60px #ff3366; }
+      from { text-shadow: 0 0 15px #fff, 0 0 25px #ff99cc; }
+      to { text-shadow: 0 0 25px #fff, 0 0 45px #ff3366; }
     }
-    /* emoji rain */
-    .fall {
+    /* animasi love rain */
+    .love {
       position: fixed;
       top: -10px;
-      font-size: 40px;
+      font-size: 28px;
       animation: fall linear forwards;
+      color: #fff;
+      text-shadow: 0 0 5px #ff3366;
     }
     @keyframes fall {
       to {
-        transform: translateY(110vh) rotate(360deg);
+        transform: translateY(110vh);
         opacity: 0;
       }
     }
   </style>
 </head>
 <body>
-  <h1 id="judul">💘 Love Adventure 💘</h1>
-  <p id="teks">Malam ini kamu kangen aku nggak? 🤔</p>
+  <h1 id="judul">🫶 Pertanyaan 1 🫶</h1>
+  <p id="teks">Kamu sayang aku nggak? 😏</p>
   <div id="btnArea">
-    <button onclick="nextStep(1)">Banget! 😍</button>
-    <button onclick="nextStep(0)">Enggak 🙄</button>
+    <button onclick="nextStep(1)">Sayang 😍</button>
+    <button onclick="nextStep(0)">Biasa aja 🙄</button>
   </div>
+
+  <!-- GIF ANIME -->
+  <img id="gifAnime" src="https://ivank1999.github.io/Ivank/Anime1.gif" alt="Anime Love">
+
+  <!-- PESAN -->
   <div id="pesan"></div>
 
   <script>
     let step = 1;
-    let score = 0;
-
+    let score = 0; // nilai bucin
+  
     function nextStep(answer) {
-      score += answer;
+      score += answer; 
       step++;
-
       let judul = document.getElementById("judul");
       let teks = document.getElementById("teks");
       let btnArea = document.getElementById("btnArea");
       let pesan = document.getElementById("pesan");
-
+      let gifAnime = document.getElementById("gifAnime");
+  
       if (step === 2) {
-        document.body.style.background = "linear-gradient(135deg, #a18cd1, #fbc2eb)";
-        judul.innerHTML = "✨ Level 2 ✨";
-        teks.innerHTML = "Kalau aku ngajak jalan, kamu pilih ke mana? 😏";
+        judul.innerHTML = "🫶 Pertanyaan 2 🫶";
+        teks.innerHTML = "Kalau aku kangen, kamu bakal apa?";
         btnArea.innerHTML = `
-          <button onclick="nextStep(1)">Makan bareng 🍜</button>
-          <button onclick="nextStep(0)">Main game aja 🎮</button>
+          <button onclick="nextStep(1)">Langsung chat kamu 📱</button>
+          <button onclick="nextStep(0)">Tidur aja 😴</button>
         `;
       }
       else if (step === 3) {
-        document.body.style.background = "linear-gradient(135deg, #f6d365, #fda085)";
-        judul.innerHTML = "🔥 Level 3 🔥";
-        teks.innerHTML = "Kalau aku tiba-tiba peluk kamu, reaksi kamu?";
+        judul.innerHTML = "🫶 Pertanyaan 3 🫶";
+        teks.innerHTML = "Kalau aku ngajak ketemu, kamu?";
         btnArea.innerHTML = `
-          <button onclick="nextStep(1)">Peluk balik 😘</button>
-          <button onclick="nextStep(0)">Kaget 🙈</button>
+          <button onclick="nextStep(1)">Dateng dong 😘</button>
+          <button onclick="nextStep(0)">Nolak 🙅</button>
         `;
       }
       else {
         judul.style.display = "none";
         teks.style.display = "none";
         btnArea.style.display = "none";
+        gifAnime.style.display = "block";
         pesan.style.display = "block";
-
+  
         if (score === 3) {
-          pesan.innerHTML = "😍 Kamu bucin maksimal! Aku bahagia banget punya kamu 💖";
-          createRain("❤️");
+          pesan.innerHTML = "💖 Kamu Lucu banget Sayang! Aku bahagia banget punya kamu 😍";
         } else if (score === 2) {
-          pesan.innerHTML = "😘 Kamu lumayan romantis... tetep bikin aku baper kok 💕";
-          createRain("💌");
+          pesan.innerHTML = "😘 Kamu lumayan bucin... tapi tetep aku sayang kok 💕";
         } else if (score === 1) {
-          pesan.innerHTML = "😅 Kamu setengah cuek, tapi aku tetep nggak bisa jauh dari kamu 💘";
-          createRain("🌸");
+          pesan.innerHTML = "🤔 Kamu agak cuek sih... tapi aku tetep nempel kayak lem 😅";
         } else {
-          pesan.innerHTML = "😭 Kamu cuek parah! Tapi aku tetep sayang segila itu sama kamu 💔";
-          createRain("💔");
+          pesan.innerHTML = "😭 Kamu jahat! Tapi gapapa, aku sayang banget jadi tetep cinta 💔";
         }
+  
+        createLoveRain();
       }
+  
+      // 🔥 ini fix utama: hapus fokus dari tombol
+      setTimeout(() => {
+        let btns = document.querySelectorAll("button");
+        btns.forEach(b => b.blur());
+      }, 50);
     }
-
-    function createRain(emoji) {
-      for (let i = 0; i < 35; i++) {
-        let fall = document.createElement("div");
-        fall.className = "fall";
-        fall.innerHTML = emoji;
-        fall.style.left = Math.random() * 100 + "vw";
-        fall.style.animationDuration = (3 + Math.random() * 3) + "s";
-        document.body.appendChild(fall);
-        setTimeout(() => fall.remove(), 7000);
+  
+    function createLoveRain() {
+      for (let i = 0; i < 25; i++) {
+        let love = document.createElement("div");
+        love.className = "love";
+        love.innerHTML = "❤️";
+        love.style.left = Math.random() * 100 + "vw";
+        love.style.animationDuration = (2 + Math.random() * 4) + "s";
+        document.body.appendChild(love);
+        setTimeout(() => love.remove(), 6000);
       }
     }
   </script>
