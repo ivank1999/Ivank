@@ -1,0 +1,830 @@
+
+
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Belajar Huruf Jepang</title>
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #c1b2d8, #d4b6ea);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* Desain card dan layar dengan tampilan modern */
+        .menu, .learning-screen, .quiz-container, .end-screen {
+            display: none;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.85);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 450px;
+            transition: all 0.3s ease;
+        }
+
+        .menu.active, .learning-screen.active, .quiz-container.active, .end-screen.active {
+            display: block;
+        }
+
+        /* Style untuk tombol dan elemen aktif */
+        #menu {
+            display: none;
+        }
+
+        #menu.active {
+            display: block;
+        }
+
+/* Tombol Mode (Hiragana dan Katakana) */
+       .button {
+           background-color: #28a745; /* Warna hijau */
+           color: white;
+           border: none;
+           padding: 10px 40px;  /* Ukuran padding lebih besar untuk tombol */
+           margin: 10px;
+           font-size: 1.5em;  /* Ukuran font lebih besar untuk tombol */
+           border-radius: 10px;  /* Sudut tombol membulat */
+           cursor: pointer;
+           transition: all 0.3s ease;
+           width: 50%; /* Agar tombol memanfaatkan lebar penuh */
+           text-align: center; /* Pastikan teks ada di tengah */
+       }
+       
+       .button:hover {
+           background-color: #218838; /* Gelap sedikit saat hover */
+           box-shadow: 0 4px 10px rgba(40, 167, 69, 0.3); /* Efek bayangan */
+       }
+       
+       .button:active {
+           background-color: #1e7e34; /* Gelap saat tombol ditekan */
+       }
+
+        .kana-card {
+            background: #f9e6d1;
+            color: #4e2c5b;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 15px;
+            font-size: 3em;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .kana-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+        }
+
+/* Tombol Jawaban */
+        .option {
+            background-color: #ffc107; /* Kuning Cerah */
+            color: white; /* Teks putih */
+            border: none; /* Menghapus border default */
+            padding: 15px 30px; /* Padding yang lebih besar untuk tombol */
+            font-size: 1.2em; /* Ukuran font yang lebih besar */
+            border-radius: 10px; /* Sudut tombol lebih bulat */
+            cursor: pointer; /* Menambahkan cursor pointer */
+            transition: background-color 0.3s ease, transform 0.2s ease; /* Animasi transisi */
+        }
+        
+        /* Efek hover untuk tombol jawaban */
+        .option:hover {
+            background-color: #e0a800; /* Kuning lebih gelap saat hover */
+            transform: scale(1.05); /* Sedikit efek zoom saat hover */
+        }
+        
+        /* Efek saat tombol diklik atau aktif */
+        .option:active {
+            background-color: #c69500; /* Kuning lebih tua saat tombol diklik */
+        }
+
+        .button:hover, .option:hover {
+            background: #d84040;
+            transform: scale(1.05);
+        }
+
+.correct {
+            background-color: #28a745; /* Hijau untuk benar */
+            color: white; /* Warna teks putih */
+            border: 2px solid #28a745; /* Border hijau lebih gelap */
+            padding: 8px 15px; /* Padding lebih kecil agar tidak terlalu besar */
+            font-size: 1.1em; /* Ukuran font sedikit lebih kecil */
+            font-weight: bold;
+            border-radius: 20px; /* Membuat sudut lebih membulat */
+            box-shadow: 0 4px 6px rgba(40, 167, 69, 0.3); /* Efek bayangan hijau lebih ringan */
+            transition: all 0.3s ease;
+        }
+        
+        .correct:hover {
+            background-color: #218838; /* Warna hijau lebih gelap saat hover */
+            border-color: #218838;
+            box-shadow: 0 6px 12px rgba(40, 167, 69, 0.5); /* Bayangan lebih besar saat hover */
+        }
+        
+         .back-btn {
+                    padding: 10px 20px;
+                    font-size: 16px;
+                    color: white;
+                    background-color: #007bff;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: background-color 0.3s;
+                }
+        
+                .back-btn:hover {
+                    background-color: #0056b3;
+                }
+        
+        .incorrect {
+            background-color: #dc3545; /* Merah untuk salah */
+            color: white; /* Warna teks putih */
+            border: 2px solid #dc3545; /* Border merah lebih gelap */
+            padding: 8px 15px; /* Padding lebih kecil */
+            font-size: 1.1em; /* Ukuran font sedikit lebih kecil */
+            font-weight: bold;
+            border-radius: 20px; /* Membuat sudut lebih membulat */
+            box-shadow: 0 4px 6px rgba(220, 53, 69, 0.3); /* Efek bayangan merah lebih ringan */
+            transition: all 0.3s ease;
+        }
+        
+        .incorrect:hover {
+            background-color: #c82333; /* Warna merah lebih gelap saat hover */
+            border-color: #c82333;
+            box-shadow: 0 6px 12px rgba(220, 53, 69, 0.5); /* Bayangan lebih besar saat hover */
+        }
+        
+/* Tampilan Akhir (End Screen) */
+        .end-screen {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        
+        .end-screen h1 {
+            font-size: 2.5em;  /* Menambahkan ukuran besar pada judul */
+            margin-bottom: 20px;
+            color: #2c3e50;  /* Warna teks yang lebih gelap */
+        }
+        
+        #final-score {
+            font-size: 2em;  /* Memperbesar ukuran skor akhir */
+            color: #34495e;  /* Warna lebih gelap untuk skor */
+            margin-bottom: 20px;
+        }
+        
+        #result-message-end {
+            font-size: 1.8em;  /* Memperbesar ukuran pesan lulus/tidak lulus */
+            font-weight: bold;
+            color: #e74c3c;  /* Merah default untuk pesan */
+            margin-bottom: 20px;
+        }
+        
+        /* Tombol Main Lagi */
+        .reset-button {
+            background-color: #3498db;  /* Warna biru tombol */
+            color: white;  /* Warna teks putih */
+            font-size: 1.5em;  /* Ukuran font lebih besar */
+            padding: 15px 30px;  /* Padding lebih besar untuk tombol */
+            border: none;
+            border-radius: 10px;  /* Sudut lebih bulat */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        
+        .reset-button:hover {
+            background-color: #2980b9;  /* Warna biru lebih gelap saat hover */
+        }
+        
+        .reset-button:active {
+            background-color: #1d6fa5;  /* Warna biru lebih gelap saat tombol ditekan */
+        }
+        
+/* 
+        /*
+        
+/* /* Tombol Pilihan Jawaban */
+        .option {
+            background: #ffc107; /* Warna kuning */
+            color: white; /* Warna teks putih */
+            border: none;
+            padding: 15px 20px;
+            margin: 10px;
+            font-size: 1.2em;
+            border-radius: 10px; /* Sudut membulat */
+            cursor: pointer;
+            transition: all 0.3s ease; /* Transisi halus */
+        }
+        
+        /* Efek Hover: Warna sedikit lebih gelap saat hover */
+        .option:hover {
+            background: #e0a800; /* Warna kuning lebih gelap */
+            box-shadow: 0 4px 10px rgba(255, 193, 7, 0.3); /* Efek bayangan */
+        }
+        
+        /* Efek saat Tombol Diklik */
+        .option:active {
+            background: #c69500; /* Warna kuning lebih gelap saat tombol ditekan */
+        }
+        
+        /* Tombol Lanjutkan (Jaga Ukuran Tombol) */
+        #continue-btn {
+            background: #007bff; /* Warna biru untuk tombol Lanjutkan */
+            color: white; /* Teks putih */
+            border: none;
+            padding: 5px 10px; /* Padding lebih besar untuk tombol Lanjutkan */
+            margin: 10px;
+            font-size: 1.2em; /* Ukuran font tetap besar */
+            border-radius: 10px; /* Sudut membulat */
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #continue-btn:hover {
+            background: #0056b3; /* Biru lebih gelap saat hover */
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+        
+        #continue-btn:active {
+            background: #004085; /* Biru lebih gelap saat ditekan */
+        }
+        
+        #question {
+            font-size: 4em; /* Ukuran font lebih besar, sesuaikan sesuai kebutuhan */
+            margin: 20px;
+            font-weight: bold;
+            color: #333; /* Warna teks agar lebih jelas */
+            text-align: center; /* Teks di tengah */
+        }
+        
+        .result-message {
+            font-size: 2em;
+            margin-top: 20px;
+            color: #2c3e50;
+        }
+        
+        @keyframes tick {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: scale(0);
+            opacity: 0;
+          }
+        }
+        
+        /* Animasi untuk elemen-elemen yang muncul */
+        .fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<body>
+
+
+<!-- Audio Background Music -->
+        <audio id="background-audio" loop autoplay>
+            <source src="https://adewij.github.io/Adewij/backsound.mp3" type="audio/mp3">
+            Your browser does not support the audio element.
+        </audio>
+    <audio id="correct-audio">
+        <source src="https://adewij.github.io/Adewij/correct.mp3" type="audio/mp3">
+    </audio>
+    <audio id="wrong-audio">
+        <source src="https://adewij.github.io/Adewij/wrong.mp3" type="audio/mp3">
+    </audio>
+    
+    <div class="menu active" id="menu">
+        <h1>Pilih Mode</h1>
+        
+        </body>
+        </html>
+        <button class="button" onclick="startLearning('hiragana', 'A')">Hiragana </button>
+        <button class="button" onclick="startLearning('katakana', 'A')">Katakana </button>
+    </div>
+    
+    <div id="end-screen" class="end-screen">
+        <h1>Permainan Selesai!</h1>
+        <p id="final-score"></p>
+        <p id="result-message-end" style="font-size: 1.5em; color: #e74c3c;"></p> <!-- Pesan Lulus/Tidak Lulus -->
+        <button class="reset-button" onclick="resetGame()">Main Lagi</button>
+    </div>
+
+    <div class="learning-screen" id="learning-screen">
+        <h1>Hafalkan Dulu</h1>
+        <div id="timer"></div>
+        <div id="kana-list"></div>
+        <button class="button" id="continue-btn" onclick="startQuiz()">Lanjut ke Soal</button>
+    </div>
+
+    <div class="quiz-container" id="quiz-container">
+        <h1>Tebak Huruf</h1>
+        <div id="question" style="font-size: 3em; margin: 20px;"></div>
+        <div id="options"></div>
+        <div id="result-message" class="result-message"></div>
+    </div>
+
+    <script>
+        const hiraganaA = [
+            { kana: "あ", romaji: "a" }, { kana: "い", romaji: "i" }, { kana: "う", romaji: "u" },
+            { kana: "え", romaji: "e" }, { kana: "お", romaji: "o" }
+        ];
+
+        const katakanaA = [
+            { kana: "ア", romaji: "a" }, { kana: "イ", romaji: "i" }, { kana: "ウ", romaji: "u" },
+            { kana: "エ", romaji: "e" }, { kana: "オ", romaji: "o" }
+        ];
+
+        const hiraganaKA = [
+            { kana: "か", romaji: "ka" }, { kana: "き", romaji: "ki" }, { kana: "く", romaji: "ku" },
+            { kana: "け", romaji: "ke" }, { kana: "こ", romaji: "ko" }
+        ];
+
+        const katakanaKA = [
+            { kana: "カ", romaji: "ka" }, { kana: "キ", romaji: "ki" }, { kana: "ク", romaji: "ku" },
+            { kana: "ケ", romaji: "ke" }, { kana: "コ", romaji: "ko" }
+        ];
+
+        const hiraganaSA = [
+            { kana: "さ", romaji: "sa" }, { kana: "し", romaji: "shi" }, { kana: "す", romaji: "su" },
+            { kana: "せ", romaji: "se" }, { kana: "そ", romaji: "so" }
+        ];
+
+        const katakanaSA = [
+            { kana: "サ", romaji: "sa" }, { kana: "シ", romaji: "shi" }, { kana: "ス", romaji: "su" },
+            { kana: "セ", romaji: "se" }, { kana: "ソ", romaji: "so" }
+        ];
+        
+        const hiraganaTA = [
+            { kana: "た", romaji: "ta" }, { kana: "ち", romaji: "chi" }, { kana: "つ", romaji: "tsu" },
+            { kana: "て", romaji: "te" }, { kana: "と", romaji: "to" }
+        ];
+
+        const katakanaTA = [
+            { kana: "タ", romaji: "ta" }, { kana: "チ", romaji: "chi" }, { kana: "ツ", romaji: "tsu" },
+            { kana: "テ", romaji: "te" }, { kana: "ト", romaji: "to" }
+        ];
+    
+        const hiraganaNA = [
+            { kana: "な", romaji: "na" }, { kana: "に", romaji: "ni" }, { kana: "ぬ", romaji: "nu" },
+            { kana: "ね", romaji: "ne" }, { kana: "の", romaji: "no" }
+        ];
+        
+        const katakanaNA = [
+            { kana: "ナ", romaji: "na" }, { kana: "ニ", romaji: "ni" }, { kana: "ヌ", romaji: "nu" },
+            { kana: "ネ", romaji: "ne" }, { kana: "ノ", romaji: "no" }
+        ];
+        
+        const hiraganaHA = [
+            { kana: "は", romaji: "ha" }, { kana: "ひ", romaji: "hi" }, { kana: "ふ", romaji: "fu" },
+            { kana: "へ", romaji: "he" }, { kana: "ほ", romaji: "ho" }
+        ];
+        
+        const katakanaHA = [
+            { kana: "ハ", romaji: "ha" }, { kana: "ヒ", romaji: "hi" }, { kana: "フ", romaji: "fu" },
+            { kana: "ヘ", romaji: "he" }, { kana: "ホ", romaji: "ho" }
+        ];
+        
+        const hiraganaMA = [
+            { kana: "ま", romaji: "ma" }, { kana: "み", romaji: "mi" }, { kana: "む", romaji: "mu" },
+            { kana: "め", romaji: "me" }, { kana: "も", romaji: "mo" }
+        ];
+        
+        const katakanaMA = [
+            { kana: "マ", romaji: "ma" }, { kana: "ミ", romaji: "mi" }, { kana: "ム", romaji: "mu" },
+            { kana: "メ", romaji: "me" }, { kana: "モ", romaji: "mo" }
+        ];
+        
+        const hiraganaYA = [
+            { kana: "や", romaji: "ya" }, { kana: "ゆ", romaji: "yu" }, { kana: "よ", romaji: "yo" }
+        ];
+        
+        const katakanaYA = [
+            { kana: "ヤ", romaji: "ya" }, { kana: "ユ", romaji: "yu" }, { kana: "ヨ", romaji: "yo" }
+        ];
+        
+        const hiraganaRA = [
+            { kana: "ら", romaji: "ra" }, { kana: "り", romaji: "ri" }, { kana: "る", romaji: "ru" },
+            { kana: "れ", romaji: "re" }, { kana: "ろ", romaji: "ro" }
+        ];
+        
+        const katakanaRA = [
+            { kana: "ラ", romaji: "ra" }, { kana: "リ", romaji: "ri" }, { kana: "ル", romaji: "ru" },
+            { kana: "レ", romaji: "re" }, { kana: "ロ", romaji: "ro" }
+        ];
+        
+        const hiraganaWA = [
+            { kana: "わ", romaji: "wa" }, { kana: "を", romaji: "wo" }, { kana: "ん", romaji: "n" }
+        ];
+        
+        const katakanaWA = [
+            { kana: "ワ", romaji: "wa" }, { kana: "ヲ", romaji: "wo" }, { kana: "ン", romaji: "n" }
+        ];
+       // Mendapatkan elemen audio
+        const backgroundAudio = document.getElementById('background-audio');
+        const correctAudio = document.getElementById('correct-audio');
+        const wrongAudio = document.getElementById('wrong-audio');
+        
+        
+        let correctAnswers = 0;  // Variabel untuk menyimpan jumlah soal yang benar
+        let totalQuestions = 0;   // Total soal yang dikerjakan selama permainan
+        let currentMode = '';
+        let currentData = [];
+        let currentIndex = 0;
+        let questionIndex = 0;
+        let questionsPerSet = 5;
+        let score = 0; // Variabel untuk skor pemain
+        let countdownInterval;
+        
+        
+        function startLearning(mode, set) {
+        
+            console.log("Starting learning with mode:", mode, "Set:", set);
+            
+                backgroundAudio.play();
+                backgroundAudio.volume = 0.1; //
+            
+            if (mode === 'hiragana' && set === 'A') {
+                currentData = hiraganaA;
+                currentSet = 'A';
+            } else if (mode === 'katakana' && set === 'A') {
+                currentData = katakanaA;
+                currentSet = 'A';
+            } else if (mode === 'hiragana' && set === 'KA') {
+                currentData = hiraganaKA;
+                currentSet = 'KA';
+            } else if (mode === 'katakana' && set === 'KA') {
+                currentData = katakanaKA;
+                currentSet = 'KA';
+            } else if (mode === 'hiragana' && set === 'SA') {
+                currentData = hiraganaSA;
+                currentSet = 'SA';
+            } else if (mode === 'katakana' && set === 'SA') {
+                currentData = katakanaSA;
+                currentSet = 'SA';
+            } else if (mode === 'hiragana' && set === 'TA') {
+                currentData = hiraganaTA;
+                currentSet = 'TA';
+            } else if (mode === 'katakana' && set === 'TA') {
+                currentData = katakanaTA;
+                currentSet = 'TA';
+            } else if (mode === 'hiragana' && set === 'NA') {
+                currentData = hiraganaNA;
+                currentSet = 'NA';
+            } else if (mode === 'katakana' && set === 'NA') {
+                currentData = katakanaNA;
+                currentSet = 'NA';
+            } else if (mode === 'hiragana' && set === 'HA') {
+                currentData = hiraganaHA;
+                currentSet = 'HA';
+            } else if (mode === 'katakana' && set === 'HA') {
+                currentData = katakanaHA;
+                currentSet = 'HA';
+            } else if (mode === 'hiragana' && set === 'MA') {
+                currentData = hiraganaMA;
+                currentSet = 'MA';
+            } else if (mode === 'katakana' && set === 'MA') {
+                currentData = katakanaMA;
+                currentSet = 'MA';
+            } else if (mode === 'hiragana' && set === 'YA') {
+                currentData = hiraganaYA;
+                currentSet = 'YA';
+            } else if (mode === 'katakana' && set === 'YA') {
+                currentData = katakanaYA;
+                currentSet = 'YA';
+            } else if (mode === 'hiragana' && set === 'RA') {
+                currentData = hiraganaRA;
+                currentSet = 'RA';
+            } else if (mode === 'katakana' && set === 'RA') {
+                currentData = katakanaRA;
+                currentSet = 'RA';
+            } else if (mode === 'hiragana' && set === 'WA') {
+                currentData = hiraganaWA;
+                currentSet = 'WA';
+            } else if (mode === 'katakana' && set === 'WA') {
+                currentData = katakanaWA;
+                currentSet = 'WA';
+             if (currentSet === 'WA' && questionIndex === currentData.length && currentIndex >= currentData.length) {
+                showEndScreen();
+            }
+            }
+        
+            
+            currentMode = mode;
+            currentIndex = 0;
+            questionIndex = 0;
+            document.getElementById("menu").classList.remove("active");
+            showLearning();
+        }
+
+        function showLearning() {
+            const kanaList = document.getElementById("kana-list");
+            const continueBtn = document.getElementById("continue-btn");
+        
+            // Sembunyikan elemen lain
+            document.getElementById("quiz-container").classList.remove("active");
+            document.getElementById("result-message").textContent = ""; // Reset hasil sebelumnya
+        
+            kanaList.innerHTML = ""; // Pastikan tampilan sebelumnya dihapus
+            const learningSet = currentData.slice(currentIndex, currentIndex + questionsPerSet);
+            learningSet.forEach(item => {
+                const div = document.createElement("div");
+                div.className = "kana-card";
+                div.textContent = item.kana + " (" + item.romaji + ")";
+                kanaList.appendChild(div);
+            });
+                 
+        
+            // Tampilkan Daftar Hafalan
+            document.getElementById("learning-screen").classList.add("active");
+            continueBtn.classList.add("active");
+            
+              startCountdown();
+        }
+
+        function startCountdown() {
+          let timeLeft = 10; // Mulai dengan 10 detik
+          const timerDiv = document.getElementById("timer");
+        
+          // Periksa jika elemen benar-benar ada
+          if (!timerDiv) {
+            console.error("Elemen 'timer' tidak ditemukan di DOM.");
+            return;
+          }
+        
+          // Perbarui timer pertama
+          timerDiv.innerText = `Waktu: `;
+        
+          // Jalankan interval countdown
+          const countdownInterval = setInterval(() => {
+            timeLeft--;
+            
+            // Buat animasi setiap detikan
+            createTickAnimation();
+// Fungsi untuk menangani tombol klik "Lanjut"
+              document.getElementById("continue-btn").addEventListener("click", function() {
+                clearInterval(countdownInterval); // Hentikan timer secara paksa
+                document.getElementById("timer").innerText = "Waktu habis!";
+                disableButton();
+                startQuiz();
+              });
+            // Perbarui timer dengan warna merah
+            // Perbarui timer dengan warna merah dan tampilkan nilai detik yang tersisa
+                timerDiv.innerText = `Waktu: ; `; 
+        
+            if (timeLeft <= 0) {
+              clearInterval(countdownInterval); // Berhentikan timer
+              timerDiv.innerText = ""; // Kosongkan timer dari tampilan
+              startQuiz();
+            }
+          }, 1000);
+        }
+         
+        function createTickAnimation() {
+          const tickDiv = document.createElement("div");
+          tickDiv.classList.add("tick-animation");
+        
+          document.body.appendChild(tickDiv);
+        
+          // Force reflow untuk memulai animasi
+          void tickDiv.offsetWidth;
+        
+          // Jalankan animasi dengan CSS
+          tickDiv.style.animation = "tick 0.3s forwards";
+        
+          // Hapus animasi setelah selesai
+          setTimeout(() => {
+            tickDiv.remove();
+          }, 300);
+        }
+    
+
+        function startQuiz() {
+            
+            
+            // Sembunyikan elemen Hafalan
+            document.getElementById("learning-screen").classList.remove("active");
+
+            // Reset elemen terkait
+            document.getElementById("kana-list").innerHTML = "";
+            document.getElementById("result-message").textContent = "";
+
+            // Tampilkan elemen soal
+            document.getElementById("quiz-container").classList.add("active");
+
+            currentData = shuffleArray(currentData.slice(currentIndex)); 
+            questionIndex = 0;
+            loadQuestion();
+        }
+
+      
+        function loadQuestion() {
+            // Cek jika soal sudah habis di set ini
+            if (questionIndex === currentData.length) {  // Gunakan panjang array currentData
+                currentIndex += currentData.length;
+                questionIndex = 0;  // Reset soal
+        
+                // Cek jika ada set berikutnya
+                if (currentIndex < currentData.length) {
+                    // Jika masih ada soal untuk set saat ini
+                    document.getElementById("quiz-container").classList.remove("active");
+                    showLearning(); // Menampilkan daftar hafalan untuk set berikutnya
+                } else {
+                    // Setelah selesai dengan soal untuk set ini, lanjut ke set berikutnya
+                    setTimeout(() => {
+                        // Sesuaikan transisi antar set berdasarkan currentSet
+                        if (currentSet === 'A') {
+                            startLearning(currentMode, 'KA');
+                        } else if (currentSet === 'KA') {
+                            startLearning(currentMode, 'SA');
+                        } else if (currentSet === 'SA') {
+                            startLearning(currentMode, 'TA');
+                        } else if (currentSet === 'TA') {
+                            startLearning(currentMode, 'NA');
+                        } else if (currentSet === 'NA') {
+                            startLearning(currentMode, 'HA');
+                        } else if (currentSet === 'HA') {
+                            startLearning(currentMode, 'MA');
+                        } else if (currentSet === 'MA') {
+                            startLearning(currentMode, 'YA'); // Lanjut ke YA
+                        } else if (currentSet === 'YA') {
+                            startLearning(currentMode, 'RA'); // Lanjut ke RA
+                        } else if (currentSet === 'RA') {
+                            startLearning(currentMode, 'WA'); // Lanjut ke WA
+                        } else if (currentSet === 'WA') {
+                    // Tampilkan layar akhir jika set terakhir selesai
+                    showEndScreen();
+
+            
+                            
+                            document.getElementById("quiz-container").classList.remove("active");
+                          
+                        }
+                    }, 0);
+                }
+                return;
+            }
+        
+        
+            // Load soal berikutnya
+            const currentKana = currentData[questionIndex];
+            document.getElementById("question").textContent = currentKana.kana;
+            document.getElementById("options").innerHTML = "";
+            let answerChoices = [currentKana.romaji];
+                while (answerChoices.length < Math.min(4, currentData.length)) { // Menggunakan Math.min untuk memilih max 4 jawaban
+                    const randomKana = currentData[Math.floor(Math.random() * currentData.length)];
+                    if (!answerChoices.includes(randomKana.romaji)) {
+                        answerChoices.push(randomKana.romaji);
+                    }
+                }
+        
+            answerChoices = shuffleArray(answerChoices);
+            answerChoices.forEach(answer => {
+                const button = document.createElement("button");
+                button.className = "option";
+                button.textContent = answer;
+                button.onclick = () => checkAnswer(answer, currentKana.romaji);
+                document.getElementById("options").appendChild(button);
+            });
+        }
+    
+    
+
+        function checkAnswer(selected, correct) {
+            const resultMessage = document.getElementById("result-message");
+                if (selected === correct) {
+                    resultMessage.textContent = "Jawaban Benar!";
+                    resultMessage.className = "result-message correct";
+                    correctAnswers++;  // Update correc
+                    playCorrectSound(); // Memainkan suara
+                    correctAudio.volume = 0.9; // Suara benar leb
+                    console.log("Skor saat ini:", score); // Debug log// Tambahkan skor jika jawaban benar
+                } else {
+                    resultMessage.textContent = "Jawaban Salah!";
+                    resultMessage.className = "result-message incorrect";
+                    playWrongSound(); // Memainkan suara salah
+                    wrongAudio.volume = 0.5; // Suara salah lebi
+                }
+            
+            totalQuestions++;  
+            questionIndex++;
+            setTimeout(() => {
+                resultMessage.textContent = '';
+                loadQuestion();
+            }, 900);
+        }
+        
+// Fungsi untuk memutar audio benar
+        function playCorrectAudio() {
+            try {
+                correctAudio.play(); // Mulai memutar audio benar
+                correctAudio.volume = 0.50; // Atur volume audio benar
+            } catch (e) {
+                console.error("Gagal memutar audio:", e);
+            }
+        }
+        
+        // Fungsi untuk memutar audio salah
+        function playWrongAudio() {
+            try {
+                wrongAudio.play(); // Mulai memutar audio salah
+                wrongAudio.volume = 0.5; // Atur volume audio salah
+            } catch (e) {
+                console.error("Gagal memutar audio:", e);
+            }
+        }
+        
+// Fungsi untuk memainkan suara benar
+        function playCorrectSound() {
+            correctAudio.play();
+        }
+        
+        // Fungsi untuk memainkan suara salah
+        function playWrongSound() {
+            wrongAudio.play();
+        }
+        
+        function showEndScreen() {
+             if (currentIndex < currentData.length || questionIndex < currentData.length) {
+                    console.error("Belum semua soal selesai, tidak dapat menampilkan skor.");
+                
+                }
+             // Sembunyikan tombol pilihan Hiragana/Katakana
+             document.getElementById("menu").classList.remove("active");
+             
+             // Sembunyikan soal terlebih dahulu
+             document.getElementById("quiz-container").classList.remove("active");
+             
+             if (totalQuestions === 0) {
+                 alert("Tidak ada soal yang dijawab.");
+                 return;
+             }
+         
+             const percentage = (correctAnswers / totalQuestions) * 100;  // Persentase dari soal yang benar
+             
+             // Tampilkan skor akhir
+             document.getElementById("final-score").textContent = ` /  (%)`;
+         
+             // Tentukan lulus atau tidak lulus berdasarkan persentase
+             let resultMessage = '';
+             if (percentage === 100) {
+                 resultMessage = "Anda sangat luar biasa Lulus dengan Nilai 100%!";
+             } else if (percentage >= 80) {
+                 resultMessage = "Horee, Anda Lulus!";
+             } else {
+                 resultMessage = "Yaah, Anda Tidak Lulus. Belajar Lagi yaa!";
+             }
+         
+             // Tampilkan pesan hasil lulus/tidak lulus di layar akhir
+             document.getElementById("result-message-end").textContent = resultMessage;
+         
+             // Tampilkan layar akhir
+             document.getElementById("end-screen").classList.add("active");
+         }
+
+        backgroundAudio.muted = true;
+        correctAudio.muted = true;
+        wrongAudio.muted = true;
+    
+            function resetGame() {
+                score = 0;  // Reset skor hanya saat permainan dimulai ulang
+                correctAnswers = 0;  // Reset jawaban benar
+                totalQuestions = 0;  // Reset total soal
+                currentIndex = 0;  // Reset soal yang sudah dikerjakan
+                questionIndex = 0;  // Reset indeks soal
+                document.getElementById("end-screen").classList.remove("active");
+                document.getElementById("menu").classList.add("active"); // Kembali ke menu
+// Tampilkan kembali tampilan menu
+                    document.getElementById("menu").classList.add("active"); // Tampilkan tombol Hiragana/Katakan
+            }
+            
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+    </script>
+</body>
