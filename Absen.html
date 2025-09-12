@@ -1,0 +1,167 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Absensi Belajar Minna</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 100%;
+      margin: 0;
+      padding: 20px;
+      background: #111;
+      color: #fff;
+    }
+    
+    input, select, textarea, button {
+      width: 100%;
+      font-size: 16px;
+      margin-top: 6px;
+      padding: 10px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background: #0b72ff;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled {
+      background: #555;
+      cursor: not-allowed;
+    }
+    #status {margin-top:12px; font-weight:bold;}
+  </style>
+</head>
+<body>
+
+  <h2>Absensi Belajar Minna</h2>
+
+  <label>Nama</label>
+  <input id="name" type="text" placeholder="Ivank">
+
+  <label>Bab & Day</label>
+  <input id="bab" type="text" placeholder="Bab 8 Day 1">
+
+  <label>Sesi</label>
+  <select id="session">
+    <option value="09:00–11:00">Pagi (09:00–11:00)</option>
+    <option value="14:00–16:00">Siang (14:00–16:00)</option>
+    <option value="19:30–21:30">Malam (19:30–21:30)</option>
+  </select>
+
+  <label>Bukti (foto catatan / screenshot)</label>
+  <input id="file" type="file" accept="image/*">
+
+  <label>Catatan</label>
+  <textarea id="note" rows="3"></textarea>
+
+  <button id="submitBtn" onclick="submitForm()">Kirim Absensi</button>
+  <div id="status"></div>
+
+<script>
+const SUBMIT_URL = "https://script.google.com/macros/s/AKfycbxKgfUhzl96UC7iL6SyYI-gAEbyjjCOTiCb4KyZyV8axEtXOXkscZjVk0DsV-WwBxYOgw/exec";
+
+async function submitForm(){
+  const btn = document.getElementById("submitBtn");
+  const status = document.getElementById("status");
+
+  // tampilkan loading
+  btn.textContent = "⏳ Mengirim...";
+  btn.disabled = true;
+  status.style.color = "#0ff";
+  status.textContent = "Sedang mengirim absensi...";
+
+  try {
+    const name = document.getElementById("name").value.trim();
+    const bab = document.getElementById("bab").value.trim();
+    const session = document.getElementById("session").value;
+    const note = document.getElementById("note").value.trim();
+    const fileInput = document.getElementById("file");
+    const file = fileInput.files[0];
+
+    let base64 = "";
+    let filename = "";
+    if(file){
+      base64 = await resizeImage(file); // kompres dulu
+      filename = file.name || "bukti.jpg";
+    }
+
+    const data = {name,bab,session,note,file: base64.split(",")[1], filename};
+
+    const res = await fetch(SUBMIT_URL, {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+
+    const result = await res.json();
+    status.style.color = result.status === "OK" ? "lightgreen" : "red";
+    status.textContent = 
+      result.status === "OK" ? "✅ Absensi berhasil dikirim!" : "❌ Gagal: " + result.message;
+
+    // reset form (kecuali nama)
+    document.getElementById("bab").value = "";
+    document.getElementById("note").value = "";
+    document.getElementById("file").value = "";
+
+  } catch(err){
+    status.style.color = "red";
+    status.textContent = "❌ Error: " + err.message;
+  }
+
+  // kembalikan tombol
+  btn.textContent = "Kirim Absensi";
+  btn.disabled = false;
+}
+
+function resizeImage(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        let maxSize = 1024; // max panjang sisi
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxSize) {
+            height *= maxSize / width;
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width *= maxSize / height;
+            height = maxSize;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.7); // kompres JPG
+        resolve(dataUrl);
+      };
+      img.src = e.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function toBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>resolve(reader.result);
+    reader.onerror = error=>reject(error);
+    reader.readAsDataURL(file);
+  });
+}
+</script>
+</body>
+</html>
