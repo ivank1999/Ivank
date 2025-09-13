@@ -1,0 +1,1726 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minna no Nihongo 1</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+      background: linear-gradient(135deg, #1e3c72, #2a5298);
+      color: #fff;
+    }
+
+    h1 {
+      margin-bottom: 15px;
+      font-size: 1.8em; /* dikecilkan */
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+    }
+
+    .bab-buttons {
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .bab-buttons button {
+      padding: 12px 18px;
+      border: none;
+      background: linear-gradient(135deg, #00c6ff, #0072ff);
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .bab-buttons button:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    #quiz-area {
+      display: none;
+      margin-top: 20px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+      background: rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      backdrop-filter: blur(10px);
+    }
+
+    #bab-title {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+      font-weight: 700;
+      color: #ffdf6c;
+    }
+
+    #question-label {
+      font-size: 1.1em;
+      margin-bottom: 8px;
+      color: #ffdf6c;
+      font-weight: 500;
+    }
+
+    #question-word {
+      font-size: 1.6em;
+      font-weight: 700;
+      margin: 0 0 15px 0; /* kasih jarak lebih bawah */
+      color: #fff; /* teks utama putih */
+      text-shadow: 
+             -1px -1px 0 #000,  
+              1px -1px 0 #000,
+             -1px  1px 0 #000,
+              1px  1px 0 #000;
+    }
+
+    input[type="text"] {
+      padding: 12px;
+      width: 80%;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+      margin-bottom: 12px;
+      outline: none;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.2) inset;
+    }
+
+    button.action {
+      margin-top: 8px;
+      padding: 10px 18px;
+      border: none;
+      background: linear-gradient(135deg, #ff512f, #dd2476);
+      color: #fff;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    button.action:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+    }
+
+    #result {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .correct {
+      color: #00ff95;
+      text-shadow: 0 0 6px rgba(0,255,149,0.7);
+    }
+
+    .wrong {
+      color: #ff5f5f;
+      text-shadow: 0 0 6px rgba(255,95,95,0.7);
+    }
+  </style>
+</head>
+<body>
+  <h1>み ん な の 日 本 語  1</h1>
+  <p style="font-size:0.9em; color:#ffdf6c;">Kotoba Minna no Nihongo 1</p>
+  <p id="pilihBab">Pilih Bab:</p>
+  <div class="bab-buttons" id="babButtons"></div>
+
+  <div id="quiz-area">
+    <h2 id="bab-title"></h2>
+    <div id="question">
+      <p id="question-label"></p>
+      <p id="question-word"></p>
+    </div>
+    <input type="text" id="answer" placeholder=" Jawab dalam bahasa Indonesia">
+    <br>
+    <button class="action" onclick="checkAnswer()">Kirim</button>
+    <p id="result"></p>
+    <button class="action" onclick="nextQuestion()" id="nextBtn">Soal Berikutnya</button>
+  </div>
+
+  <p id="final-score" style="display:none; font-size:1.3em; font-weight:bold; color:#ffdf6c; margin-top:20px;"></p>
+
+  <script>
+    const data = {
+      1: [
+        { kana: "わたし", kanji: "私", arti: ["saya","aku"] },
+        { kana: "あなた", kanji: "あなた", arti: ["kamu","anda"] },
+        { kana: "あのひと", kanji: "あの人", arti: ["orang itu","dia"] },
+        { kana: "あのかた", kanji: "あの方", arti: ["beliau itu"] },
+        { kana: "～さん", kanji: "～さん", arti: ["tuan","nyonya","saudara"] },
+        { kana: "～ちゃん", kanji: "～ちゃん", arti: ["panggilan anak kecil"] },
+        { kana: "～じん", kanji: "～人", arti: ["orang","bangsa"] },
+        { kana: "せんせい", kanji: "先生", arti: ["guru","dosen","pengajar"] },
+        { kana: "きょうし", kanji: "教師", arti: ["guru"] },
+        { kana: "がくせい", kanji: "学生", arti: ["siswa","murid","pelajar"] },
+        { kana: "かいしゃいん", kanji: "会社員", arti: ["pegawai perusahaan"] },
+        { kana: "しゃいん", kanji: "社員", arti: ["pegawai"] },
+        { kana: "ぎんこういん", kanji: "銀行員", arti: ["pegawai bank"] },
+        { kana: "いしゃ", kanji: "医者", arti: ["dokter"] },
+        { kana: "けんきゅうしゃ", kanji: "研究者", arti: ["peneliti"] },
+        { kana: "だいがく", kanji: "大学", arti: ["universitas"] },
+        { kana: "びょういん", kanji: "病院", arti: ["rumah sakit"] },
+        { kana: "だれ", kanji: "誰", arti: ["siapa"] },
+        { kana: "どなた", kanji: "どなた", arti: ["siapa"] },
+        { kana: "～さい", kanji: "～歳", arti: ["umur","tahun"] },
+        { kana: "なんさい", kanji: "何歳", arti: ["umur berapa"] },
+        { kana: "おいくつ", kanji: "おいくつ", arti: ["usia berapa"] },
+        { kana: "はい", kanji: "はい", arti: ["iya"] },
+        { kana: "いいえ", kanji: "いいえ", arti: ["tidak"] },
+        { kana: "はじめまして", kanji: "初めまして", arti: ["perkenalkan"] },
+        { kana: "～からきました", kanji: "～から来ました", arti: ["datang dari"] },
+        { kana: "どうぞよろしく", kanji: "-", arti: ["mohon kerjasamanya","salam kenal"] },
+        { kana: "おねがいします", kanji: "お願いします", arti: ["tolong","mohon bantuannya","saya mohon"] },
+        { kana: "しつれいですが", kanji: "失礼ですが", arti: ["permisi","maaf"] },
+        { kana: "おなまえは", kanji: "お名前は", arti: ["namanya siapa"] },
+        { kana: "アメリカ", kanji: "-", arti: ["amerika"] },
+        { kana: "イギリス", kanji: "-", arti: ["inggris"] },
+        { kana: "インド", kanji: "-", arti: ["india"] },
+        { kana: "インドネシア", kanji: "-", arti: ["indonesia"] },
+        { kana: "かんこく", kanji: "韓国", arti: ["korea"] },
+        { kana: "ちゅうごく", kanji: "中国", arti: ["cina","tiongkok"] },
+        { kana: "ドイツ", kanji: "-", arti: ["jerman"] },
+        { kana: "にほん", kanji: "日本", arti: ["jepang"] },
+        { kana: "フランス", kanji: "-", arti: ["perancis"] },
+        { kana: "ブラジル", kanji: "-", arti: ["brazil"] }
+      ],
+      2: [
+        { kana: "これ", kanji: "-", arti: ["ini"] },
+        { kana: "それ", kanji: "-", arti: ["itu","itu (dekat)"] },
+        { kana: "あれ", kanji: "-", arti: ["itu (jauh)"] },
+        { kana: "この～", kanji: "-", arti: ["～ini"] },
+        { kana: "その～", kanji: "-", arti: ["～itu","～itu (dekat)"] },
+        { kana: "あの～", kanji: "-", arti: ["～itu (jauh)"] },
+        { kana: "ほん", kanji: "本", arti: ["buku"] },
+        { kana: "じしょ", kanji: "辞書", arti: ["kamus"] },
+        { kana: "ざっし", kanji: "雑誌", arti: ["majalah"] },
+        { kana: "しんぶん", kanji: "新聞", arti: ["koran","surat kabar"] },
+        { kana: "ノート", kanji: "-", arti: ["buku catatan","notebook"] },
+        { kana: "てちょう", kanji: "手帳", arti: ["buku agenda","buku catatan kecil"] },
+        { kana: "めいし", kanji: "名刺", arti: ["kartu nama"] },
+        { kana: "カード", kanji: "-", arti: ["kartu","card"] },
+        { kana: "えんぴつ", kanji: "鉛筆", arti: ["pensil"] },
+        { kana: "ボールペン", kanji: "-", arti: ["bolpoin","ballpoint"] },
+        { kana: "シャープペンシル", kanji: "-", arti: ["pensil mekanik","pensil isi ulang"] },
+        { kana: "かぎ", kanji: "鍵", arti: ["kunci"] },
+        { kana: "とけい", kanji: "時計", arti: ["jam","arloji"] },
+        { kana: "かさ", kanji: "傘", arti: ["payung"] },
+        { kana: "かばん", kanji: "鞄", arti: ["tas"] },
+        { kana: "テレビ", kanji: "-", arti: ["televisi","tv"] },
+        { kana: "ラジオ", kanji: "-", arti: ["radio"] },
+        { kana: "カメラ", kanji: "-", arti: ["kamera"] },
+        { kana: "コンピューター", kanji: "-", arti: ["komputer"] },
+        { kana: "くるま", kanji: "車", arti: ["mobil"] },
+        { kana: "つくえ", kanji: "机", arti: ["meja"] },
+        { kana: "いす", kanji: "椅子", arti: ["kursi"] },
+        { kana: "チョコレート", kanji: "-", arti: ["coklat","chocolate"] },
+        { kana: "コーヒー", kanji: "-", arti: ["kopi","coffee"] },
+        { kana: "おみやげ", kanji: "お土産", arti: ["oleh-oleh","souvenir"] },
+        { kana: "えいご", kanji: "英語", arti: ["bahasa inggris"] },
+        { kana: "にほんご", kanji: "日本語", arti: ["bahasa jepang"] },
+        { kana: "～ご", kanji: "～語", arti: ["bahasa ～"] },
+        { kana: "なん", kanji: "何", arti: ["apa"] },
+        { kana: "そう", kanji: "-", arti: ["begitu"] },
+        { kana: "あのう", kanji: "-", arti: ["eee","ungkapan ketika ragu"] },
+        { kana: "えっ", kanji: "-", arti: ["eh","ungkapan terkejut"] },
+        { kana: "どうぞ", kanji: "-", arti: ["silakan"] },
+        { kana: "どうもありがとうございます", kanji: "-", arti: ["terima kasih","terima kasih banyak"] },
+        { kana: "そうですか", kanji: "-", arti: ["oh begitu","benarkah?"] },
+        { kana: "ちがいます", kanji: "違います", arti: ["bukan","tidak","salah"] },
+        { kana: "あ", kanji: "-", arti: ["oh","eh"] },
+        { kana: "これからおせわになります", kanji: "これからお世話になります", arti: ["mulai sekarang saya akan meminta bantuan anda"] },
+        { kana: "こちらこそよろしくおねがいします", kanji: "-", arti: ["ya sama-sama","saya juga mohon kerjasamanya"] }
+      ],
+      3: [
+        { kana: "ここ", kanji: "-", arti: ["di sini"] },
+        { kana: "そこ", kanji: "-", arti: ["di situ"] },
+        { kana: "あそこ", kanji: "-", arti: ["di sana"] },
+        { kana: "どこ", kanji: "-", arti: ["di mana?"] },
+        { kana: "こちら", kanji: "-", arti: ["di sini","sebelah sini"] },
+        { kana: "そちら", kanji: "-", arti: ["di situ","sebelah situ"] },
+        { kana: "あちら", kanji: "-", arti: ["di sana","sebelah sana"] },
+        { kana: "どちら", kanji: "-", arti: ["di mana?","sebelah mana?"] },
+        { kana: "きょうしつ", kanji: "教室", arti: ["ruang kelas"] },
+        { kana: "しょくどう", kanji: "食堂", arti: ["ruang makan","kantin"] },
+        { kana: "じむしょ", kanji: "事務所", arti: ["kantor"] },
+        { kana: "かいぎしつ", kanji: "会議室", arti: ["ruang rapat"] },
+        { kana: "うけつけ", kanji: "受付", arti: ["meja informasi","resepsionis"] },
+        { kana: "ロビー", kanji: "-", arti: ["lobi","ruang tunggu"] },
+        { kana: "へや", kanji: "部屋", arti: ["kamar","ruangan"] },
+        { kana: "おてあらい", kanji: "お手洗い", arti: ["toilet","kamar kecil","WC"] },
+        { kana: "トイレ", kanji: "-", arti: ["toilet"] },
+        { kana: "かいだん", kanji: "階段", arti: ["tangga"] },
+        { kana: "エレベーター", kanji: "-", arti: ["lift","elevator"] },
+        { kana: "エスカレーター", kanji: "-", arti: ["eskalator","tangga berjalan"] },
+        { kana: "じどうはんばいき", kanji: "自動販売機", arti: ["mesin jual otomatis"] },
+        { kana: "でんわ", kanji: "電話", arti: ["telepon"] },
+        { kana: "おくに", kanji: "お国", arti: ["negara (anda)"] },
+        { kana: "かいしゃ", kanji: "会社", arti: ["perusahaan"] },
+        { kana: "うち", kanji: "家", arti: ["rumah"] },
+        { kana: "くつ", kanji: "靴", arti: ["sepatu"] },
+        { kana: "ネクタイ", kanji: "-", arti: ["dasi"] },
+        { kana: "ワイン", kanji: "-", arti: ["anggur"] },
+        { kana: "うりば", kanji: "売り場", arti: ["tempat penjualan","counter"] },
+        { kana: "ちか", kanji: "地下", arti: ["bawah tanah","basement"] },
+        { kana: "～かい", kanji: "～階", arti: ["lantai ～","tingkat ～"] },
+        { kana: "なんがい", kanji: "何階", arti: ["lantai berapa?"] },
+        { kana: "～えん", kanji: "～円", arti: ["～ yen"] },
+        { kana: "いくら", kanji: "-", arti: ["berapa?"] },
+        { kana: "ひゃく", kanji: "百", arti: ["seratus"] },
+        { kana: "せん", kanji: "千", arti: ["seribu"] },
+        { kana: "まん", kanji: "万", arti: ["puluh ribu"] },
+        { kana: "すみません", kanji: "-", arti: ["maaf","permisi"] },
+        { kana: "どうも", kanji: "-", arti: ["terima kasih"] },
+        { kana: "いらっしゃいませ", kanji: "-", arti: ["selamat datang"] },
+        { kana: "みせてください", kanji: "見せてください", arti: ["tolong perlihatkan"] },
+        { kana: "じゃ", kanji: "-", arti: ["kalau begitu"] },
+        { kana: "～をください", kanji: "-", arti: ["tolong ～"] },
+        { kana: "イタリア", kanji: "-", arti: ["Italia"] },
+        { kana: "スイス", kanji: "-", arti: ["Swiss"] },
+        { kana: "フランス", kanji: "-", arti: ["Perancis"] },
+        { kana: "ジャカルタ", kanji: "-", arti: ["Jakarta"] },
+        { kana: "バンコク", kanji: "-", arti: ["Bangkok"] },
+        { kana: "ベルリン", kanji: "-", arti: ["Berlin"] },
+        { kana: "おくじょう", kanji: "屋上", arti: ["lantai atas","atap gedung"] },
+        { kana: "レストラン", kanji: "-", arti: ["restoran"] },
+        { kana: "ゆうえんち", kanji: "遊園地", arti: ["tempat hiburan","taman bermain"] },
+        { kana: "もよおしものかいじょう", kanji: "催し物会場", arti: ["tempat pertunjukan","event hall"] },
+        { kana: "めがね", kanji: "眼鏡", arti: ["kacamata"] },
+        { kana: "スポーツようひん", kanji: "スポーツ用品", arti: ["peralatan olahraga"] },
+        { kana: "りょこうようひん", kanji: "旅行用品", arti: ["peralatan wisata"] },
+        { kana: "こどものふく", kanji: "子供の服", arti: ["pakaian anak"] },
+        { kana: "おもちゃ", kanji: "-", arti: ["mainan"] },
+        { kana: "ぶんぼうぐ", kanji: "文房具", arti: ["alat tulis"] },
+        { kana: "かぐ", kanji: "家具", arti: ["perlengkapan rumah","mebel"] },
+        { kana: "しょっき", kanji: "食器", arti: ["peralatan makan"] },
+        { kana: "でんかせいひん", kanji: "電化製品", arti: ["barang elektronik"] },
+        { kana: "しんしふく", kanji: "紳士服", arti: ["pakaian pria"] },
+        { kana: "ふじんふく", kanji: "婦人服", arti: ["pakaian wanita"] },
+        { kana: "アクセサリー", kanji: "-", arti: ["perhiasan","aksesoris"] },
+        { kana: "けしょうひん", kanji: "化粧品", arti: ["kosmetik"] },
+        { kana: "しょくひん", kanji: "食品", arti: ["makanan"] }
+      ],
+      4: [
+        { kana: "おきます", kanji: "起きます", arti: ["bangun tidur"] },
+        { kana: "ねます", kanji: "寝ます", arti: ["tidur"] },
+        { kana: "はたらきます", kanji: "働きます", arti: ["bekerja"] },
+        { kana: "やすみます", kanji: "休みます", arti: ["beristirahat","libur"] },
+        { kana: "べんきょうします", kanji: "勉強します", arti: ["belajar"] },
+        { kana: "おわります", kanji: "終わります", arti: ["selesai"] },
+        { kana: "デパート", kanji: "-", arti: ["departemen store"] },
+        { kana: "ぎんこう", kanji: "銀行", arti: ["bank"] },
+        { kana: "ゆうびんきょく", kanji: "郵便局", arti: ["kantor pos"] },
+        { kana: "としょかん", kanji: "図書館", arti: ["perpustakaan"] },
+        { kana: "びじゅつかん", kanji: "美術館", arti: ["gedung kesenian"] },
+        { kana: "いま", kanji: "今", arti: ["sekarang"] },
+        { kana: "～じ", kanji: "～時", arti: ["jam","pukul"] },
+        { kana: "～ふん／～ぷん", kanji: "～分", arti: ["menit"] },
+        { kana: "はん", kanji: "半", arti: ["setengah"] },
+        { kana: "なんじ", kanji: "何時", arti: ["jam berapa?"] },
+        { kana: "なんぷん", kanji: "何分", arti: ["berapa menit?"] },
+        { kana: "ごぜん", kanji: "午前", arti: ["AM (sebelum jam 12 siang)"] },
+        { kana: "ごご", kanji: "午後", arti: ["PM (setelah jam 12 siang)"] },
+        { kana: "あさ", kanji: "朝", arti: ["pagi"] },
+        { kana: "ひる", kanji: "昼", arti: ["siang"] },
+        { kana: "ばん／よる", kanji: "晩／夜", arti: ["malam"] },
+        { kana: "おととい", kanji: "一昨日", arti: ["2 hari yang lalu","kemarin lusa"] },
+        { kana: "きのう", kanji: "昨日", arti: ["kemarin"] },
+        { kana: "きょう", kanji: "今日", arti: ["hari ini"] },
+        { kana: "あした", kanji: "明日", arti: ["besok"] },
+        { kana: "あさって", kanji: "明後日", arti: ["besok lusa"] },
+        { kana: "けさ", kanji: "今朝", arti: ["tadi pagi"] },
+        { kana: "こんばん", kanji: "今晩", arti: ["malam ini"] },
+        { kana: "やすみ", kanji: "休み", arti: ["istirahat","cuti","libur"] },
+        { kana: "ひるやすみ", kanji: "昼休み", arti: ["istirahat siang"] },
+        { kana: "しけん", kanji: "試験", arti: ["ujian"] },
+        { kana: "かいぎ", kanji: "会議", arti: ["rapat"] },
+        { kana: "えいが", kanji: "映画", arti: ["film"] },
+        { kana: "まいあさ", kanji: "毎朝", arti: ["setiap pagi"] },
+        { kana: "まいばん", kanji: "毎晩", arti: ["setiap malam"] },
+        { kana: "まいにち", kanji: "毎日", arti: ["setiap hari"] },
+        { kana: "げつようび", kanji: "月曜日", arti: ["hari senin"] },
+        { kana: "かようび", kanji: "火曜日", arti: ["hari selasa"] },
+        { kana: "すいようび", kanji: "水曜日", arti: ["hari rabu"] },
+        { kana: "もくようび", kanji: "木曜日", arti: ["hari kamis"] },
+        { kana: "きんようび", kanji: "金曜日", arti: ["hari jumat"] },
+        { kana: "どようび", kanji: "土曜日", arti: ["hari sabtu"] },
+        { kana: "にちようび", kanji: "日曜日", arti: ["hari minggu"] },
+        { kana: "なんようび", kanji: "何曜日", arti: ["hari apa?"] },
+        { kana: "から", kanji: "-", arti: ["dari"] },
+        { kana: "まで", kanji: "-", arti: ["sampai"] },
+        { kana: "そして", kanji: "-", arti: ["dan"] },
+        { kana: "たいへんですね", kanji: "大変ですね", arti: ["berat ya","wah susah ya"] },
+        { kana: "ばんごう", kanji: "番号", arti: ["nomor"] },
+        { kana: "なんばん", kanji: "何番", arti: ["nomor berapa?"] },
+        { kana: "ニューヨーク", kanji: "-", arti: ["New York"] },
+        { kana: "ペキン", kanji: "北京", arti: ["Beijing"] },
+        { kana: "ロサンゼルス", kanji: "-", arti: ["Los Angeles"] },
+        { kana: "ロンドン", kanji: "-", arti: ["London"] },
+        { kana: "けいさつしょ", kanji: "警察署", arti: ["kantor polisi"] },
+        { kana: "しょうぼうしょ", kanji: "消防署", arti: ["pemadam kebakaran"] },
+        { kana: "じどう", kanji: "時報", arti: ["pemberitahuan waktu"] },
+        { kana: "てんきよほう", kanji: "天気予報", arti: ["ramalan cuaca"] },
+        { kana: "でんわばんごうあんない", kanji: "電話番号案内", arti: ["petunjuk nomor telepon"] }
+      ],
+      5: [
+        { kana: "いきます", kanji: "行きます", arti: ["pergi"] },
+        { kana: "きます", kanji: "来ます", arti: ["datang"] },
+        { kana: "かえります", kanji: "帰ります", arti: ["pulang"] },
+        { kana: "がっこう", kanji: "学校", arti: ["sekolahan"] },
+        { kana: "スーパー", kanji: "-", arti: ["supermarket"] },
+        { kana: "えき", kanji: "駅", arti: ["stasiun"] },
+        { kana: "ひこうき", kanji: "飛行機", arti: ["pesawat terbang"] },
+        { kana: "ふね", kanji: "船", arti: ["kapal laut"] },
+        { kana: "でんしゃ", kanji: "電車", arti: ["kereta listrik"] },
+        { kana: "ちかてつ", kanji: "地下鉄", arti: ["kereta bawah tanah"] },
+        { kana: "しんかんせん", kanji: "新幹線", arti: ["shinkansen"] },
+        { kana: "バス", kanji: "-", arti: ["bus"] },
+        { kana: "タクシー", kanji: "-", arti: ["taksi"] },
+        { kana: "じてんしゃ", kanji: "自転車", arti: ["sepeda"] },
+        { kana: "あるいて", kanji: "歩いて", arti: ["jalan kaki"] },
+        { kana: "ひと", kanji: "人", arti: ["orang"] },
+        { kana: "ともだち", kanji: "友達", arti: ["teman"] },
+        { kana: "かれ", kanji: "彼", arti: ["dia (laki-laki)"] },
+        { kana: "かのじょ", kanji: "彼女", arti: ["dia (perempuan)"] },
+        { kana: "かぞく", kanji: "家族", arti: ["keluarga"] },
+        { kana: "ひとりで", kanji: "一人で", arti: ["sendirian"] },
+        { kana: "せんしゅう", kanji: "先週", arti: ["minggu lalu"] },
+        { kana: "こんしゅう", kanji: "今週", arti: ["minggu ini"] },
+        { kana: "らいしゅう", kanji: "来週", arti: ["minggu depan"] },
+        { kana: "せんげつ", kanji: "先月", arti: ["bulan lalu"] },
+        { kana: "こんげつ", kanji: "今月", arti: ["bulan ini"] },
+        { kana: "らいげつ", kanji: "来月", arti: ["bulan depan"] },
+        { kana: "きょねん", kanji: "去年", arti: ["tahun lalu"] },
+        { kana: "ことし", kanji: "今年", arti: ["tahun ini"] },
+        { kana: "らいねん", kanji: "来年", arti: ["tahun depan"] },
+        { kana: "～ねん", kanji: "～年", arti: ["tahun ～"] },
+        { kana: "なんねん", kanji: "何年", arti: ["tahun berapa?"] },
+        { kana: "～がつ", kanji: "～月", arti: ["bulan ～"] },
+        { kana: "なんがつ", kanji: "何月", arti: ["bulan apa?"] },
+        { kana: "ついたち", kanji: "一日", arti: ["tanggal 1"] },
+        { kana: "ふつか", kanji: "二日", arti: ["tanggal 2","2 hari"] },
+        { kana: "みっか", kanji: "三日", arti: ["tanggal 3","3 hari"] },
+        { kana: "よっか", kanji: "四日", arti: ["tanggal 4","4 hari"] },
+        { kana: "いつか", kanji: "五日", arti: ["tanggal 5","5 hari"] },
+        { kana: "むいか", kanji: "六日", arti: ["tanggal 6","6 hari"] },
+        { kana: "なのか", kanji: "七日", arti: ["tanggal 7","7 hari"] },
+        { kana: "ようか", kanji: "八日", arti: ["tanggal 8","8 hari"] },
+        { kana: "ここのか", kanji: "九日", arti: ["tanggal 9","9 hari"] },
+        { kana: "とおか", kanji: "十日", arti: ["tanggal 10","10 hari"] },
+        { kana: "じゅうよっか", kanji: "十四日", arti: ["tanggal 14","14 hari"] },
+        { kana: "はつか", kanji: "二十日", arti: ["tanggal 20","20 hari"] },
+        { kana: "にじゅうよっか", kanji: "二十四日", arti: ["tanggal 24","24 hari"] },
+        { kana: "～にち", kanji: "～日", arti: ["tanggal ～","～ hari"] },
+        { kana: "なんにち", kanji: "何日", arti: ["tanggal berapa?","berapa hari?"] },
+        { kana: "いつ", kanji: "-", arti: ["kapan"] },
+        { kana: "たんじょうび", kanji: "誕生日", arti: ["hari ulang tahun"] },
+        { kana: "そうですね", kanji: "-", arti: ["ya begitulah"] },
+        { kana: "どういたしまして", kanji: "-", arti: ["sama-sama"] },
+        { kana: "～ばんせん", kanji: "～番線", arti: ["peron nomor ～","jalur nomor ～"] },
+        { kana: "つぎの", kanji: "次の", arti: ["yang berikutnya"] },
+        { kana: "ふつう", kanji: "普通", arti: ["biasa"] },
+        { kana: "きゅうこう", kanji: "急行", arti: ["ekspres"] },
+        { kana: "とっきゅう", kanji: "特急", arti: ["super ekspres"] },
+        { kana: "しゅくさいじつ", kanji: "祝祭日", arti: ["hari libur nasional"] },
+        { kana: "がんじつ", kanji: "元日", arti: ["tahun baru"] },
+        { kana: "せいじんのひ", kanji: "成人の日", arti: ["hari perayaan menjadi dewasa"] },
+        { kana: "けんこくきねんのひ", kanji: "建国記念の日", arti: ["hari pembangunan nasional"] },
+        { kana: "しゅんぶんのひ", kanji: "春分の日", arti: ["hari equinox musim semi"] },
+        { kana: "しょうわのひ", kanji: "昭和の日", arti: ["hari showa"] },
+        { kana: "けんぽうきねんび", kanji: "憲法記念日", arti: ["hari peringatan konstitusi"] },
+        { kana: "みどりのひ", kanji: "みどりの日", arti: ["hari penghijauan"] },
+        { kana: "こどものひ", kanji: "こどもの日", arti: ["hari anak"] },
+        { kana: "うみのひ", kanji: "海の日", arti: ["hari bahari"] },
+        { kana: "やまのひ", kanji: "山の日", arti: ["hari gunung"] },
+        { kana: "けいろうのひ", kanji: "敬老の日", arti: ["hari hormat kepada orang tua"] },
+        { kana: "しゅうぶんのひ", kanji: "秋分の日", arti: ["hari equinox musim gugur"] },
+        { kana: "たいいくのひ", kanji: "体育の日", arti: ["hari kesehatan olahraga"] },
+        { kana: "ぶんかのひ", kanji: "文化の日", arti: ["hari kebudayaan"] },
+        { kana: "きんろうかんしゃのひ", kanji: "勤労感謝の日", arti: ["hari bersyukur untuk pekerjaan"] },
+        { kana: "てんのうたんじょうび", kanji: "天皇誕生日", arti: ["hari ulang tahun kaisar"] }
+      ],
+      6: [
+        { kana: "たべます", kanji: "食べます", arti: ["makan"] },
+        { kana: "のみます", kanji: "飲みます", arti: ["minum"] },
+        { kana: "すいます", kanji: "吸います", arti: ["menghisap","merokok"] },
+        { kana: "みます", kanji: "見ます", arti: ["melihat","menonton"] },
+        { kana: "ききます", kanji: "聞きます", arti: ["mendengar"] },
+        { kana: "よみます", kanji: "読みます", arti: ["membaca"] },
+        { kana: "かきます", kanji: "書きます", arti: ["menulis","menggambar"] },
+        { kana: "かいます", kanji: "買います", arti: ["membeli"] },
+        { kana: "とります", kanji: "撮ります", arti: ["mengambil (foto)","memotret"] },
+        { kana: "します", kanji: "-", arti: ["melakukan","mengerjakan","berbuat"] },
+        { kana: "あいます", kanji: "会います", arti: ["bertemu"] },
+        { kana: "ごはん", kanji: "ご飯", arti: ["nasi","makanan"] },
+        { kana: "あさごはん", kanji: "朝ご飯", arti: ["sarapan","makan pagi"] },
+        { kana: "ひるごはん", kanji: "昼ご飯", arti: ["makan siang"] },
+        { kana: "ばんごはん", kanji: "晩ご飯", arti: ["makan malam"] },
+        { kana: "パン", kanji: "-", arti: ["roti"] },
+        { kana: "たまご", kanji: "卵", arti: ["telur"] },
+        { kana: "にく", kanji: "肉", arti: ["daging"] },
+        { kana: "さかな", kanji: "魚", arti: ["ikan"] },
+        { kana: "やさい", kanji: "野菜", arti: ["sayuran"] },
+        { kana: "くだもの", kanji: "果物", arti: ["buah-buahan"] },
+        { kana: "みず", kanji: "水", arti: ["air"] },
+        { kana: "おちゃ", kanji: "お茶", arti: ["teh jepang","teh hijau"] },
+        { kana: "こうちゃ", kanji: "紅茶", arti: ["teh hitam","teh biasa"] },
+        { kana: "ぎゅうにゅう", kanji: "牛乳", arti: ["susu"] },
+        { kana: "ジュース", kanji: "-", arti: ["jus"] },
+        { kana: "ビール", kanji: "-", arti: ["bir"] },
+        { kana: "おさけ", kanji: "お酒", arti: ["minuman keras","sake"] },
+        { kana: "たばこ", kanji: "-", arti: ["rokok"] },
+        { kana: "てがみ", kanji: "手紙", arti: ["surat"] },
+        { kana: "レポート", kanji: "-", arti: ["laporan"] },
+        { kana: "しゃしん", kanji: "写真", arti: ["foto"] },
+        { kana: "ビデオ", kanji: "-", arti: ["kaset video"] },
+        { kana: "みせ", kanji: "店", arti: ["toko"] },
+        { kana: "にわ", kanji: "庭", arti: ["halaman"] },
+        { kana: "しゅくだい", kanji: "宿題", arti: ["pekerjaan rumah","PR"] },
+        { kana: "テニス", kanji: "-", arti: ["tenis"] },
+        { kana: "サッカー", kanji: "-", arti: ["sepak bola"] },
+        { kana: "はなみ", kanji: "花見", arti: ["hanami","melihat bunga sakura"] },
+        { kana: "なに", kanji: "何", arti: ["apa"] },
+        { kana: "いっしょに", kanji: "-", arti: ["bersama-sama"] },
+        { kana: "ちょっと", kanji: "-", arti: ["sebentar","sedikit"] },
+        { kana: "いつも", kanji: "-", arti: ["selalu"] },
+        { kana: "ときどき", kanji: "時々", arti: ["kadang-kadang"] },
+        { kana: "それから", kanji: "-", arti: ["setelah itu","kemudian"] },
+        { kana: "ええ", kanji: "-", arti: ["ya"] },
+        { kana: "いいですね", kanji: "-", arti: ["bagus ya","baik ya"] },
+        { kana: "わかりました", kanji: "分かりました", arti: ["mengerti","baik"] },
+        { kana: "じゃ、また", kanji: "-", arti: ["ok, sampai jumpa besok"] },
+        { kana: "メキシコ", kanji: "-", arti: ["meksiko"] },
+      
+        // tambahan sayuran
+        { kana: "きゅうり", kanji: "-", arti: ["timun"] },
+        { kana: "トマト", kanji: "-", arti: ["tomat"] },
+        { kana: "なす", kanji: "-", arti: ["terong"] },
+        { kana: "まめ", kanji: "-", arti: ["kacang-kacangan"] },
+        { kana: "キャベツ", kanji: "-", arti: ["kol"] },
+        { kana: "ねぎ", kanji: "-", arti: ["daun bawang"] },
+        { kana: "はくさい", kanji: "白菜", arti: ["sawi putih"] },
+        { kana: "ほうれんそう", kanji: "-", arti: ["bayam"] },
+        { kana: "レタス", kanji: "-", arti: ["selada","lettuce"] },
+        { kana: "じゃがいも", kanji: "-", arti: ["kentang"] },
+        { kana: "だいこん", kanji: "大根", arti: ["lobak"] },
+        { kana: "たまねぎ", kanji: "-", arti: ["bawang"] },
+        { kana: "にんじん", kanji: "-", arti: ["wortel"] },
+      
+        // buah-buahan
+        { kana: "いちご", kanji: "-", arti: ["stroberi"] },
+        { kana: "もも", kanji: "桃", arti: ["buah peach"] },
+        { kana: "すいか", kanji: "-", arti: ["semangka"] },
+        { kana: "ぶどう", kanji: "-", arti: ["anggur"] },
+        { kana: "なし", kanji: "梨", arti: ["pir"] },
+        { kana: "かき", kanji: "柿", arti: ["kesemek"] },
+        { kana: "みかん", kanji: "-", arti: ["jeruk"] },
+        { kana: "りんご", kanji: "-", arti: ["apel"] },
+        { kana: "バナナ", kanji: "-", arti: ["pisang"] },
+      
+        // daging
+        { kana: "ぎゅうにく", kanji: "牛肉", arti: ["daging sapi"] },
+        { kana: "とりにく", kanji: "鶏肉", arti: ["daging ayam"] },
+        { kana: "ぶたにく", kanji: "豚肉", arti: ["daging babi"] },
+        { kana: "ソーセージ", kanji: "-", arti: ["sosis"] },
+        { kana: "ハム", kanji: "-", arti: ["ham"] },
+      
+        // ikan & seafood
+        { kana: "あじ", kanji: "鯵", arti: ["ikan mackerel"] },
+        { kana: "いわし", kanji: "鰯", arti: ["ikan sarden"] },
+        { kana: "さば", kanji: "鯖", arti: ["ikan kembung"] },
+        { kana: "さんま", kanji: "秋刀魚", arti: ["ikan sauri pasifik"] },
+        { kana: "さけ", kanji: "鮭", arti: ["ikan salmon"] },
+        { kana: "まぐろ", kanji: "鮪", arti: ["ikan tuna"] },
+        { kana: "たい", kanji: "鯛", arti: ["ikan kakap"] },
+        { kana: "たら", kanji: "鱈", arti: ["ikan cod / gabus"] },
+        { kana: "えび", kanji: "海老", arti: ["udang"] },
+        { kana: "かに", kanji: "蟹", arti: ["kepiting"] },
+        { kana: "いか", kanji: "烏賊", arti: ["cumi-cumi"] },
+        { kana: "たこ", kanji: "蛸", arti: ["gurita"] },
+        { kana: "こめ", kanji: "米", arti: ["beras"] }
+      ],
+      7: [
+        { kana: "きります", kanji: "切ります", arti: ["memotong","menggunting"] },
+        { kana: "おくります", kanji: "送ります", arti: ["mengirim"] },
+        { kana: "あげます", kanji: "-", arti: ["memberikan"] },
+        { kana: "もらいます", kanji: "-", arti: ["menerima","mendapatkan"] },
+        { kana: "かします", kanji: "貸します", arti: ["meminjamkan","menyewakan"] },
+        { kana: "かります", kanji: "借ります", arti: ["meminjam","menyewa"] },
+        { kana: "おしえます", kanji: "教えます", arti: ["mengajar"] },
+        { kana: "ならいます", kanji: "習います", arti: ["belajar (kepada)"] },
+        { kana: "かけます", kanji: "-", arti: ["menelpon"] },
+        { kana: "て", kanji: "手", arti: ["tangan"] },
+        { kana: "はし", kanji: "-", arti: ["sumpit"] },
+        { kana: "スプーン", kanji: "-", arti: ["sendok"] },
+        { kana: "ナイフ", kanji: "-", arti: ["pisau"] },
+        { kana: "フォーク", kanji: "-", arti: ["garpu"] },
+        { kana: "はさみ", kanji: "-", arti: ["gunting"] },
+        { kana: "パソコン", kanji: "-", arti: ["laptop"] },
+        { kana: "ケータイ", kanji: "-", arti: ["HP"] },
+        { kana: "メール", kanji: "-", arti: ["email"] },
+        { kana: "ねんがじょう", kanji: "年賀状", arti: ["kartu tahun baru"] },
+        { kana: "パンチ", kanji: "-", arti: ["pelubang kertas"] },
+        { kana: "ホッチキス", kanji: "-", arti: ["stapler"] },
+        { kana: "セロテープ", kanji: "-", arti: ["selotip"] },
+        { kana: "けしゴム", kanji: "消しゴム", arti: ["penghapus karet"] },
+        { kana: "かみ", kanji: "紙", arti: ["kertas"] },
+        { kana: "はな", kanji: "花", arti: ["bunga"] },
+        { kana: "シャツ", kanji: "-", arti: ["kemeja"] },
+        { kana: "プレゼント", kanji: "-", arti: ["hadiah","kado"] },
+        { kana: "にもつ", kanji: "荷物", arti: ["barang"] },
+        { kana: "おかね", kanji: "お金", arti: ["uang"] },
+        { kana: "きっぷ", kanji: "切符", arti: ["karcis","tiket"] },
+        { kana: "クリスマス", kanji: "-", arti: ["natal"] },
+        { kana: "ちち", kanji: "父", arti: ["ayah (sendiri)"] },
+        { kana: "はは", kanji: "母", arti: ["ibu (sendiri)"] },
+        { kana: "おとうさん", kanji: "お父さん", arti: ["ayah (orang lain)"] },
+        { kana: "おかあさん", kanji: "お母さん", arti: ["ibu (orang lain)"] },
+        { kana: "もう", kanji: "-", arti: ["sudah"] },
+        { kana: "まだ", kanji: "-", arti: ["belum"] },
+        { kana: "これから", kanji: "-", arti: ["mulai dari sekarang"] },
+        { kana: "すてきですね", kanji: "-", arti: ["bagus ya","indah ya"] },
+        { kana: "いらっしゃい", kanji: "-", arti: ["selamat datang"] },
+        { kana: "どうぞおあがりください", kanji: "-", arti: ["silakan masuk"] },
+        { kana: "しつれいします", kanji: "失礼します", arti: ["permisi"] },
+        { kana: "～いかがですか", kanji: "-", arti: ["bagaimana? (menawarkan sesuatu)"] },
+        { kana: "いただきます", kanji: "-", arti: ["selamat makan"] },
+        { kana: "ごちそうさまでした", kanji: "-", arti: ["terima kasih atas hidangannya"] },
+        { kana: "スペイン", kanji: "-", arti: ["spanyol"] },
+      
+        // keluarga sendiri
+        { kana: "かぞく", kanji: "家族", arti: ["keluarga"] },
+        { kana: "そぼ", kanji: "祖母", arti: ["nenek (sendiri)"] },
+        { kana: "そふ", kanji: "祖父", arti: ["kakek (sendiri)"] },
+        { kana: "そふぼ", kanji: "祖父母", arti: ["kakek nenek"] },
+        { kana: "りょうしん", kanji: "両親", arti: ["orang tua"] },
+        { kana: "いもうと", kanji: "妹", arti: ["adik perempuan"] },
+        { kana: "おとうと", kanji: "弟", arti: ["adik laki-laki"] },
+        { kana: "あね", kanji: "姉", arti: ["kakak perempuan"] },
+        { kana: "あに", kanji: "兄", arti: ["kakak laki-laki"] },
+        { kana: "きょうだい", kanji: "兄弟", arti: ["saudara kandung"] },
+        { kana: "つま", kanji: "妻", arti: ["istri"] },
+        { kana: "おっと", kanji: "夫", arti: ["suami"] },
+        { kana: "ふうふ", kanji: "夫婦", arti: ["pasangan suami istri"] },
+        { kana: "むすめ", kanji: "娘", arti: ["anak perempuan"] },
+        { kana: "むすこ", kanji: "息子", arti: ["anak laki-laki"] },
+        { kana: "こども", kanji: "子供", arti: ["anak"] },
+      
+        // keluarga orang lain
+        { kana: "おばあさん", kanji: "-", arti: ["nenek (orang lain)"] },
+        { kana: "おじいさん", kanji: "-", arti: ["kakek (orang lain)"] },
+        { kana: "ごりょうしん", kanji: "ご両親", arti: ["orang tua (orang lain)"] },
+        { kana: "いもうとさん", kanji: "-", arti: ["adik perempuan (orang lain)"] },
+        { kana: "おとうとさん", kanji: "-", arti: ["adik laki-laki (orang lain)"] },
+        { kana: "おねえさん", kanji: "-", arti: ["kakak perempuan (orang lain)"] },
+        { kana: "おにいさん", kanji: "-", arti: ["kakak laki-laki (orang lain)"] },
+        { kana: "ごきょうだい", kanji: "ご兄弟", arti: ["saudara kandung (orang lain)"] },
+        { kana: "おくさん", kanji: "-", arti: ["istri (orang lain)"] },
+        { kana: "ごふうふ", kanji: "ご夫婦", arti: ["pasangan suami istri (orang lain)"] },
+        { kana: "むすめさん", kanji: "-", arti: ["anak perempuan (orang lain)"] },
+        { kana: "むすこさん", kanji: "-", arti: ["anak laki-laki (orang lain)"] },
+        { kana: "おこさん", kanji: "-", arti: ["anak (orang lain)"] }
+      ],
+      8: [
+        // な-adjective
+        { kana: "ハンサム（な）", kanji: "-", arti: ["tampan","gagah","ganteng"] },
+        { kana: "きれい（な）", kanji: "-", arti: ["cantik","bersih"] },
+        { kana: "しずか（な）", kanji: "静か（な）", arti: ["sunyi","tenang"] },
+        { kana: "にぎやか（な）", kanji: "-", arti: ["ramai"] },
+        { kana: "ゆうめい（な）", kanji: "有名（な）", arti: ["terkenal"] },
+        { kana: "しんせつ（な）", kanji: "親切（な）", arti: ["baik hati"] },
+        { kana: "げんき（な）", kanji: "元気（な）", arti: ["sehat"] },
+        { kana: "ひま（な）", kanji: "暇（な）", arti: ["senggang"] },
+        { kana: "べんり（な）", kanji: "便利（な）", arti: ["praktis"] },
+        { kana: "すてき（な）", kanji: "-", arti: ["bagus","indah"] },
+      
+        // い-adjective
+        { kana: "おおきい", kanji: "大きい", arti: ["besar"] },
+        { kana: "ちいさい", kanji: "小さい", arti: ["kecil"] },
+        { kana: "あたらしい", kanji: "新しい", arti: ["baru"] },
+        { kana: "ふるい", kanji: "古い", arti: ["lama","tua"] },
+        { kana: "いい（よい）", kanji: "-", arti: ["baik","bagus"] },
+        { kana: "わるい", kanji: "悪い", arti: ["jelek"] },
+        { kana: "あつい", kanji: "暑い／熱い", arti: ["panas"] },
+        { kana: "さむい", kanji: "寒い", arti: ["dingin (suhu)"] },
+        { kana: "つめたい", kanji: "冷たい", arti: ["dingin (benda)"] },
+        { kana: "むずかしい", kanji: "難しい", arti: ["sulit","susah"] },
+        { kana: "やさしい", kanji: "易しい", arti: ["mudah","gampang"] },
+        { kana: "たかい", kanji: "高い", arti: ["mahal","tinggi"] },
+        { kana: "やすい", kanji: "安い", arti: ["murah"] },
+        { kana: "ひくい", kanji: "低い", arti: ["rendah"] },
+        { kana: "おもしろい", kanji: "-", arti: ["menarik"] },
+        { kana: "おいしい", kanji: "-", arti: ["enak"] },
+        { kana: "いそがしい", kanji: "忙しい", arti: ["sibuk"] },
+        { kana: "たのしい", kanji: "楽しい", arti: ["senang"] },
+        { kana: "しろい", kanji: "白い", arti: ["putih"] },
+        { kana: "くろい", kanji: "黒い", arti: ["hitam"] },
+        { kana: "あかい", kanji: "赤い", arti: ["merah"] },
+        { kana: "あおい", kanji: "青い", arti: ["biru"] },
+      
+        // noun
+        { kana: "さくら", kanji: "桜", arti: ["sakura"] },
+        { kana: "やま", kanji: "山", arti: ["gunung"] },
+        { kana: "まち", kanji: "町", arti: ["kota"] },
+        { kana: "たべもの", kanji: "食べ物", arti: ["makanan"] },
+        { kana: "ところ", kanji: "所", arti: ["tempat"] },
+        { kana: "りょう", kanji: "寮", arti: ["asrama"] },
+        { kana: "レストラン", kanji: "-", arti: ["restoran"] },
+        { kana: "せいかつ", kanji: "生活", arti: ["kehidupan"] },
+        { kana: "しごと", kanji: "仕事", arti: ["pekerjaan"] },
+      
+        // expression
+        { kana: "どう", kanji: "-", arti: ["bagaimana?"] },
+        { kana: "どんな～", kanji: "-", arti: ["yang bagaimana?"] },
+        { kana: "とても", kanji: "-", arti: ["sangat","~ sekali"] },
+        { kana: "あまり", kanji: "-", arti: ["tidak begitu","kurang begitu"] },
+        { kana: "そして", kanji: "-", arti: ["kemudian"] },
+        { kana: "～が～", kanji: "-", arti: ["tetapi"] },
+        { kana: "おげんきですか", kanji: "お元気ですか", arti: ["apa kabar?"] },
+        { kana: "そうですね", kanji: "-", arti: ["bagaimana ya?"] },
+        { kana: "～もういっぱいいかがですか", kanji: "-", arti: ["mau nambah secangkir lagi?"] },
+        { kana: "（いいえ）けっこうです", kanji: "-", arti: ["tidak, cukup"] },
+        { kana: "そろそろしつれいします", kanji: "そろそろ失礼します", arti: ["maaf saya mau pamit dulu"] },
+        { kana: "いいえ", kanji: "-", arti: ["tidak","sama-sama"] },
+        { kana: "またいらっしゃってください", kanji: "-", arti: ["silakan datang lagi"] },
+      
+        // warna
+        { kana: "シャンハイ", kanji: "-", arti: ["shanghai"] },
+        { kana: "みどり", kanji: "緑", arti: ["hijau"] },
+        { kana: "むらさき", kanji: "紫", arti: ["ungu"] },
+        { kana: "きいろい", kanji: "黄色い", arti: ["kuning"] },
+        { kana: "ちゃいろい", kanji: "茶色い", arti: ["cokelat"] },
+        { kana: "ピンク", kanji: "-", arti: ["merah muda"] },
+        { kana: "オレンジ", kanji: "-", arti: ["oranye"] },
+        { kana: "グレー", kanji: "-", arti: ["abu-abu"] },
+        { kana: "ベージュ", kanji: "-", arti: ["krem"] },
+      
+        // musim
+        { kana: "はる", kanji: "春", arti: ["musim semi"] },
+        { kana: "なつ", kanji: "夏", arti: ["musim panas"] },
+        { kana: "あき", kanji: "秋", arti: ["musim gugur"] },
+        { kana: "ふゆ", kanji: "冬", arti: ["musim dingin"] }
+      ],
+      9: [
+        { kana: "わかります", kanji: "分かります", arti: ["mengerti"] },
+        { kana: "あります", kanji: "-", arti: ["ada","mempunyai"] },
+        { kana: "すき（な）", kanji: "好きな", arti: ["suka","gemar"] },
+        { kana: "きらい（な）", kanji: "嫌いな", arti: ["benci"] },
+        { kana: "じょうず（な）", kanji: "上手な", arti: ["pandai","pintar"] },
+        { kana: "へた（な）", kanji: "下手な", arti: ["tidak pandai","bodoh"] },
+      
+        { kana: "のみもの", kanji: "飲み物", arti: ["minuman"] },
+        { kana: "りょうり", kanji: "料理", arti: ["masakan"] },
+        { kana: "スポーツ", kanji: "-", arti: ["olahraga"] },
+        { kana: "やきゅう", kanji: "野球", arti: ["baseball"] },
+        { kana: "ダンス", kanji: "-", arti: ["dansa"] },
+        { kana: "りょこう", kanji: "旅行", arti: ["tamasya"] },
+        { kana: "おんがく", kanji: "音楽", arti: ["musik"] },
+        { kana: "うた", kanji: "歌", arti: ["lagu"] },
+        { kana: "クラシック", kanji: "-", arti: ["musik klasik"] },
+        { kana: "ジャズ", kanji: "-", arti: ["jazz"] },
+        { kana: "コンサート", kanji: "-", arti: ["konser"] },
+        { kana: "カラオケ", kanji: "-", arti: ["karaoke"] },
+        { kana: "かぶき", kanji: "歌舞伎", arti: ["kabuki (drama tradisional jepang)"] },
+        { kana: "え", kanji: "絵", arti: ["gambar"] },
+        { kana: "じ", kanji: "字", arti: ["huruf"] },
+        { kana: "かんじ", kanji: "漢字", arti: ["kanji"] },
+        { kana: "ひらがな", kanji: "-", arti: ["hiragana"] },
+        { kana: "かたかな", kanji: "-", arti: ["katakana"] },
+        { kana: "ローマじ", kanji: "-", arti: ["huruf latin"] },
+        { kana: "こまかいおかね", kanji: "細かいお金", arti: ["uang kecil","receh"] },
+        { kana: "チケット", kanji: "-", arti: ["tiket"] },
+        { kana: "じかん", kanji: "時間", arti: ["waktu"] },
+        { kana: "ようじ", kanji: "用事", arti: ["urusan"] },
+        { kana: "やくそく", kanji: "約束", arti: ["janji"] },
+        { kana: "アルバイト", kanji: "-", arti: ["kerja paruh waktu"] },
+      
+        { kana: "ごしゅじん", kanji: "ご主人", arti: ["suami (orang lain)"] },
+        { kana: "おっと／しゅじん", kanji: "夫／主人", arti: ["suami"] },
+        { kana: "おくさん", kanji: "奥さん", arti: ["istri (orang lain)"] },
+        { kana: "つま／かない", kanji: "妻／家内", arti: ["istri"] },
+        { kana: "こども", kanji: "子供", arti: ["anak"] },
+      
+        { kana: "よく", kanji: "-", arti: ["dengan baik"] },
+        { kana: "だいたい", kanji: "-", arti: ["kira-kira"] },
+        { kana: "たくさん", kanji: "-", arti: ["banyak"] },
+        { kana: "すこし", kanji: "少し", arti: ["sedikit"] },
+        { kana: "ぜんぜん", kanji: "全然", arti: ["sama sekali"] },
+        { kana: "はやく", kanji: "早く／速く", arti: ["dengan cepat"] },
+      
+        { kana: "～から", kanji: "-", arti: ["karena"] },
+        { kana: "どうして", kanji: "-", arti: ["kenapa"] },
+        { kana: "かしてください", kanji: "貸してください", arti: ["tolong pinjamkan"] },
+        { kana: "いいですよ", kanji: "-", arti: ["boleh"] },
+        { kana: "ざんねんです", kanji: "残念です", arti: ["sayang sekali"] },
+        { kana: "いっしょにいかがですか", kanji: "-", arti: ["bagaimana kalau bersama-sama"] },
+        { kana: "～ちょっと....", kanji: "-", arti: ["maaf, saya tidak bisa"] },
+        { kana: "だめですか", kanji: "-", arti: ["tidak bisa ya","tidak boleh ya"] },
+        { kana: "またこんどおねがいします", kanji: "また今度お願いします", arti: ["maaf lain kali saja"] },
+      
+        // genre musik & film
+        { kana: "ポップス", kanji: "-", arti: ["pop"] },
+        { kana: "ロック", kanji: "-", arti: ["rock"] },
+        { kana: "ラテン", kanji: "-", arti: ["musik latin"] },
+        { kana: "みんよう", kanji: "民謡", arti: ["musik rakyat","nyanyian daerah"] },
+        { kana: "えんか", kanji: "演歌", arti: ["lagu tradisional jepang populer"] },
+        { kana: "ミュージカル", kanji: "-", arti: ["drama musikal"] },
+        { kana: "オペラ", kanji: "-", arti: ["opera"] },
+        { kana: "ホラー", kanji: "-", arti: ["film horor"] },
+        { kana: "アニメ", kanji: "-", arti: ["film kartun","animasi"] },
+        { kana: "ドキュメンタリー", kanji: "-", arti: ["film dokumenter"] },
+        { kana: "れんあい", kanji: "恋愛", arti: ["film percintaan"] },
+        { kana: "ミステリー", kanji: "-", arti: ["film misteri"] },
+        { kana: "ぶんげい", kanji: "文芸", arti: ["film kesusastraan"] },
+        { kana: "せんそう", kanji: "戦争", arti: ["film peperangan"] },
+        { kana: "アクション", kanji: "-", arti: ["film aksi"] },
+        { kana: "きげき", kanji: "喜劇", arti: ["film komedi"] },
+      
+        // olahraga
+        { kana: "ソフトボール", kanji: "-", arti: ["softball"] },
+        { kana: "サッカー", kanji: "-", arti: ["sepak bola"] },
+        { kana: "ラグビー", kanji: "-", arti: ["rugby"] },
+        { kana: "バレーボール", kanji: "-", arti: ["voli"] },
+        { kana: "テニス", kanji: "-", arti: ["tenis"] },
+        { kana: "ボウリング", kanji: "-", arti: ["bowling"] },
+        { kana: "スキー", kanji: "-", arti: ["ski"] },
+        { kana: "スケート", kanji: "-", arti: ["skate"] },
+        { kana: "たっきゅう／ピンポン", kanji: "卓球", arti: ["pingpong"] },
+        { kana: "すもう", kanji: "相撲", arti: ["sumo"] },
+        { kana: "じゅうどう", kanji: "柔道", arti: ["judo"] },
+        { kana: "けんどう", kanji: "剣道", arti: ["kendo"] },
+        { kana: "すいえい", kanji: "水泳", arti: ["renang"] }
+      ],
+      10: [
+        { kana: "あります", kanji: "-", arti: ["ada (benda mati)"] },
+        { kana: "います", kanji: "-", arti: ["ada (benda hidup)"] },
+        { kana: "いろいろ（な）", kanji: "-", arti: ["berbagai","macam-macam"] },
+      
+        { kana: "おとこのひと", kanji: "男の人", arti: ["orang laki-laki"] },
+        { kana: "おんなのひと", kanji: "女の人", arti: ["orang perempuan"] },
+        { kana: "おとこのこ", kanji: "男の子", arti: ["anak laki-laki"] },
+        { kana: "おんなのこ", kanji: "女の子", arti: ["anak perempuan"] },
+      
+        { kana: "いぬ", kanji: "犬", arti: ["anjing"] },
+        { kana: "ねこ", kanji: "猫", arti: ["kucing"] },
+        { kana: "パンダ", kanji: "-", arti: ["panda"] },
+        { kana: "ぞう", kanji: "象", arti: ["gajah"] },
+        { kana: "き", kanji: "木", arti: ["pohon"] },
+        { kana: "でんち", kanji: "電池", arti: ["baterai"] },
+        { kana: "はこ", kanji: "箱", arti: ["kotak"] },
+        { kana: "スイッチ", kanji: "-", arti: ["saklar"] },
+        { kana: "もの", kanji: "物", arti: ["barang","benda"] },
+        { kana: "れいぞうこ", kanji: "冷蔵庫", arti: ["kulkas"] },
+        { kana: "テーブル", kanji: "-", arti: ["meja makan"] },
+        { kana: "ベッド", kanji: "-", arti: ["tempat tidur"] },
+        { kana: "たな", kanji: "棚", arti: ["lemari","rak"] },
+        { kana: "ドア", kanji: "-", arti: ["pintu"] },
+        { kana: "まど", kanji: "窓", arti: ["jendela"] },
+        { kana: "ポスト", kanji: "-", arti: ["kotak surat"] },
+        { kana: "ビル", kanji: "-", arti: ["gedung"] },
+        { kana: "ATM", kanji: "-", arti: ["ATM"] },
+        { kana: "コンビニ", kanji: "-", arti: ["toko 24 jam"] },
+        { kana: "こうえん", kanji: "公園", arti: ["taman"] },
+        { kana: "きっさてん", kanji: "喫茶店", arti: ["kedai kopi","café"] },
+        { kana: "～や", kanji: "～屋", arti: ["toko ~"] },
+        { kana: "のりば", kanji: "乗り場", arti: ["tempat naik","halte","terminal"] },
+        { kana: "けん", kanji: "県", arti: ["prefektur"] },
+      
+        { kana: "うえ", kanji: "上", arti: ["atas"] },
+        { kana: "した", kanji: "下", arti: ["bawah"] },
+        { kana: "まえ", kanji: "前", arti: ["depan"] },
+        { kana: "うしろ", kanji: "後ろ", arti: ["belakang"] },
+        { kana: "みぎ", kanji: "右", arti: ["kanan"] },
+        { kana: "ひだり", kanji: "左", arti: ["kiri"] },
+        { kana: "なか", kanji: "中", arti: ["dalam"] },
+        { kana: "そと", kanji: "外", arti: ["luar"] },
+        { kana: "となり", kanji: "隣", arti: ["sebelah","samping"] },
+        { kana: "ちかく", kanji: "近く", arti: ["dekat"] },
+        { kana: "あいだ", kanji: "間", arti: ["antara"] },
+      
+        { kana: "どうもすみません", kanji: "-", arti: ["maaf","terima kasih banyak"] },
+        { kana: "ナンプラー", kanji: "-", arti: ["kecap ikan (nam pla)"] },
+        { kana: "コーナー", kanji: "-", arti: ["pojok","bagian penjualan"] },
+        { kana: "いちばんした", kanji: "一番下", arti: ["paling bawah"] },
+        { kana: "げんかん", kanji: "玄関", arti: ["pintu masuk"] },
+        { kana: "ふろば", kanji: "風呂場", arti: ["kamar mandi"] },
+        { kana: "せんめんじょ", kanji: "洗面所", arti: ["tempat cuci tangan"] },
+        { kana: "だいどころ", kanji: "台所", arti: ["dapur"] },
+        { kana: "しょくどう", kanji: "食堂", arti: ["kantin","ruang makan"] },
+        { kana: "いま", kanji: "居間", arti: ["ruang tamu"] },
+        { kana: "しんしつ", kanji: "寝室", arti: ["kamar tidur"] },
+        { kana: "ろうか", kanji: "廊下", arti: ["koridor"] },
+        { kana: "ベランダ", kanji: "-", arti: ["teras","balkon"] }
+      ],
+      11: [
+        { kana: "います", kanji: "-", arti: ["ada / mempunyai (benda hidup)"] },
+        { kana: "かかります", kanji: "-", arti: ["memerlukan waktu / biaya"] },
+        { kana: "やすみます", kanji: "休みます", arti: ["tidak masuk kerja","libur"] },
+        { kana: "ひとつ", kanji: "-", arti: ["1 buah"] },
+        { kana: "ふたつ", kanji: "-", arti: ["2 buah"] },
+        { kana: "みっつ", kanji: "-", arti: ["3 buah"] },
+        { kana: "よっつ", kanji: "-", arti: ["4 buah"] },
+        { kana: "いつつ", kanji: "-", arti: ["5 buah"] },
+        { kana: "むっつ", kanji: "-", arti: ["6 buah"] },
+        { kana: "ななつ", kanji: "-", arti: ["7 buah"] },
+        { kana: "やっつ", kanji: "-", arti: ["8 buah"] },
+        { kana: "ここのつ", kanji: "-", arti: ["9 buah"] },
+        { kana: "とお", kanji: "-", arti: ["10 buah"] },
+        { kana: "いくつ", kanji: "-", arti: ["berapa buah?"] },
+        { kana: "ひとり", kanji: "-", arti: ["1 orang"] },
+        { kana: "ふたり", kanji: "-", arti: ["2 orang"] },
+        { kana: "～にん", kanji: "～人", arti: ["~ orang"] },
+        { kana: "～だい", kanji: "～台", arti: ["~ unit (mesin/kendaraan)"] },
+        { kana: "～まい", kanji: "～枚", arti: ["~ lembar"] },
+        { kana: "～かい", kanji: "～回", arti: ["~ kali"] },
+        { kana: "りんご", kanji: "-", arti: ["apel"] },
+        { kana: "みかん", kanji: "-", arti: ["jeruk"] },
+        { kana: "サンドイッチ", kanji: "-", arti: ["sandwich"] },
+        { kana: "カレー", kanji: "-", arti: ["kari"] },
+        { kana: "アイスクリーム", kanji: "-", arti: ["es krim"] },
+        { kana: "きって", kanji: "切手", arti: ["perangko"] },
+        { kana: "はがき", kanji: "-", arti: ["kartu pos"] },
+        { kana: "ふうとう", kanji: "封筒", arti: ["amplop"] },
+        { kana: "がいこく", kanji: "外国", arti: ["luar negeri"] },
+        { kana: "りゅうがくせい", kanji: "留学生", arti: ["pelajar asing"] },
+        { kana: "クラス", kanji: "-", arti: ["kelas"] },
+        { kana: "～じかん", kanji: "～時間", arti: ["~ jam"] },
+        { kana: "～しゅうかん", kanji: "～週間", arti: ["~ minggu"] },
+        { kana: "～かげつ", kanji: "～か月", arti: ["~ bulan"] },
+        { kana: "～ねん", kanji: "～年", arti: ["~ tahun"] },
+        { kana: "～ぐらい", kanji: "-", arti: ["kira-kira ~"] },
+        { kana: "どのくらい", kanji: "-", arti: ["berapa lama?"] },
+        { kana: "ぜんぶで", kanji: "全部で", arti: ["semuanya"] },
+        { kana: "みんな", kanji: "-", arti: ["semua","semuanya"] },
+        { kana: "～だけ", kanji: "-", arti: ["hanya ~"] },
+        { kana: "かしこまりました", kanji: "-", arti: ["baik, mengerti (bahasa sopan)"] },
+        { kana: "いいてんきですね", kanji: "いい天気ですね", arti: ["cuacanya bagus ya"] },
+        { kana: "おでかけですか", kanji: "お出かけですか", arti: ["mau keluar?"] },
+        { kana: "いってらっしゃい", kanji: "-", arti: ["hati-hati (saat berangkat)"] },
+        { kana: "いってきます", kanji: "-", arti: ["saya berangkat"] },
+      
+        { kana: "ふなびん", kanji: "船便", arti: ["pos laut"] },
+        { kana: "こうくうびん", kanji: "航空便", arti: ["pos udara"] },
+        { kana: "エアメール", kanji: "-", arti: ["pos udara (airmail)"] },
+        { kana: "オーストラリア", kanji: "-", arti: ["Australia"] },
+      
+        { kana: "ていしょく", kanji: "定食", arti: ["makanan paket (set menu)"] },
+        { kana: "ランチ", kanji: "-", arti: ["makan siang"] },
+        { kana: "てんどん", kanji: "天どん", arti: ["semangkuk nasi + tempura"] },
+        { kana: "おやこどん", kanji: "親子どん", arti: ["nasi dengan ayam & telur"] },
+        { kana: "ぎゅうどん", kanji: "牛どん", arti: ["nasi dengan daging sapi"] },
+        { kana: "やきにく", kanji: "焼肉", arti: ["daging panggang"] },
+        { kana: "やさいため", kanji: "野菜ため", arti: ["sayur goreng"] },
+        { kana: "つけもの", kanji: "漬物", arti: ["asinan"] },
+        { kana: "みそしる", kanji: "みそ汁", arti: ["sup miso"] },
+        { kana: "おにぎり", kanji: "-", arti: ["nasi kepal"] },
+        { kana: "てんぷら", kanji: "-", arti: ["tempura"] },
+        { kana: "すし", kanji: "-", arti: ["sushi (nasi cuka + ikan mentah)"] },
+        { kana: "うどん", kanji: "-", arti: ["mi Jepang ukuran besar"] },
+        { kana: "そば", kanji: "-", arti: ["mi Jepang warna coklat/abu"] },
+        { kana: "ラーメン", kanji: "-", arti: ["ramen (mi Jepang kuah)"] },
+        { kana: "やきそば", kanji: "焼きそば", arti: ["mi goreng Jepang"] },
+        { kana: "おこのみやき", kanji: "お好み焼き", arti: ["pancake asin Jepang"] },
+        { kana: "カレーライス", kanji: "-", arti: ["nasi kari"] },
+        { kana: "ハンバーグ", kanji: "-", arti: ["hamburger steak"] },
+        { kana: "コロッケ", kanji: "-", arti: ["kroket"] },
+        { kana: "えびフライ", kanji: "-", arti: ["udang goreng tepung"] },
+        { kana: "フライドチキン", kanji: "-", arti: ["ayam goreng"] },
+        { kana: "サラダ", kanji: "-", arti: ["salad"] },
+        { kana: "スープ", kanji: "-", arti: ["sup"] },
+        { kana: "スパゲッティ", kanji: "-", arti: ["spageti"] },
+        { kana: "ピザ", kanji: "-", arti: ["pizza"] },
+        { kana: "トースト", kanji: "-", arti: ["roti panggang"] },
+        { kana: "コーヒー", kanji: "-", arti: ["kopi"] },
+        { kana: "こうちゃ", kanji: "紅茶", arti: ["teh"] },
+        { kana: "ココア", kanji: "-", arti: ["minuman coklat"] },
+        { kana: "ジュース", kanji: "-", arti: ["jus"] },
+        { kana: "コーラ", kanji: "-", arti: ["coca cola"] }
+      ],
+      12: [
+        { kana: "かんたん（な）", kanji: "簡単な", arti: ["mudah","gampang"] },
+        { kana: "ちかい", kanji: "近い", arti: ["dekat"] },
+        { kana: "とおい", kanji: "遠い", arti: ["jauh"] },
+        { kana: "はやい", kanji: "早い / 速い", arti: ["cepat"] },
+        { kana: "おそい", kanji: "遅い", arti: ["lambat"] },
+        { kana: "おおい", kanji: "多い", arti: ["banyak"] },
+        { kana: "すくない", kanji: "少ない", arti: ["sedikit"] },
+        { kana: "あたたかい", kanji: "暖かい / 温かい", arti: ["hangat"] },
+        { kana: "すずしい", kanji: "涼しい", arti: ["sejuk"] },
+        { kana: "あまい", kanji: "甘い", arti: ["manis"] },
+        { kana: "からい", kanji: "辛い", arti: ["pedas"] },
+        { kana: "おもい", kanji: "重い", arti: ["berat"] },
+        { kana: "かるい", kanji: "軽い", arti: ["ringan"] },
+        { kana: "いい", kanji: "-", arti: ["lebih baik","bagus"] },
+        { kana: "きせつ", kanji: "季節", arti: ["musim"] },
+        { kana: "てんき", kanji: "天気", arti: ["cuaca"] },
+        { kana: "あめ", kanji: "雨", arti: ["hujan"] },
+        { kana: "ゆき", kanji: "雪", arti: ["salju"] },
+        { kana: "くもり", kanji: "曇り", arti: ["mendung"] },
+        { kana: "ホテル", kanji: "-", arti: ["hotel"] },
+        { kana: "くうこう", kanji: "空港", arti: ["bandara"] },
+        { kana: "うみ", kanji: "海", arti: ["laut"] },
+        { kana: "せかい", kanji: "世界", arti: ["dunia"] },
+        { kana: "パーティー", kanji: "-", arti: ["pesta"] },
+        { kana: "まつり", kanji: "祭り", arti: ["perayaan","festival"] },
+        { kana: "レモン", kanji: "-", arti: ["lemon"] },
+        { kana: "いけばな", kanji: "生け花", arti: ["seni merangkai bunga"] },
+        { kana: "もみじ", kanji: "紅葉", arti: ["daun maple","daun musim gugur"] },
+        { kana: "どちら", kanji: "-", arti: ["yang mana"] },
+        { kana: "どちらも", kanji: "-", arti: ["dua-duanya","yang mana saja"] },
+        { kana: "いちばん", kanji: "-", arti: ["yang paling"] },
+        { kana: "ずっと", kanji: "-", arti: ["selamanya","terus-menerus"] },
+        { kana: "はじめて", kanji: "初めて", arti: ["pertama kali"] },
+        { kana: "ただいま", kanji: "-", arti: ["saya pulang","saya kembali"] },
+        { kana: "おかえりなさい", kanji: "お帰りなさい", arti: ["sudah pulang ya"] },
+        { kana: "わあ、すごいひとですね", kanji: "-", arti: ["wah… banyak orang ya"] },
+        { kana: "つかれました", kanji: "疲れました", arti: ["capek","lelah"] },
+        { kana: "ホンコン", kanji: "-", arti: ["Hongkong"] },
+        { kana: "シンガポール", kanji: "-", arti: ["Singapura"] },
+        { kana: "めいしょ", kanji: "名所", arti: ["tempat terkenal"] }
+      ],
+      13: [
+        { kana: "あそびます", kanji: "遊びます", arti: ["bermain"] },
+        { kana: "およぎます", kanji: "泳ぎます", arti: ["berenang"] },
+        { kana: "むかえます", kanji: "迎えます", arti: ["menjemput"] },
+        { kana: "つかれます", kanji: "疲れます", arti: ["lelah"] },
+        { kana: "けっこんします", kanji: "結婚します", arti: ["menikah"] },
+        { kana: "かいものします", kanji: "買い物します", arti: ["berbelanja"] },
+        { kana: "しょくじします", kanji: "食事します", arti: ["makan bersama"] },
+        { kana: "さんぽします", kanji: "散歩します", arti: ["jalan-jalan"] },
+        { kana: "たいへん（な）", kanji: "大変な", arti: ["susah","berat"] },
+        { kana: "ほしい", kanji: "欲しい", arti: ["ingin"] },
+        { kana: "ひろい", kanji: "広い", arti: ["luas"] },
+        { kana: "せまい", kanji: "狭い", arti: ["sempit"] },
+        { kana: "プール", kanji: "-", arti: ["kolam renang"] },
+        { kana: "かわ", kanji: "川", arti: ["sungai"] },
+        { kana: "びじゅつ", kanji: "美術", arti: ["seni"] },
+        { kana: "つり", kanji: "釣り", arti: ["pancing","memancing"] },
+        { kana: "スキー", kanji: "-", arti: ["ski"] },
+        { kana: "しゅうまつ", kanji: "週末", arti: ["akhir pekan"] },
+        { kana: "おしょうがつ", kanji: "お正月", arti: ["tahun baru"] },
+        { kana: "～ごろ", kanji: "-", arti: ["kira-kira","sekitar"] },
+        { kana: "なにか", kanji: "何か", arti: ["sesuatu"] },
+        { kana: "どこか", kanji: "-", arti: ["suatu tempat"] },
+        { kana: "のどがかわきます", kanji: "-", arti: ["haus"] },
+        { kana: "おなかがすきます", kanji: "-", arti: ["lapar"] },
+        { kana: "そうしましょう", kanji: "-", arti: ["ya ayo"] },
+        { kana: "ごちゅうもんは", kanji: "ご注文は", arti: ["mau pesan apa?"] },
+        { kana: "おまちください", kanji: "お待ちください", arti: ["tunggu sebentar"] },
+        { kana: "べつべつに", kanji: "別々に", arti: ["sendiri-sendiri","masing-masing"] },
+        { kana: "はくぶつかん", kanji: "博物館", arti: ["museum"] },
+        { kana: "びじゅつかん", kanji: "美術館", arti: ["gedung kesenian"] },
+        { kana: "としょかん", kanji: "図書館", arti: ["perpustakaan"] },
+        { kana: "えいがかん", kanji: "映画館", arti: ["bioskop"] },
+        { kana: "どうぶつえん", kanji: "動物園", arti: ["kebun binatang"] },
+        { kana: "しょくぶつえん", kanji: "植物園", arti: ["kebun raya"] },
+        { kana: "おてら", kanji: "お寺", arti: ["kuil budha"] },
+        { kana: "じんじゃ", kanji: "神社", arti: ["kuil sinto"] },
+        { kana: "きょうかい", kanji: "教会", arti: ["gereja"] },
+        { kana: "たいしかん", kanji: "大使館", arti: ["kedutaan besar"] },
+        { kana: "にゅうこくかんりきょく", kanji: "入国管理局", arti: ["kantor imigrasi"] },
+        { kana: "しやくしょ", kanji: "市役所", arti: ["kantor balaikota"] },
+        { kana: "こうばん", kanji: "交番", arti: ["pos polisi"] },
+        { kana: "ちゅうしゃじょう", kanji: "駐車場", arti: ["tempat parkir"] },
+        { kana: "だいがく", kanji: "大学", arti: ["universitas"] },
+        { kana: "こうこう", kanji: "高校", arti: ["SMA"] },
+        { kana: "ちゅうがっこう", kanji: "中学校", arti: ["SMP"] },
+        { kana: "しょうがっこう", kanji: "小学校", arti: ["SD"] },
+        { kana: "ようちえん", kanji: "幼稚園", arti: ["TK"] },
+        { kana: "にくや", kanji: "肉屋", arti: ["toko daging"] },
+        { kana: "パンや", kanji: "-", arti: ["toko roti"] },
+        { kana: "さかなや", kanji: "魚屋", arti: ["toko ikan"] },
+        { kana: "やおや", kanji: "八百屋", arti: ["toko sayuran"] }
+      ],
+      14: [
+        { kana: "つけます", kanji: "-", arti: ["menyalakan","memasang","menghidupkan"] },
+        { kana: "けします", kanji: "消します", arti: ["mematikan","memadamkan"] },
+        { kana: "あけます", kanji: "開けます", arti: ["membuka"] },
+        { kana: "しめます", kanji: "閉めます", arti: ["menutup"] },
+        { kana: "いそぎます", kanji: "急ぎます", arti: ["buru-buru"] },
+        { kana: "まちます", kanji: "待ちます", arti: ["menunggu"] },
+        { kana: "もちます", kanji: "持ちます", arti: ["membawa"] },
+        { kana: "とります", kanji: "取ります", arti: ["mengambil"] },
+        { kana: "てつだいます", kanji: "手伝います", arti: ["membantu"] },
+        { kana: "よびます", kanji: "呼びます", arti: ["memanggil"] },
+        { kana: "はなします", kanji: "話します", arti: ["berbicara"] },
+        { kana: "つかいます", kanji: "使います", arti: ["memakai"] },
+        { kana: "とめます", kanji: "止めます", arti: ["menghentikan"] },
+        { kana: "みせます", kanji: "見せます", arti: ["memperlihatkan"] },
+        { kana: "おしえます", kanji: "教えます", arti: ["memberitahu"] },
+        { kana: "すわります", kanji: "座ります", arti: ["duduk"] },
+        { kana: "たちます", kanji: "立ちます", arti: ["berdiri"] },
+        { kana: "はいります", kanji: "入ります", arti: ["masuk"] },
+        { kana: "でます", kanji: "出ます", arti: ["keluar"] },
+        { kana: "ふります", kanji: "降ります", arti: ["turun (hujan)"] },
+        { kana: "コピーします", kanji: "-", arti: ["memfotokopi"] },
+        { kana: "でんき", kanji: "電気", arti: ["listrik","lampu"] },
+        { kana: "エアコン", kanji: "-", arti: ["AC"] },
+        { kana: "パスポート", kanji: "-", arti: ["paspor"] },
+        { kana: "なまえ", kanji: "名前", arti: ["nama"] },
+        { kana: "じゅうしょ", kanji: "住所", arti: ["alamat"] },
+        { kana: "ちず", kanji: "地図", arti: ["peta"] },
+        { kana: "しお", kanji: "塩", arti: ["garam"] },
+        { kana: "さとう", kanji: "砂糖", arti: ["gula"] },
+        { kana: "もんだい", kanji: "問題", arti: ["masalah","soal"] },
+        { kana: "こたえ", kanji: "答え", arti: ["jawaban"] },
+        { kana: "よみかた", kanji: "読み方", arti: ["cara membaca"] },
+        { kana: "～かた", kanji: "～方", arti: ["cara ~"] },
+        { kana: "まっすぐ", kanji: "-", arti: ["lurus"] },
+        { kana: "ゆっくり", kanji: "-", arti: ["pelan-pelan","istirahat dengan baik"] },
+        { kana: "すぐ", kanji: "-", arti: ["segera","langsung"] },
+        { kana: "また", kanji: "-", arti: ["lagi"] },
+        { kana: "あとで", kanji: "-", arti: ["nanti"] },
+        { kana: "もうすこし", kanji: "もう少し", arti: ["sedikit lagi"] },
+        { kana: "もう～", kanji: "-", arti: ["~lagi"] },
+        { kana: "さあ", kanji: "-", arti: ["mari"] },
+        { kana: "あれ？", kanji: "-", arti: ["ah (saat heran atau kaget)"] },
+        { kana: "これでおねがいします", kanji: "これでお願いします", arti: ["minta dengan ini"] },
+        { kana: "おつり", kanji: "お釣り", arti: ["kembalian"] },
+        { kana: "きっぷうりば", kanji: "切符売り場", arti: ["loket penjualan karcis"] },
+        { kana: "じどうけんばいき", kanji: "自動券売機", arti: ["mesin karcis otomatis"] },
+        { kana: "せいさんき", kanji: "精算機", arti: ["alat penghitung otomatis"] },
+        { kana: "かいさつぐち", kanji: "改札口", arti: ["pintu pemeriksaan karcis"] },
+        { kana: "でぐち", kanji: "出口", arti: ["pintu keluar"] },
+        { kana: "いりぐち", kanji: "入口", arti: ["pintu masuk"] },
+        { kana: "ひがしぐち", kanji: "東口", arti: ["pintu timur"] },
+        { kana: "にしぐち", kanji: "西口", arti: ["pintu barat"] },
+        { kana: "みなみぐち", kanji: "南口", arti: ["pintu selatan"] },
+        { kana: "きたぐち", kanji: "北口", arti: ["pintu utara"] },
+        { kana: "ちゅうおうぐち", kanji: "中央口", arti: ["pintu tengah"] },
+        { kana: "プラットホーム", kanji: "-", arti: ["peron"] },
+        { kana: "ばいてん", kanji: "売店", arti: ["kios","kedai"] },
+        { kana: "コインロッカー", kanji: "-", arti: ["loker"] },
+        { kana: "タクシーのりば", kanji: "-", arti: ["tempat naik taksi"] },
+        { kana: "バスターミナル", kanji: "-", arti: ["terminal bis"] },
+        { kana: "バスてい", kanji: "バス停", arti: ["halte bis"] },
+        { kana: "かいそく", kanji: "快速", arti: ["kereta cepat (pinggir kota)"] },
+        { kana: "じゅんきゅう", kanji: "準急", arti: ["kereta semi cepat"] },
+        { kana: "じこくひょう", kanji: "時刻表", arti: ["jadwal keberangkatan"] },
+        { kana: "～はつ", kanji: "～発", arti: ["berangkat dari","berangkat pukul"] },
+        { kana: "～ちゃく", kanji: "～着", arti: ["tiba di","tiba pukul"] },
+        { kana: "とうきょういき", kanji: "東京行き", arti: ["tujuan Tokyo"] },
+        { kana: "ていきけん", kanji: "定期券", arti: ["kartu langganan berjangka"] },
+        { kana: "かいすうけん", kanji: "回数券", arti: ["karcis kupon"] },
+        { kana: "かたみち", kanji: "片道", arti: ["sekali jalan"] },
+        { kana: "おうふく", kanji: "往復", arti: ["pulang pergi"] }
+      ],
+      15: [
+        { kana: "おきます", kanji: "置きます", arti: ["meletakkan"] },
+        { kana: "つくります", kanji: "作ります", arti: ["membuat"] },
+        { kana: "うります", kanji: "売ります", arti: ["menjual"] },
+        { kana: "しります", kanji: "知ります", arti: ["mengetahui","mengenal"] },
+        { kana: "すみます", kanji: "住みます", arti: ["tinggal"] },
+        { kana: "けんきゅうします", kanji: "研究します", arti: ["meneliti"] },
+        { kana: "しりょう", kanji: "資料", arti: ["data","bahan"] },
+        { kana: "カタログ", kanji: "-", arti: ["katalog"] },
+        { kana: "ふく", kanji: "服", arti: ["pakaian"] },
+        { kana: "せいひん", kanji: "製品", arti: ["produk"] },
+        { kana: "ソフト", kanji: "-", arti: ["perangkat lunak"] },
+        { kana: "でんしじしょ", kanji: "電子辞書", arti: ["kamus elektronik"] },
+        { kana: "けいざい", kanji: "経済", arti: ["ekonomi"] },
+        { kana: "はいしゃ", kanji: "歯医者", arti: ["dokter gigi"] },
+        { kana: "どくしん", kanji: "独身", arti: ["bujangan","jomblo"] },
+        { kana: "おもいだします", kanji: "思い出します", arti: ["teringat"] },
+        { kana: "いらっしゃいます", kanji: "-", arti: ["ada (hidup)"] },
+        { kana: "しょくぎょう", kanji: "職業", arti: ["pekerjaan","profesi"] },
+        { kana: "かいしゃいん", kanji: "会社員", arti: ["pegawai perusahaan"] },
+        { kana: "こうむいん", kanji: "公務員", arti: ["pegawai negeri"] },
+        { kana: "えきいん", kanji: "駅員", arti: ["pegawai stasiun"] },
+        { kana: "ぎんこういん", kanji: "銀行員", arti: ["pegawai bank"] },
+        { kana: "ゆうびんきょくいん", kanji: "郵便局員", arti: ["pegawai kantor pos"] },
+        { kana: "てんいん", kanji: "店員", arti: ["pegawai toko"] },
+        { kana: "ちょうりし", kanji: "調理師", arti: ["tukang masak"] },
+        { kana: "りようし", kanji: "理容師", arti: ["tukang potong rambut"] },
+        { kana: "びようし", kanji: "美容師", arti: ["ahli kecantikan"] },
+        { kana: "きょうし", kanji: "教師", arti: ["guru"] },
+        { kana: "べんごし", kanji: "弁護士", arti: ["pengacara"] },
+        { kana: "けんきゅうしゃ", kanji: "研究者", arti: ["peneliti"] },
+        { kana: "いしゃ", kanji: "医者", arti: ["dokter"] },
+        { kana: "かんごし", kanji: "看護師", arti: ["perawat"] },
+        { kana: "うんてんしゅ", kanji: "運転手", arti: ["sopir"] },
+        { kana: "けいさつかん", kanji: "警察官", arti: ["polisi"] },
+        { kana: "がいこうかん", kanji: "外交官", arti: ["diplomat"] },
+        { kana: "せいじか", kanji: "政治家", arti: ["politikus"] },
+        { kana: "がか", kanji: "画家", arti: ["pelukis"] },
+        { kana: "さっか", kanji: "作家", arti: ["pengarang"] },
+        { kana: "おんがくか", kanji: "音楽家", arti: ["musisi"] },
+        { kana: "けんちくか", kanji: "建築家", arti: ["arsitek"] },
+        { kana: "エンジニア", kanji: "-", arti: ["insinyur"] },
+        { kana: "デザイナー", kanji: "-", arti: ["perancang busana"] },
+        { kana: "ジャーナリスト", kanji: "-", arti: ["wartawan"] },
+        { kana: "かしゅ", kanji: "歌手", arti: ["penyanyi"] },
+        { kana: "はいゆう", kanji: "俳優", arti: ["aktor","artis"] },
+        { kana: "スポーツせんしゅ", kanji: "スポーツ選手", arti: ["olahragawan","atlet"] }
+      ],
+      16: [
+        { kana: "のります", kanji: "乗ります", arti: ["naik"] },
+        { kana: "おります", kanji: "降ります", arti: ["turun"] },
+        { kana: "のりかえます", kanji: "乗り換えます", arti: ["ganti","pindah kendaraan"] },
+        { kana: "あびます", kanji: "浴びます", arti: ["mandi"] },
+        { kana: "いれます", kanji: "入れます", arti: ["memasukkan"] },
+        { kana: "だします", kanji: "出します", arti: ["mengeluarkan"] },
+        { kana: "おろします", kanji: "下ろします", arti: ["mengambil uang","mengeluarkan"] },
+        { kana: "はいります", kanji: "入ります", arti: ["masuk"] },
+        { kana: "でます", kanji: "出ます", arti: ["keluar"] },
+        { kana: "おします", kanji: "押します", arti: ["menekan"] },
+        { kana: "のみます", kanji: "飲みます", arti: ["minum"] },
+        { kana: "はじめます", kanji: "始めます", arti: ["mulai"] },
+        { kana: "けんがくします", kanji: "見学します", arti: ["mengunjungi","kunjungan belajar"] },
+        { kana: "でんわします", kanji: "電話します", arti: ["menelepon"] },
+        { kana: "わかい", kanji: "若い", arti: ["muda"] },
+        { kana: "ながい", kanji: "長い", arti: ["panjang"] },
+        { kana: "みじかい", kanji: "短い", arti: ["pendek"] },
+        { kana: "あかるい", kanji: "明るい", arti: ["terang"] },
+        { kana: "くらい", kanji: "暗い", arti: ["gelap"] },
+        { kana: "からだ", kanji: "体", arti: ["badan"] },
+        { kana: "あたま", kanji: "頭", arti: ["kepala"] },
+        { kana: "かみ", kanji: "髪", arti: ["rambut"] },
+        { kana: "かお", kanji: "顔", arti: ["wajah"] },
+        { kana: "め", kanji: "目", arti: ["mata"] },
+        { kana: "みみ", kanji: "耳", arti: ["telinga"] },
+        { kana: "はな", kanji: "鼻", arti: ["hidung"] },
+        { kana: "くち", kanji: "口", arti: ["mulut"] },
+        { kana: "は", kanji: "歯", arti: ["gigi"] },
+        { kana: "おなか", kanji: "-", arti: ["perut"] },
+        { kana: "あし", kanji: "足", arti: ["kaki"] },
+        { kana: "せ", kanji: "背", arti: ["punggung"] },
+        { kana: "サービス", kanji: "-", arti: ["pelayanan"] },
+        { kana: "ジョギング", kanji: "-", arti: ["joging"] },
+        { kana: "シャワー", kanji: "-", arti: ["shower"] },
+        { kana: "みどり", kanji: "緑", arti: ["hijau"] },
+        { kana: "おてら", kanji: "お寺", arti: ["kuil budha"] },
+        { kana: "じんじゃ", kanji: "神社", arti: ["kuil shinto"] },
+        { kana: "～ばん", kanji: "-", arti: ["nomor"] },
+        { kana: "どうやって", kanji: "-", arti: ["bagaimana caranya"] },
+        { kana: "どの～", kanji: "-", arti: ["yang mana (benda)"] },
+        { kana: "どれ", kanji: "-", arti: ["mana"] },
+        { kana: "すごいですね", kanji: "-", arti: ["hebat sekali"] },
+        { kana: "いいえ、まだまだです", kanji: "-", arti: ["tidak, belum memuaskan"] },
+        { kana: "おひきだし", kanji: "お引き出し", arti: ["penarikan uang"] },
+        { kana: "まず", kanji: "-", arti: ["pertama-tama"] },
+        { kana: "つぎに", kanji: "次に", arti: ["kemudian","berikutnya"] },
+        { kana: "キャッシュカード", kanji: "-", arti: ["kartu ATM"] },
+        { kana: "あんしょうばんごう", kanji: "暗証番号", arti: ["PIN"] },
+        { kana: "きんがく", kanji: "金額", arti: ["jumlah uang"] },
+        { kana: "かくにん", kanji: "確認", arti: ["memastikan"] },
+        { kana: "ボタン", kanji: "-", arti: ["tombol"] },
+        { kana: "ゆきまつり", kanji: "雪祭り", arti: ["pesta salju"] },
+        { kana: "おあずけいれ", kanji: "お預入れ", arti: ["menabung","menambahkan saldo"] },
+        { kana: "おふりこみ", kanji: "お振込み", arti: ["pembayaran"] },
+        { kana: "おふりかえ", kanji: "お振替え", arti: ["pengiriman"] },
+        { kana: "つうちょうきにゅう", kanji: "通帳記入", arti: ["update buku tabungan"] },
+        { kana: "ざんだかしょうかい", kanji: "残高照会", arti: ["cek saldo"] }
+      ],
+      17: [
+        { kana: "おぼえます", kanji: "覚えます", arti: ["mengingat"] },
+        { kana: "わすれます", kanji: "忘れます", arti: ["lupa"] },
+        { kana: "なくします", kanji: "-", arti: ["kehilangan"] },
+        { kana: "はらいます", kanji: "払います", arti: ["membayar"] },
+        { kana: "かえします", kanji: "返します", arti: ["mengembalikan"] },
+        { kana: "でかけます", kanji: "出かけます", arti: ["keluar rumah"] },
+        { kana: "ぬぎます", kanji: "脱ぎます", arti: ["melepas pakaian"] },
+        { kana: "もっていきます", kanji: "持って行きます", arti: ["membawa pergi"] },
+        { kana: "もってきます", kanji: "持って来ます", arti: ["membawa datang"] },
+        { kana: "しんぱいします", kanji: "心配します", arti: ["khawatir"] },
+        { kana: "ざんぎょうします", kanji: "残業します", arti: ["lembur"] },
+        { kana: "しゅっちょうします", kanji: "出張します", arti: ["dinas"] },
+        { kana: "たいせつな", kanji: "大切な", arti: ["penting"] },
+        { kana: "だいじょうぶな", kanji: "大丈夫な", arti: ["tidak apa-apa"] },
+        { kana: "あぶない", kanji: "危ない", arti: ["berbahaya"] },
+        { kana: "きんえん", kanji: "禁煙", arti: ["dilarang merokok"] },
+        { kana: "けんこうほけんしょう", kanji: "健康保険証", arti: ["kartu asuransi kesehatan"] },
+        { kana: "ねつ", kanji: "熱", arti: ["demam"] },
+        { kana: "びょうき", kanji: "病気", arti: ["sakit"] },
+        { kana: "くすり", kanji: "薬", arti: ["obat"] },
+        { kana: "おふろ", kanji: "-", arti: ["kamar mandi","pemandian"] },
+        { kana: "うわぎ", kanji: "上着", arti: ["jaket","baju luar"] },
+        { kana: "したぎ", kanji: "下着", arti: ["pakaian dalam"] },
+        { kana: "までに", kanji: "-", arti: ["sampai dengan (batas waktu)"] },
+        { kana: "ですから", kanji: "-", arti: ["oleh karena itu"] },
+        { kana: "どうしましたか", kanji: "-", arti: ["apa yang terjadi?"] },
+        { kana: "のど", kanji: "-", arti: ["tenggorokan"] },
+        { kana: "いたい", kanji: "痛い", arti: ["sakit","nyeri"] },
+        { kana: "かぜ", kanji: "-", arti: ["masuk angin","flu ringan"] },
+        { kana: "それから", kanji: "-", arti: ["setelah itu","kemudian"] },
+        { kana: "おだいじに", kanji: "お大事に", arti: ["semoga lekas sembuh"] },
+        { kana: "あたまがいたい", kanji: "頭が痛い", arti: ["sakit kepala"] },
+        { kana: "おなかがいたい", kanji: "-", arti: ["sakit perut"] },
+        { kana: "はがいたい", kanji: "歯が痛い", arti: ["sakit gigi"] },
+        { kana: "ねつがあります", kanji: "熱があります", arti: ["demam"] },
+        { kana: "せきがでます", kanji: "せきが出ます", arti: ["batuk"] },
+        { kana: "はなみずがでます", kanji: "鼻水が出ます", arti: ["pilek"] },
+        { kana: "ちがでます", kanji: "血が出ます", arti: ["berdarah"] },
+        { kana: "はきけがします", kanji: "-", arti: ["mual"] },
+        { kana: "さむけがします", kanji: "-", arti: ["kedinginan"] },
+        { kana: "めまいがします", kanji: "-", arti: ["pusing"] },
+        { kana: "げりをします", kanji: "下痢をします", arti: ["diare"] },
+        { kana: "べんぴをします", kanji: "便秘をします", arti: ["sembelit"] },
+        { kana: "けがをします", kanji: "-", arti: ["terluka"] },
+        { kana: "やけどをします", kanji: "-", arti: ["terbakar"] },
+        { kana: "しょくよくがありません", kanji: "食欲がありません", arti: ["tidak nafsu makan"] },
+        { kana: "かたがこります", kanji: "肩が凝ります", arti: ["bahu pegal"] },
+        { kana: "からだがだるい", kanji: "体がだるい", arti: ["badan lemas"] },
+        { kana: "かゆい", kanji: "-", arti: ["gatal"] },
+        { kana: "インフルエンザ", kanji: "-", arti: ["influenza"] },
+        { kana: "もうちょう", kanji: "盲腸", arti: ["usus buntu"] },
+        { kana: "ぎっくりごし", kanji: "ぎっくり腰", arti: ["sakit pinggang"] },
+        { kana: "ねんざ", kanji: "-", arti: ["keseleo"] },
+        { kana: "こっせつ", kanji: "骨折", arti: ["patah tulang"] },
+        { kana: "ふつかよい", kanji: "二日酔い", arti: ["efek mabuk (hangover)"] }
+      ],
+      18: [
+        { kana: "できます", kanji: "-", arti: ["dapat", "bisa", "mampu"] },
+        { kana: "あらいます", kanji: "洗います", arti: ["mencuci"] },
+        { kana: "ひきます", kanji: "弾きます", arti: ["bermain (alat musik, piano)"] },
+        { kana: "うたいます", kanji: "歌います", arti: ["menyanyi"] },
+        { kana: "あつめます", kanji: "集めます", arti: ["mengumpulkan"] },
+        { kana: "すてます", kanji: "捨てます", arti: ["membuang"] },
+        { kana: "かえます", kanji: "換えます", arti: ["menukar", "mengganti"] },
+        { kana: "うんてんします", kanji: "運転します", arti: ["menyetir", "mengendarai"] },
+        { kana: "よやくします", kanji: "予約します", arti: ["memesan"] },
+        { kana: "ピアノ", kanji: "-", arti: ["piano"] },
+        { kana: "～メートル", kanji: "-", arti: ["meter"] },
+        { kana: "げんきん", kanji: "現金", arti: ["uang tunai"] },
+        { kana: "しゅみ", kanji: "趣味", arti: ["hobi", "kegemaran"] },
+        { kana: "にっき", kanji: "日記", arti: ["catatan harian"] },
+        { kana: "おいのり", kanji: "お祈り", arti: ["doa"] },
+        { kana: "かちょう", kanji: "課長", arti: ["kepala seksi"] },
+        { kana: "ぶちょう", kanji: "部長", arti: ["kepala bagian"] },
+        { kana: "しゃちょう", kanji: "社長", arti: ["direktur utama"] },
+        { kana: "どうぶつ", kanji: "動物", arti: ["hewan"] },
+        { kana: "うま", kanji: "馬", arti: ["kuda"] },
+        { kana: "インターネット", kanji: "-", arti: ["internet"] },
+        { kana: "とくに", kanji: "特に", arti: ["terutama", "khususnya"] },
+        { kana: "それはおもしろいですね", kanji: "-", arti: ["itu menarik ya..."] },
+        { kana: "ほんとうですか", kanji: "-", arti: ["betulkah?", "benarkah?"] },
+        { kana: "ぜひ", kanji: "-", arti: ["pasti", "benar-benar"] },
+        { kana: "なかなか", kanji: "-", arti: ["jarang", "tidak mudah (diikuti bentuk negatif)"] },
+        { kana: "とぶ", kanji: "飛ぶ", arti: ["terbang"] },
+        { kana: "とぶ", kanji: "跳ぶ", arti: ["meloncat"] },
+        { kana: "のぼる", kanji: "登る", arti: ["memanjat"] },
+        { kana: "はしる", kanji: "走る", arti: ["berlari"] },
+        { kana: "およぐ", kanji: "泳ぐ", arti: ["berenang"] },
+        { kana: "もぐる", kanji: "-", arti: ["menyelam"] },
+        { kana: "とびこむ", kanji: "飛び込む", arti: ["terjun"] },
+        { kana: "さかだちする", kanji: "逆立ちする", arti: ["berjungkir balik"] },
+        { kana: "はう", kanji: "-", arti: ["merayap"] },
+        { kana: "ける", kanji: "-", arti: ["menendang"] },
+        { kana: "ふる", kanji: "振る", arti: ["melambaikan"] },
+        { kana: "もちあげる", kanji: "持ち上げる", arti: ["mengangkat"] },
+        { kana: "なげる", kanji: "投げる", arti: ["melempar"] },
+        { kana: "たたく", kanji: "-", arti: ["memukul"] },
+        { kana: "ひく", kanji: "引く", arti: ["menarik"] },
+        { kana: "おす", kanji: "押す", arti: ["menekan", "mendorong"] },
+        { kana: "まげる", kanji: "曲げる", arti: ["membengkokkan"] },
+        { kana: "のばす", kanji: "伸ばす", arti: ["meluruskan"] },
+        { kana: "ころぶ", kanji: "転ぶ", arti: ["jatuh"] },
+        { kana: "ふりむく", kanji: "振り向く", arti: ["menengok ke belakang"] }
+      ],
+      19: [
+        { kana: "のぼります", kanji: "登ります、上ります", arti: ["naik", "mendaki"] },
+        { kana: "とまります", kanji: "泊まります", arti: ["menginap"] },
+        { kana: "そうじします", kanji: "掃除します", arti: ["membersihkan"] },
+        { kana: "せんたくします", kanji: "洗濯します", arti: ["mencuci pakaian"] },
+        { kana: "なります", kanji: "-", arti: ["menjadi"] },
+        { kana: "ねむい", kanji: "眠い", arti: ["mengantuk"] },
+        { kana: "つよい", kanji: "強い", arti: ["kuat"] },
+        { kana: "よわい", kanji: "弱い", arti: ["lemah"] },
+        { kana: "れんしゅう", kanji: "練習", arti: ["latihan"] },
+        { kana: "ゴルフ", kanji: "-", arti: ["golf"] },
+        { kana: "すもう", kanji: "相撲", arti: ["sumo"] },
+        { kana: "おちゃ", kanji: "お茶", arti: ["teh"] },
+        { kana: "ひ", kanji: "日", arti: ["hari"] },
+        { kana: "ちょうし", kanji: "調子", arti: ["kondisi"] },
+        { kana: "いちど", kanji: "一度", arti: ["sekali"] },
+        { kana: "いちども", kanji: "一度も", arti: ["sekalipun"] },
+        { kana: "だんだん", kanji: "-", arti: ["sedikit demi sedikit", "berangsur-angsur"] },
+        { kana: "もうすぐ", kanji: "-", arti: ["tidak lama lagi", "sebentar lagi"] },
+        { kana: "おかげさまで", kanji: "-", arti: ["atas berkat (doa) anda"] },
+        { kana: "でも", kanji: "-", arti: ["tetapi"] },
+        { kana: "かんぱい", kanji: "乾杯", arti: ["toast"] },
+        { kana: "ダイエット", kanji: "-", arti: ["diet"] },
+        { kana: "むりな", kanji: "無理な", arti: ["paksa", "berlebihan", "tidak mungkin"] },
+        { kana: "からだにいい", kanji: "体にいい", arti: ["baik untuk tubuh"] },
+        { kana: "とうきょうスカイツリー", kanji: "-", arti: ["Tokyo Skytree"] },
+        { kana: "さどう", kanji: "茶道", arti: ["upacara minum teh"] },
+        { kana: "かどう", kanji: "華道", arti: ["seni merangkai bunga"] },
+        { kana: "しょどう", kanji: "書道", arti: ["seni menulis huruf Jepang"] },
+        { kana: "かぶき", kanji: "歌舞伎", arti: ["Kabuki (drama tradisional Jepang)"] },
+        { kana: "のう", kanji: "能", arti: ["Noh (drama topeng tradisional Jepang)"] },
+        { kana: "ぶんらく", kanji: "文楽", arti: ["Bunraku (wayang golek tradisional Jepang)"] },
+        { kana: "じゅうどう", kanji: "柔道", arti: ["Judo (olahraga tradisional Jepang)"] },
+        { kana: "けんどう", kanji: "剣道", arti: ["Kendo (olahraga tradisional Jepang)"] },
+        { kana: "からて", kanji: "空手", arti: ["Karate (olahraga bela diri Jepang)"] },
+        { kana: "まんざい、らくご", kanji: "漫才、落語", arti: ["lelucon", "komedi"] },
+        { kana: "いご、しょうぎ", kanji: "囲碁、将棋", arti: ["catur Jepang"] },
+        { kana: "パチンコ", kanji: "-", arti: ["pachinko"] },
+        { kana: "カラオケ", kanji: "-", arti: ["karaoke"] },
+        { kana: "ぼんおどり", kanji: "盆踊り", arti: ["tarian Bon"] }
+      ],
+      20: [
+        { kana: "いります", kanji: "要ります", arti: ["memerlukan"] },
+        { kana: "しらべます", kanji: "調べます", arti: ["memeriksa", "meneliti", "mengecek"] },
+        { kana: "しゅうりします", kanji: "修理します", arti: ["memperbaiki"] },
+        { kana: "ぼく", kanji: "僕", arti: ["aku"] },
+        { kana: "きみ", kanji: "君", arti: ["kamu"] },
+        { kana: "～くん", kanji: "～君", arti: ["saudara~"] },
+        { kana: "うん", kanji: "-", arti: ["ya"] },
+        { kana: "ううん", kanji: "-", arti: ["tidak"] },
+        { kana: "ことば", kanji: "言葉", arti: ["kata", "kosakata", "bahasa"] },
+        { kana: "きもの", kanji: "着物", arti: ["kimono"] },
+        { kana: "ビザ", kanji: "-", arti: ["visa"] },
+        { kana: "はじめ", kanji: "初め", arti: ["awal", "mula-mula"] },
+        { kana: "おわり", kanji: "終わり", arti: ["akhir"] },
+        { kana: "こっち", kanji: "-", arti: ["sini"] },
+        { kana: "そっち", kanji: "-", arti: ["situ"] },
+        { kana: "あっち", kanji: "-", arti: ["sana"] },
+        { kana: "どっち", kanji: "-", arti: ["mana"] },
+        { kana: "みんなで", kanji: "-", arti: ["kita semua"] },
+        { kana: "～けど", kanji: "-", arti: ["tetapi"] },
+        { kana: "おなかがいっぱいです", kanji: "-", arti: ["kenyang"] },
+        { kana: "よかったら", kanji: "-", arti: ["kalau mau", "kalau suka"] },
+        { kana: "いろいろ", kanji: "-", arti: ["macam-macam"] }
+      ],
+      21: [
+        { kana: "おもいます", kanji: "思います", arti: ["mengira", "berpikir"] },
+        { kana: "いいます", kanji: "言います", arti: ["berkata", "mengatakan"] },
+        { kana: "かちます", kanji: "勝ちます", arti: ["menang"] },
+        { kana: "まけます", kanji: "負けます", arti: ["kalah"] },
+        { kana: "やくにたちます", kanji: "役に立ちます", arti: ["bermanfaat", "berguna"] },
+        { kana: "うごきます", kanji: "動きます", arti: ["pindah", "bergerak"] },
+        { kana: "やめます", kanji: "-", arti: ["berhenti"] },
+        { kana: "きをつけます", kanji: "気を付けます", arti: ["berhati-hati", "berwaspada"] },
+        { kana: "りゅうがくします", kanji: "留学します", arti: ["studi di luar negeri"] },
+        { kana: "むだな", kanji: "-", arti: ["sia-sia", "tidak berguna"] },
+        { kana: "ふべんな", kanji: "不便な", arti: ["tidak praktis"] },
+        { kana: "すごい", kanji: "-", arti: ["hebat"] },
+        { kana: "ほんとう", kanji: "-", arti: ["betul", "benar"] },
+        { kana: "うそ", kanji: "-", arti: ["bohong"] },
+        { kana: "じどうしゃ", kanji: "自動車", arti: ["mobil"] },
+        { kana: "こうつう", kanji: "交通", arti: ["lalu lintas"] },
+        { kana: "ぶっか", kanji: "物価", arti: ["harga barang"] },
+        { kana: "ニュース", kanji: "-", arti: ["siaran", "pengumuman"] },
+        { kana: "アニメ", kanji: "-", arti: ["animasi"] },
+        { kana: "マンガ", kanji: "-", arti: ["komik"] },
+        { kana: "デザイン", kanji: "-", arti: ["desain", "model"] },
+        { kana: "ゆめ", kanji: "夢", arti: ["mimpi"] },
+        { kana: "てんさい", kanji: "天才", arti: ["genius"] },
+        { kana: "しあい", kanji: "試合", arti: ["pertandingan"] },
+        { kana: "いけん", kanji: "意見", arti: ["pendapat"] },
+        { kana: "はなし", kanji: "話", arti: ["cerita"] },
+        { kana: "ちきゅう", kanji: "地球", arti: ["bumi"] },
+        { kana: "つき", kanji: "月", arti: ["bulan"] },
+        { kana: "さいきん", kanji: "最近", arti: ["akhir-akhir ini"] },
+        { kana: "たぶん", kanji: "-", arti: ["mungkin", "barangkali"] },
+        { kana: "きっと", kanji: "-", arti: ["pasti"] },
+        { kana: "ほんとうに", kanji: "-", arti: ["betul-betul"] },
+        { kana: "そんなに", kanji: "-", arti: ["tidak begitu (diikuti negatif)"] },
+        { kana: "～について", kanji: "-", arti: ["tentang ~"] },
+        { kana: "ひさしぶりですね", kanji: "久しぶりですね", arti: ["sudah lama tidak bertemu ya"] },
+        { kana: "もちろん", kanji: "-", arti: ["tentu saja"] },
+        { kana: "やくしょくめい", kanji: "役職名", arti: ["nama-nama jabatan"] },
+        { kana: "とどうふけん", kanji: "都道府県", arti: ["prefektur"] },
+        { kana: "し", kanji: "市", arti: ["kota"] },
+        { kana: "まち", kanji: "町", arti: ["distrik", "daerah"] },
+        { kana: "むら", kanji: "村", arti: ["desa"] },
+        { kana: "しゅしょう（ないかくそうりだいじん）", kanji: "首相（内閣総理大臣）", arti: ["perdana menteri"] },
+        { kana: "ちじ", kanji: "知事", arti: ["gubernur"] },
+        { kana: "しちょう", kanji: "市長", arti: ["wali kota"] },
+        { kana: "ちょうちょう", kanji: "町長", arti: ["kepala daerah"] },
+        { kana: "そんちょう", kanji: "村長", arti: ["kepala desa"] },
+        { kana: "がくちょう", kanji: "学長", arti: ["rektor"] },
+        { kana: "こうちょう", kanji: "校長", arti: ["kepala sekolah"] },
+        { kana: "えんちょう", kanji: "園長", arti: ["kepala TK"] },
+        { kana: "かいちょう", kanji: "会長", arti: ["ketua"] },
+        { kana: "じゅうやく", kanji: "重役", arti: ["direktur"] },
+        { kana: "ぶちょう", kanji: "部長", arti: ["kepala bagian"] },
+        { kana: "かちょう", kanji: "課長", arti: ["kepala seksi"] },
+        { kana: "とうどり", kanji: "頭取", arti: ["direktur bank"] },
+        { kana: "してんちょう", kanji: "支店長", arti: ["kepala kantor cabang"] },
+        { kana: "えきちょう", kanji: "駅長", arti: ["kepala stasiun"] },
+        { kana: "いんちょう", kanji: "院長", arti: ["direktur rumah sakit"] },
+        { kana: "かんごしちょう", kanji: "看護師長", arti: ["kepala perawat"] },
+        { kana: "けいさつ", kanji: "警察", arti: ["kantor polisi"] },
+        { kana: "しょちょう", kanji: "署長", arti: ["kepala kantor polisi"] }
+      ],
+      22: [
+        { kana: "きます", kanji: "着ます", arti: ["memakai (pakaian)"] },
+        { kana: "はきます", kanji: "-", arti: ["memakai (sepatu, celana)"] },
+        { kana: "かぶります", kanji: "-", arti: ["memakai (topi)"] },
+        { kana: "かけます", kanji: "-", arti: ["memakai (kacamata)"] },
+        { kana: "します", kanji: "-", arti: ["memakai (dasi, aksesoris)"] },
+        { kana: "うまれます", kanji: "生まれます", arti: ["lahir"] },
+        { kana: "わたしたち", kanji: "-", arti: ["kami", "kita"] },
+        { kana: "コート", kanji: "-", arti: ["mantel"] },
+        { kana: "セーター", kanji: "-", arti: ["sweter", "baju hangat"] },
+        { kana: "スーツ", kanji: "-", arti: ["pakaian setelan"] },
+        { kana: "ぼうし", kanji: "帽子", arti: ["topi"] },
+        { kana: "めがね", kanji: "眼鏡", arti: ["kacamata"] },
+        { kana: "ケーキ", kanji: "-", arti: ["kue"] },
+        { kana: "おべんとう", kanji: "お弁当", arti: ["bekal"] },
+        { kana: "ロボット", kanji: "-", arti: ["robot"] },
+        { kana: "ユーモア", kanji: "-", arti: ["humor"] },
+        { kana: "つごう", kanji: "都合", arti: ["kondisi", "keadaan"] },
+        { kana: "よく", kanji: "-", arti: ["sering", "dengan baik"] },
+        { kana: "おめでとうございます", kanji: "-", arti: ["selamat"] },
+        { kana: "では", kanji: "-", arti: ["kalau begitu"] },
+        { kana: "やちん", kanji: "家賃", arti: ["biaya sewa rumah"] },
+        { kana: "ダイニングキッチン", kanji: "-", arti: ["ruang makan dengan dapur"] },
+        { kana: "わしつ", kanji: "和室", arti: ["kamar ala Jepang"] },
+        { kana: "おしいれ", kanji: "押し入れ", arti: ["lemari dinding ala Jepang"] },
+        { kana: "ふとん", kanji: "布団", arti: ["selimut dan kasur isi kapas ala Jepang"] },
+        { kana: "パリ", kanji: "-", arti: ["Paris"] },
+        { kana: "ばんりのちょうじょう", kanji: "万里の長城", arti: ["Tembok Besar Cina"] },
+        { kana: "ワンピース", kanji: "-", arti: ["pakaian terusan"] },
+        { kana: "うわぎ", kanji: "上着", arti: ["jas"] },
+        { kana: "パンツ", kanji: "-", arti: ["celana panjang"] },
+        { kana: "ジーンズ", kanji: "-", arti: ["celana jeans"] },
+        { kana: "スカート", kanji: "-", arti: ["rok"] },
+        { kana: "ブラウス", kanji: "-", arti: ["blus"] },
+        { kana: "ワイシャツ", kanji: "-", arti: ["kemeja"] },
+        { kana: "マフラー", kanji: "-", arti: ["syal", "selendang"] },
+        { kana: "くつした", kanji: "靴下", arti: ["kaos kaki"] },
+        { kana: "ストッキング", kanji: "-", arti: ["stoking"] },
+        { kana: "レインコート", kanji: "-", arti: ["jas hujan"] },
+        { kana: "ベルト", kanji: "-", arti: ["sabuk", "ikat pinggang"] },
+        { kana: "ハイヒール", kanji: "-", arti: ["sepatu berhak tinggi"] },
+        { kana: "ブーツ", kanji: "-", arti: ["sepatu bot"] },
+        { kana: "ぞうり", kanji: "-", arti: ["sandal tradisional Jepang"] },
+        { kana: "たび", kanji: "-", arti: ["kaos kaki tradisional Jepang"] },
+        { kana: "おび", kanji: "帯", arti: ["ikat pinggang tradisional Jepang"] }
+      ],
+      23: [
+        { kana: "ききます", kanji: "聞きます", arti: ["bertanya"] },
+        { kana: "まわします", kanji: "回します", arti: ["memutar"] },
+        { kana: "ひきます", kanji: "引きます", arti: ["menarik"] },
+        { kana: "かえます", kanji: "変えます", arti: ["mengubah"] },
+        { kana: "さわります", kanji: "触ります", arti: ["menyentuh"] },
+        { kana: "でます", kanji: "出ます", arti: ["keluar"] },
+        { kana: "あるきます", kanji: "歩きます", arti: ["berjalan kaki"] },
+        { kana: "わたります", kanji: "渡ります", arti: ["menyeberang"] },
+        { kana: "まがります", kanji: "曲がります", arti: ["belok"] },
+        { kana: "さびしい", kanji: "寂しい", arti: ["sepi"] },
+        { kana: "おゆ", kanji: "お湯", arti: ["air panas"] },
+        { kana: "おと", kanji: "音", arti: ["suara", "bunyi"] },
+        { kana: "サイズ", kanji: "-", arti: ["ukuran"] },
+        { kana: "こしょう", kanji: "故障", arti: ["kerusakan"] },
+        { kana: "みち", kanji: "道", arti: ["jalan"] },
+        { kana: "こうさてん", kanji: "交差点", arti: ["perempatan"] },
+        { kana: "しんごう", kanji: "信号", arti: ["lampu lalu lintas"] },
+        { kana: "かど", kanji: "角", arti: ["sudut"] },
+        { kana: "はし", kanji: "橋", arti: ["jembatan"] },
+        { kana: "ちゅうしゃじょう", kanji: "駐車場", arti: ["tempat parkir"] },
+        { kana: "たてもの", kanji: "建物", arti: ["bangunan", "gedung"] },
+        { kana: "なんかいも", kanji: "何回も", arti: ["berkali-kali"] },
+        { kana: "～め", kanji: "～目", arti: ["yang ke-"] },
+        { kana: "どうろ", kanji: "道路", arti: ["jalan"] },
+        { kana: "ほどう", kanji: "歩道", arti: ["trotoar"] },
+        { kana: "しゃどう", kanji: "車道", arti: ["jalan mobil"] },
+        { kana: "こうそくどうろ", kanji: "高速道路", arti: ["jalan tol"] },
+        { kana: "とおり", kanji: "通り", arti: ["jalan"] },
+        { kana: "おうだんほどう", kanji: "横断歩道", arti: ["tempat menyeberang", "zebra cross"] },
+        { kana: "ほどうきょう", kanji: "歩道橋", arti: ["jembatan penyeberangan"] },
+        { kana: "さか", kanji: "坂", arti: ["lereng"] },
+        { kana: "ふみきり", kanji: "踏切", arti: ["lintasan kereta api"] },
+        { kana: "ガソリンスタンド", kanji: "-", arti: ["pompa bensin"] },
+        { kana: "とまれ", kanji: "止まれ", arti: ["berhenti"] },
+        { kana: "しんにゅうきんし", kanji: "進入禁止", arti: ["dilarang masuk"] },
+        { kana: "いっぽうつうこう", kanji: "一方通行", arti: ["satu arah"] },
+        { kana: "ちゅうしゃきんし", kanji: "駐車禁止", arti: ["dilarang parkir"] },
+        { kana: "うせつきんし", kanji: "右折禁止", arti: ["dilarang belok kanan"] }
+      ],
+      24: [
+        { kana: "くれます", kanji: "-", arti: ["diberikan"] },
+        { kana: "なおします", kanji: "直します", arti: ["mengoreksi", "memperbaiki"] },
+        { kana: "つれていきます", kanji: "連れて行きます", arti: ["mengajak pergi", "membawa", "mengantarkan"] },
+        { kana: "つれてきます", kanji: "連れて来ます", arti: ["membawa datang"] },
+        { kana: "おくります", kanji: "送ります", arti: ["mengantar (orang)"] },
+        { kana: "しょうかいします", kanji: "紹介します", arti: ["memperkenalkan"] },
+        { kana: "あんないします", kanji: "案内します", arti: ["memandu", "mengantarkan"] },
+        { kana: "せつめいします", kanji: "説明します", arti: ["menjelaskan", "menerangkan"] },
+        { kana: "おじいさん／おじいちゃん", kanji: "-", arti: ["kakek"] },
+        { kana: "おばあさん／おばあちゃん", kanji: "-", arti: ["nenek"] },
+        { kana: "じゅんび", kanji: "準備", arti: ["persiapan"] },
+        { kana: "ひっこし", kanji: "引っ越し", arti: ["pindah rumah"] },
+        { kana: "おかし", kanji: "お菓子", arti: ["kue", "snack", "makanan ringan"] },
+        { kana: "ホームステイ", kanji: "-", arti: ["homestay"] },
+        { kana: "ぜんぶ", kanji: "全部", arti: ["semua"] },
+        { kana: "じぶんで", kanji: "自分で", arti: ["dengan sendiri"] },
+        { kana: "ほかに", kanji: "-", arti: ["selain", "yang lain"] },
+        { kana: "ははのひ", kanji: "母の日", arti: ["hari ibu"] },
+        { kana: "ぞうとうのしゅうかん", kanji: "贈答の習慣", arti: ["tukar menukar hadiah"] },
+        { kana: "おとしだま", kanji: "お年玉", arti: ["hadiah tahun baru untuk anak-anak"] },
+        { kana: "にゅうがくいわい", kanji: "入学祝い", arti: ["hadiah masuk sekolah"] },
+        { kana: "そつぎょういわい", kanji: "卒業祝い", arti: ["hadiah kelulusan"] },
+        { kana: "けっこんいわい", kanji: "結婚祝い", arti: ["hadiah pernikahan"] },
+        { kana: "しゅっさんいわい", kanji: "出産祝い", arti: ["hadiah kelahiran"] },
+        { kana: "おちゅうげん／おせいぼ", kanji: "お中元／お歳暮", arti: ["hadiah balas jasa / bantuan"] },
+        { kana: "おこうでん", kanji: "お香典", arti: ["uang duka untuk keluarga yang berduka"] },
+        { kana: "おみまい", kanji: "お見舞い", arti: ["hadiah untuk orang sakit"] },
+        { kana: "のしぶくろ", kanji: "熨斗袋", arti: ["amplop khusus untuk hadiah uang"] }
+      ],
+      25: [
+        { kana: "かんがえます", kanji: "考えます", arti: ["berpikir", "memikirkan"] },
+        { kana: "つきます", kanji: "着きます", arti: ["tiba", "sampai"] },
+        { kana: "とります（としを～）", kanji: "取ります", arti: ["berumur", "menjadi tua"] },
+        { kana: "たります", kanji: "足ります", arti: ["cukup"] },
+        { kana: "いなか", kanji: "田舎", arti: ["desa", "kampung halaman"] },
+        { kana: "チャンス", kanji: "-", arti: ["kesempatan"] },
+        { kana: "おく", kanji: "億", arti: ["ratus juta"] },
+        { kana: "もし", kanji: "-", arti: ["kalau"] },
+        { kana: "いみ", kanji: "意味", arti: ["arti", "makna"] },
+        { kana: "てんきん", kanji: "転勤", arti: ["pindah kerja (kantor cabang)"] },
+        { kana: "こと", kanji: "-", arti: ["hal"] },
+        { kana: "ひまな", kanji: "暇な", arti: ["senggang", "waktu luang"] },
+        { kana: "いろいろおせわになりました", kanji: "いろいろお世話になりました", arti: ["terima kasih banyak atas bantuan anda"] },
+        { kana: "がんばります", kanji: "頑張ります", arti: ["berusaha", "bekerja keras"] },
+        { kana: "どうぞおげんきで", kanji: "どうぞお元気で", arti: ["semoga sehat-sehat selalu"] },
+        { kana: "ひとのいっしょう", kanji: "人の一生", arti: ["seumur hidup manusia"] },
+        { kana: "せいねん", kanji: "青年", arti: ["remaja"] },
+        { kana: "ちゅうねん", kanji: "中年", arti: ["setengah baya"] },
+        { kana: "ろうじん", kanji: "老人", arti: ["orang tua", "lanjut usia"] },
+        { kana: "ほいくえん", kanji: "保育園", arti: ["playgroup"] },
+        { kana: "ようちえん", kanji: "幼稚園", arti: ["TK"] },
+        { kana: "たんだい", kanji: "短大", arti: ["akademi"] },
+        { kana: "せんもんがっこう", kanji: "専門学校", arti: ["sekolah kejuruan", "sekolah tinggi keahlian"] },
+        { kana: "しゅうしょくします", kanji: "就職します", arti: ["mendapat pekerjaan"] },
+        { kana: "りこんします", kanji: "離婚します", arti: ["bercerai"] },
+        { kana: "さいこんします", kanji: "再婚します", arti: ["menikah lagi"] }
+      ]
+    };
+
+    let currentBab = null;
+    let currentIndex = 0;
+    let score = 0;
+    let answered = false;
+
+    const babButtons = document.getElementById("babButtons");
+    for (let i = 1; i <= 25; i++) {
+      let btn = document.createElement("button");
+      btn.innerText = "Bab " + i;
+      btn.onclick = () => startBab(i);
+      babButtons.appendChild(btn);
+    }
+    
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function startBab(bab) {
+      if (!data[bab]) {
+        alert("Data Bab " + bab + " belum tersedia!");
+        return;
+      }
+      currentBab = bab;
+      currentIndex = 0;
+      score = 0;
+      answered = false;
+
+      document.getElementById("final-score").style.display = "none";
+      document.getElementById("final-score").innerText = "";
+
+      document.querySelector("button[onclick='checkAnswer()']").disabled = false;
+      document.getElementById("nextBtn").style.display = "inline-block";
+
+      data[currentBab] = shuffleArray([...data[currentBab]]);
+      document.getElementById("bab-title").innerText = "Bab " + bab;
+      document.getElementById("quiz-area").style.display = "block";
+      document.querySelector(".bab-buttons").style.display = "none";
+      document.getElementById("pilihBab").style.display = "none";
+      showQuestion();
+    }
+
+    function showQuestion() {
+      let question = data[currentBab][currentIndex];
+      document.getElementById("question-label").innerText = "Apa Arti Kotoba Ini:";
+      document.getElementById("question-word").innerText = question.kana + " (" + question.kanji + ")";
+      document.getElementById("answer").value = "";
+      document.getElementById("result").innerText = "";
+      answered = false;
+    }
+
+    function normalize(str) {
+      return str.trim().toLowerCase();
+    }
+
+    function checkAnswer() {
+     if (answered) return; // cegah spam klik kirim
+      let userAnswer = normalize(document.getElementById("answer").value);
+      let correctAnswers = data[currentBab][currentIndex].arti.map(a => normalize(a));
+    
+      if (correctAnswers.includes(userAnswer)) {
+        document.getElementById("result").innerText = "✅ Benar!";
+        document.getElementById("result").className = "correct";
+        score++;
+      } else {
+        document.getElementById("result").innerText = "❌ Salah. Jawaban benar: " + data[currentBab][currentIndex].arti.join(", ");
+        document.getElementById("result").className = "wrong";
+      }
+      answered = true;
+      document.querySelector("button[onclick='checkAnswer()']").disabled = true;
+      if (currentIndex === data[currentBab].length - 1) {
+        let totalSoal = data[currentBab].length;
+        let nilaiAkhir = Math.round((score / totalSoal) * 100);
+    
+        let finalScoreEl = document.getElementById("final-score");
+        finalScoreEl.style.display = "block";
+        finalScoreEl.innerText = "🎉 Bab " + currentBab + " selesai!\nNilai Akhir: " + nilaiAkhir;
+    
+        document.querySelector("button[onclick='checkAnswer()']").disabled = true;
+        document.getElementById("nextBtn").style.display = "none";
+    
+        if (!document.getElementById("backBtn")) {
+          let backBtn = document.createElement("button");
+          backBtn.id = "backBtn";
+          backBtn.className = "action";
+          backBtn.innerText = "Kembali ke Pilihan Bab";
+          backBtn.onclick = () => {
+            document.getElementById("quiz-area").style.display = "none";
+            document.querySelector(".bab-buttons").style.display = "flex";
+            document.getElementById("pilihBab").style.display = "block";
+            finalScoreEl.style.display = "none"; 
+            document.querySelector("button[onclick='checkAnswer()']").disabled = false;
+            document.getElementById("backBtn").remove();
+          };
+          document.getElementById("quiz-area").appendChild(backBtn);
+        }
+      }
+    }
+
+    function nextQuestion() {
+      if (!answered) {
+        alert("⚠️ Jawab dulu sebelum lanjut!");
+        return;
+      }
+      currentIndex++;
+      if (currentIndex < data[currentBab].length) {
+        showQuestion();
+        document.getElementById("result").innerText = "";
+        document.querySelector("button[onclick='checkAnswer()']").disabled = false;
+        answered = false; // 🔑 reset status jawaban
+      }
+    }
+  </script>
+</body>
+</html>
+</html>
