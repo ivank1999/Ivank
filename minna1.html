@@ -77,7 +77,18 @@
       color: #ffdf6c;
       font-weight: 500;
     }
-    
+    #show-kana-btn {
+  margin-top: -5px;  /* geser ke atas */
+  margin-bottom: 10px; /* kasih jarak bawah biar gak nempel */
+  padding: 6px 12px;
+  border: none;
+  background: #ffa500; /* oranye biar beda */
+  color: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
     .kana-text {
       font-size: 2.5em;
       font-weight: 600;
@@ -148,8 +159,9 @@
     <h2 id="bab-title"></h2>
     <div id="question">
       <p id="question-label"></p>
-      <p id="question-word"></p>
     </div>
+    <div id="question-word"></div>
+    <button id="show-kana-btn" style="display:none;" class="action">Tampilkan Kana</button>
     <input type="text" id="answer" placeholder=" Jawab dalam bahasa Indonesia">
     <br>
     <button class="action" onclick="checkAnswer()">Kirim</button>
@@ -1667,10 +1679,7 @@
     function showQuestion() {
       let question = data[currentBab][currentIndex];
       document.getElementById("question-label").innerText = "Apa Arti Kotoba Ini:";
-      document.getElementById("question-word").innerHTML = `
-        <div class="kana-text">${question.kana}</div>
-        <div class="kanji-text">${question.kanji}</div>
-      `;
+      renderQuestion(question); // ✅ pakai fungsi yang udah lo buat
       document.getElementById("answer").value = "";
       document.getElementById("result").innerText = "";
       answered = false;
@@ -1678,6 +1687,31 @@
 
     function normalize(str) {
       return str.trim().toLowerCase();
+    }
+    function renderQuestion(question) {
+      const container = document.getElementById("question-word");
+      const kanaBtn = document.getElementById("show-kana-btn");
+    
+      if (question.kanji !== "-") {
+        // kalau ada kanji
+        container.innerHTML = `
+          <div class="kanji-text">${question.kanji}</div>
+          <div class="kana-text" style="display:none;">${question.kana}</div>
+        `;
+    
+        kanaBtn.style.display = "inline-block"; // tampilkan tombol
+        kanaBtn.onclick = () => {
+          container.querySelector(".kana-text").style.display = "block";
+          kanaBtn.style.display = "none"; // sembunyikan tombol setelah ditekan
+        };
+    
+      } else {
+        // kalau nggak ada kanji
+        container.innerHTML = `
+          <div class="kana-text">${question.kana}</div>
+        `;
+        kanaBtn.style.display = "none"; // tombol nggak perlu
+      }
     }
 
     function checkAnswer() {
