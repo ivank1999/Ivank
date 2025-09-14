@@ -2,10 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Minna no Nihongo 1</title>
   <!-- Warna status bar di iPhone saat dibuka dari Home Screen -->
-<
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Minna no Nihongo 1">
@@ -20,26 +19,12 @@
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
     body {
-      height: 100%;                  /* penting supaya fullscreen */
-      overflow-y: auto;              /* jangan pakai hidden */
-      -webkit-overflow-scrolling: touch; /* scroll iOS lebih halus */
-      margin: 0;
-      padding: 0;                     /* kita akan atur padding di inner container */
       font-family: 'Poppins', sans-serif;
       text-align: center;
+      margin: 0;
+      padding: 20px;
       background: linear-gradient(135deg, #1e3c72, #2a5298);
       color: #fff;
-    }
-    
-    /* container untuk padding asli kamu */
-    .main-content {
-      padding: 20px;                  /* ganti padding body menjadi container */
-    }
-    
-    /* input tetap relative agar keyboard muncul */
-    input, textarea {
-      position: relative;
-      font-size: 16px;                /* cegah iOS zoom saat mengetik */
     }
     
     h1 {
@@ -176,7 +161,6 @@
   </style>
 </head>
 <body>
-  <div class="main-content">
   <h1>み ん な の 日 本 語  1</h1>
   <p style="font-size:0.9em; color:#ffdf6c;">Kotoba Minna no Nihongo 1</p>
   <p id="pilihBab">Pilih Bab:</p>
@@ -1794,17 +1778,6 @@
         answered = false; // 🔑 reset status jawaban
       }
     }
-    // Set tinggi body sesuai viewport
-function setBodyHeight() {
-  document.body.style.height = window.innerHeight + "px";
-}
-window.addEventListener("resize", setBodyHeight);
-setBodyHeight();
-
-// Paksa fokus saat input disentuh supaya keyboard muncul
-document.querySelectorAll("input, textarea").forEach(el => {
-  el.addEventListener("touchstart", () => el.focus());
-});
   </script>
 </body>
 </html>
