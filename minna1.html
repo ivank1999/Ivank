@@ -1,164 +1,227 @@
 <!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Minna no Nihongo 1</title>
-  <!-- Warna status bar di iPhone saat dibuka dari Home Screen -->
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Minna no Nihongo 1">
-
-<!-- iOS Home Screen Icon -->
-<link rel="apple-touch-icon" sizes="180x180" href="https://ivank1999.github.io/Ivank/icon.PNG">
-
-<!-- Favicon untuk browser biasa -->
-<link rel="icon" type="image/png" sizes="32x32" href="https://ivank1999.github.io/Ivank/icon.PNG">
-<link rel="icon" type="image/png" sizes="16x16" href="https://ivank1999.github.io/Ivank/icon.PNG">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      text-align: center;
-      margin: 0;
-      padding: 20px;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
-    }
-    
-    h1 {
-      margin-bottom: 15px;
-      font-size: 1.8em; /* dikecilkan */
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* lebih halus */
-    }
-    
-    .bab-buttons {
-      margin-bottom: 30px;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
-    
-    .bab-buttons button {
-      padding: 12px 18px;
-      border: none;
-      background: linear-gradient(135deg, #00c6ff, #0072ff);
-      color: #fff;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-    
-    .bab-buttons button:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    }
-    
-    #quiz-area {
-      display: none;
-      margin-top: 20px;
-      max-width: 500px;
-      margin-left: auto;
-      margin-right: auto;
-      background: rgba(255,255,255,0.5);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-      backdrop-filter: blur(6px); /* blur dikurangi */
-    }
-    
-    #bab-title {
-      font-size: 1.4em;
-      margin-bottom: 10px;
-      font-weight: 700;
-      color: #ffdf6c;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.25); /* tipis */
-    }
-    
-    #question-label {
-      font-size: 1.1em;
-      margin-bottom: 8px;
-      color: #ffdf6c;
-      font-weight: 500;
-    }
-    #show-kana-btn {
-  margin-top: -5px;  /* geser ke atas */
-  margin-bottom: 10px; /* kasih jarak bawah biar gak nempel */
-  padding: 6px 12px;
-  border: none;
-  background: #ffa500; /* oranye biar beda */
-  color: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-}
-    .kana-text {
-      font-size: 2.5em;
-      font-weight: 600;
-      color: #222; /* abu tua lebih lembut */
- /*     text-shadow: 0 2px 3px rgba(255,255,255,0.7); */
-    }
-    
-    .kanji-text {
-      font-size: 2.5em;
-      font-weight: 600;
-      color: #222; 
- /*     text-shadow: 0 2px 3px rgba(255,255,255,0.7); */
-    }
-    
-    input[type="text"] {
-      padding: 12px;
-      width: 80%;
-      border-radius: 8px;
-      border: none;
-      font-size: 16px;
-      margin-bottom: 12px;
-      outline: none;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.15) inset; /* lebih soft */
-    }
-    
-    button.action {
-      margin-top: 8px;
-      padding: 10px 18px;
-      border: none;
-      background: linear-gradient(135deg, #ff512f, #dd2476);
-      color: #fff;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.2);
-    }
-    
-    button.action:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
-    }
-    
-    #result {
-      margin-top: 15px;
-      font-weight: bold;
-      font-size: 1.2em;
-    }
-    
-    .correct {
-      color: #00cc88; /* hijau lebih soft */
-      text-shadow: 0 0 4px rgba(0,204,136,0.6);
-    }
-    
-    .wrong {
-      color: #ff4d4d; /* merah lebih lembut */
-      text-shadow: 0 0 4px rgba(255,77,77,0.6);
-    }
-  </style>
+  <html lang="id">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minna no Nihongo 1</title>
+    <!-- Warna status bar di iPhone saat dibuka dari Home Screen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Minna no Nihongo 1">
+  
+  <!-- iOS Home Screen Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://ivank1999.github.io/Ivank/icon.PNG">
+  
+  <!-- Favicon untuk browser biasa -->
+  <link rel="icon" type="image/png" sizes="32x32" href="https://ivank1999.github.io/Ivank/icon.PNG">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://ivank1999.github.io/Ivank/icon.PNG">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+  
+      body {
+        font-family: 'Poppins', sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: #fff;
+      }
+      
+      h1 {
+        margin-bottom: 15px;
+        font-size: 1.8em; /* dikecilkan */
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.3); /* lebih halus */
+      }
+#questions-container {
+        display: flex;
+        flex-direction: column;  /* tumpuk ke bawah */
+        gap: 20px;               /* jarak antar box */
+        max-width: 600px;        /* biar lebar maksimal 600px */
+        margin: 0 auto;          /* posisikan di tengah */
+        padding: 10px;
+      }
+      
+      /* Box soal */
+      /* Box soal */
+      .question-box {
+        padding: 12px;
+        border: 2px solid #ccc;   /* default abu-abu */
+        border-radius: 8px;
+        background: #ccc;   /* putih kekuningan, ramah mata */
+        transition: 0.3s ease;    /* biar halus pas ganti warna */
+      }
+      
+      .question-box .kanji-text,
+      .question-box .kana-text {
+        display: block;
+        line-height: 1.6em;
+        margin: 6px 0;
+        color: #000 !important;   /* selalu hitam */
+        text-shadow: none !important; /* hilangkan efek shadow */
+      }
+      
+      .question-box .kanji-text {
+        font-size: 2.2em; 
+      }
+      
+      .question-box .kana-text {
+        font-size: 1.6em; 
+        color: #000 !important;   /* tetep hitam walau box ganti warna */
+      }
+      
+      /* Warna box saat jawab */
+      .question-box.correct {
+        border: 2px solid green;
+        background: #e8ffe8; /* hijau muda */
+      }
+      .question-box.wrong {
+        border: 2px solid red;
+        background: #ffe8e8; /* merah muda */
+      }
+      .bab-buttons {
+        margin-bottom: 30px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px;
+      }
+      
+      .bab-buttons button {
+        padding: 12px 18px;
+        border: none;
+        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        color: #fff;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      }
+      
+      .bab-buttons button:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      }
+.controls {
+        margin-top: 10px;
+        display: flex;
+        gap: 8px;
+      }
+      
+      .controls .answer-input {
+        flex: 1;
+        padding: 8px;
+        font-size: 16px;
+        border: 1px solid #aaa;
+        border-radius: 5px;
+      }
+      
+      .controls .action-btn {
+        padding: 8px 14px;
+        font-size: 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      
+      /* Tombol Kirim */
+      .controls .kirim-btn {
+        background-color: #007bff;
+        color: white;
+      }
+      .controls .kirim-btn:hover {
+        background-color: #0056b3;
+      }
+      
+/* tombol tampilkan kana kecil di bawah kanji */
+      .show-kana-btn {
+        margin-top: 6px;
+        font-size: 13px;
+        padding: 4px 8px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        background-color: #28a745;
+        color: white;
+        transition: 0.2s;
+      }
+      .show-kana-btn:hover {
+        background-color: #1e7e34;
+      }
+      #quiz-area {
+        display: none;
+        margin-top: 20px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+        background: rgba(255,255,255,0.5);
+        border-radius: 16px;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+        backdrop-filter: blur(6px); /* blur dikurangi */
+      }
+      
+      #bab-title {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+        font-weight: 700;
+        color: #ffdf6c;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.25); /* tipis */
+      }
+      
+      #question-label {
+        font-size: 1.1em;
+        margin-bottom: 8px;
+        color: #ffdf6c;
+        font-weight: 500;
+      }
+      #show-kana-btn {
+    margin-top: -5px;  /* geser ke atas */
+    margin-bottom: 10px; /* kasih jarak bawah biar gak nempel */
+    padding: 6px 12px;
+    border: none;
+    background: #ffa500; /* oranye biar beda */
+    color: #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  }
+      .kana-text {
+        font-size: 2.5em;
+        font-weight: 600;
+        color: #222; /* abu tua lebih lembut */
+   /*     text-shadow: 0 2px 3px rgba(255,255,255,0.7); */
+      }
+      
+      .kanji-text {
+        font-size: 2.5em;
+        font-weight: 600;
+        color: #222; 
+   /*     text-shadow: 0 2px 3px rgba(255,255,255,0.7); */
+      }
+      
+      
+      #result {
+        margin-top: 15px;
+        font-weight: bold;
+        font-size: 1.2em;
+      }
+      
+      .correct {
+        color: #00cc88; /* hijau lebih soft */
+        text-shadow: 0 0 4px rgba(0,204,136,0.6);
+      }
+      
+      .wrong {
+        color: #ff4d4d; /* merah lebih lembut */
+        text-shadow: 0 0 4px rgba(255,77,77,0.6);
+      }
+    </style>
 </head>
 <body>
   <h1>み ん な の 日 本 語  1</h1>
@@ -169,14 +232,15 @@
   <div id="quiz-area">
     <h2 id="bab-title"></h2>
     <div id="question">
+<!-- Ganti area soal jadi wadah kumpulan box -->
+        <div id="questions-container"></div>
       <p id="question-label"></p>
     </div>
     <div id="question-word"></div>
-    <button id="show-kana-btn" style="display:none;" class="action">Tampilkan Kana</button>
-    <input type="text" id="answer" placeholder=" Jawab dalam bahasa Indonesia">
-    <br>
-    <button class="action" onclick="checkAnswer()">Kirim</button>
-    <p id="result"></p>
+    
+    
+    
+  
     <button class="action" onclick="nextQuestion()" id="nextBtn">Soal Berikutnya</button>
   </div>
   <button id="backBtn" style="display:none;" onclick="goBack()">Kembali ke Pilihan Bab</button>
@@ -1634,8 +1698,8 @@
     let currentBab = null;
     let currentIndex = 0;
     let score = 0;
-    let answered = false;
-
+    let batchSize = 5;
+  
     const babButtons = document.getElementById("babButtons");
     for (let i = 1; i <= 25; i++) {
       let btn = document.createElement("button");
@@ -1643,7 +1707,7 @@
       btn.onclick = () => startBab(i);
       babButtons.appendChild(btn);
     }
-    
+  
     function shuffleArray(array) {
       for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -1651,16 +1715,15 @@
       }
       return array;
     }
+  
     function goBack() {
       document.getElementById("quiz-area").style.display = "none";
       document.querySelector(".bab-buttons").style.display = "flex";
       document.getElementById("pilihBab").style.display = "block";
-      document.getElementById("final-score").style.display = "none"; 
-      document.querySelector("button[onclick='checkAnswer()']").disabled = false;
-    
-      // ⬇️ Sembunyikan tombol back kalau balik ke pilih bab
+      document.getElementById("final-score").style.display = "none";
       document.getElementById("backBtn").style.display = "none";
     }
+  
     function startBab(bab) {
       if (!data[bab]) {
         alert("Data Bab " + bab + " belum tersedia!");
@@ -1669,113 +1732,128 @@
       currentBab = bab;
       currentIndex = 0;
       score = 0;
-      answered = false;
-
+  
       document.getElementById("final-score").style.display = "none";
       document.getElementById("final-score").innerText = "";
-
-      document.querySelector("button[onclick='checkAnswer()']").disabled = false;
+  
       document.getElementById("nextBtn").style.display = "inline-block";
-   // ⬇️ Tampilkan tombol back pas kuis dimulai
       document.getElementById("backBtn").style.display = "inline-block";
-      
+  
       data[currentBab] = shuffleArray([...data[currentBab]]);
       document.getElementById("bab-title").innerText = "Bab " + bab;
       document.getElementById("quiz-area").style.display = "block";
       document.querySelector(".bab-buttons").style.display = "none";
       document.getElementById("pilihBab").style.display = "none";
+  
+      document.querySelector("h1").style.display = "none";
+      document.querySelector("body > p").style.display = "none";
+  
       showQuestion();
     }
-
+  
     function showQuestion() {
-      let question = data[currentBab][currentIndex];
-      document.getElementById("question-label").innerText = "Apa Arti Kotoba Ini:";
-      renderQuestion(question); // ✅ pakai fungsi yang udah lo buat
-      document.getElementById("answer").value = "";
-      document.getElementById("result").innerText = "";
-      answered = false;
-    }
-
-    function normalize(str) {
-      return str.trim().toLowerCase();
-    }
-    function renderQuestion(question) {
-      const container = document.getElementById("question-word");
-      const kanaBtn = document.getElementById("show-kana-btn");
+      const container = document.getElementById("questions-container");
+      container.innerHTML = ""; // clear batch lama
     
-      if (question.kanji !== "-") {
-        // kalau ada kanji
-        container.innerHTML = `
-          <div class="kanji-text">${question.kanji}</div>
-          <div class="kana-text" style="display:none;">${question.kana}</div>
+      let endIndex = Math.min(currentIndex + batchSize, data[currentBab].length);
+    
+      for (let i = currentIndex; i < endIndex; i++) {
+        let q = data[currentBab][i];
+        let box = document.createElement("div");
+        box.className = "question-box";
+        box.dataset.index = i;
+    
+        // bikin tombol tampilkan kana kalau ada kanji
+        let kanaBtn = "";
+        if (q.kanji !== "-") {
+          kanaBtn = `<button class="show-kana-btn" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Tampilkan Kana</button>`;
+        }
+    
+        box.innerHTML = `
+          <p class="kanji-text">${q.kanji !== "-" ? q.kanji : q.kana}</p>${kanaBtn}
+          
+          <p class="kana-text" style="display:none;">${q.kana}</p>
+          <div class="answer-row" style="display:flex; gap:8px; margin-top:5px;">
+            <input type="text" class="answer-input" placeholder="Ketik jawaban..." style="flex:1;">
+            <button class="kirim-btn">Kirim</button>
+          </div>
+          <p class="result"></p>
         `;
     
-        kanaBtn.style.display = "inline-block"; // tampilkan tombol
-        kanaBtn.onclick = () => {
-          container.querySelector(".kana-text").style.display = "block";
-          kanaBtn.style.display = "none"; // sembunyikan tombol setelah ditekan
-        };
-    
-      } else {
-        // kalau nggak ada kanji
-        container.innerHTML = `
-          <div class="kana-text">${question.kana}</div>
-        `;
-        kanaBtn.style.display = "none"; // tombol nggak perlu
-      }
-    }
-
+// event tombol kirim
+       box.querySelector(".kirim-btn").onclick = () => {
+         let input = box.querySelector(".answer-input").value.trim().toLowerCase();
+         let correctAnswers = q.arti.map(a => a.toLowerCase());
+         let resultEl = box.querySelector(".result");
+       
+         if (correctAnswers.includes(input)) {
+           resultEl.innerHTML = "✅ (" + q.arti.join(", ") + ")";
+           resultEl.style.color = "green";
+           score++;
+           box.classList.add("correct");   // ✅ box jadi hijau
+         } else {
+           resultEl.innerHTML = "❌  (" + q.arti.join(", ") + ")";
+                     resultEl.style.color = "red";
+           box.classList.add("wrong");     // 🔴 box jadi merah
+         }
+       
+         // disable input & tombol setelah dijawab
+         box.querySelector(".answer-input").disabled = true;
+         box.querySelector(".kirim-btn").disabled = true;
+       };
+       
+       // ⬅️ TUTUP showQuestion() di sini
+       container.appendChild(box);
+       }
+    } // <--- ini penutup showQuestion()
     function checkAnswer() {
-     if (answered) return; // cegah spam klik kirim
-      let userAnswer = normalize(document.getElementById("answer").value);
-      let correctAnswers = data[currentBab][currentIndex].arti.map(a => normalize(a));
-    
-     if (correctAnswers.includes(userAnswer)) {
-        const jawabanBenar = data[currentBab][currentIndex].arti.join(", ");
-      
-        document.getElementById("result").innerHTML = 
-          "<span style='color:#00FF00;'>✅ Benar!</span> " + 
-          "<span style='color:#00FF00;'>Jawaban:</span> " + 
-          "<span style='color:gold;'>" + jawabanBenar + "</span>";
-      
-        document.getElementById("result").className = "correct";
-        score++;
-      }else {
-        const jawabanBenar = data[currentBab][currentIndex].arti.join(", ");
-      
-        document.getElementById("result").innerHTML = 
-          "<span style='color:red;'>❌ Salah.</span> " + 
-          "<span style='color:#00FF00;'>Yang benar:</span> " + 
-          "<span style='color:gold;'>" + jawabanBenar + "</span>";
-      
-        document.getElementById("result").className = "wrong";
-      }
-      answered = true;
+      let endIndex = Math.min(currentIndex + batchSize, data[currentBab].length);
+      let boxes = document.querySelectorAll(".question-box");
+  
+      boxes.forEach((box, idx) => {
+        let soalIndex = currentIndex + idx;
+        let q = data[currentBab][soalIndex];
+        let input = box.querySelector(".answer-input").value.trim().toLowerCase();
+        let correctAnswers = q.arti.map(a => a.toLowerCase());
+        let resultEl = box.querySelector(".result");
+  
+        if (correctAnswers.includes(input)) {
+          resultEl.innerHTML = "✅ Benar! (" + q.arti.join(", ") + ")";
+          resultEl.style.color = "green";
+          score++;
+        } else {
+          resultEl.innerHTML = "❌ Salah! (" + q.arti.join(", ") + ")";
+          resultEl.style.color = "red";
+        }
+      });
+  
       document.querySelector("button[onclick='checkAnswer()']").disabled = true;
-      if (currentIndex === data[currentBab].length - 1) {
+  
+      if (endIndex >= data[currentBab].length) {
         let totalSoal = data[currentBab].length;
         let nilaiAkhir = Math.round((score / totalSoal) * 100);
-    
         let finalScoreEl = document.getElementById("final-score");
         finalScoreEl.style.display = "block";
-        finalScoreEl.innerText = "🎉 Bab " + currentBab + " selesai!\nNilai Akhir: " + nilaiAkhir;
-    
-        document.querySelector("button[onclick='checkAnswer()']").disabled = true;
+        finalScoreEl.innerText = `🎉 Bab ${currentBab} selesai!\nNilai Akhir: ${nilaiAkhir}`;
         document.getElementById("nextBtn").style.display = "none";
       }
     }
-
+  
     function nextQuestion() {
-      if (!answered) {
-        alert("⚠️ Jawab dulu sebelum lanjut!");
-        return;
-      }
-      currentIndex++;
+      currentIndex += batchSize;
+    
       if (currentIndex < data[currentBab].length) {
+        // masih ada soal → lanjut tampil batch berikutnya
         showQuestion();
-        document.getElementById("result").innerText = "";
-        document.querySelector("button[onclick='checkAnswer()']").disabled = false;
-        answered = false; // 🔑 reset status jawaban
+      } else {
+        // habis soal → munculkan nilai akhir
+        let totalSoal = data[currentBab].length;
+        let nilaiAkhir = Math.round((score / totalSoal) * 100);
+        let finalScoreEl = document.getElementById("final-score");
+        finalScoreEl.style.display = "block";
+        finalScoreEl.innerText = `🎉 Bab ${currentBab} selesai!\nNilai Akhir: ${nilaiAkhir}`;
+    
+        document.getElementById("nextBtn").style.display = "none";
       }
     }
   </script>
