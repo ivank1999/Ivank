@@ -2530,11 +2530,24 @@ const kanjiReadings = [
             if (q.kanji !== "-") {
               kanaBtn = `<button class="show-kana-btn" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Tampilkan Kana</button>`;
             }
-    
+            
+                   // 🔊 tombol suara
+            let audioBtn = `<button class="play-sound-btn" onclick="playSound('${q.kana}')"
+                  style="
+                    margin-top:6px;
+                    font-size:13px;
+                    padding:4px 8px;
+                    border:none;
+                    border-radius:4px;
+                    cursor:pointer;
+                    background-color:#007bff;
+                    color:white;
+                    transition:0.2s;
+                  ">🔊 Putar Suara</button>`;
         box.innerHTML = `
           <p class="kanji-text">${q.kanji !== "-" ? q.kanji : q.kana}</p>${kanaBtn}
           
-          <p class="kana-text" style="display:none;">${q.kana}</p>
+          <p class="kana-text" style="display:none;">${q.kana}</p>${audioBtn}
           <div class="answer-row" style="display:flex; gap:8px; margin-top:5px;">
             <input type="text" class="answer-input" placeholder="Ketik jawaban..." style="flex:1; background-color:#d8e1e5; color:#2c3e50;">
             <button class="kirim-btn" style="
@@ -2592,6 +2605,14 @@ const kanjiReadings = [
        container.appendChild(box);
        }
     } // <--- ini penutup showQuestion()
+    function playSound(text) {
+      if (!text) return;
+      speechSynthesis.cancel(); // hentikan suara sebelumnya
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "ja-JP";
+      utterance.rate = 1;
+      speechSynthesis.speak(utterance);
+    }
     function checkAnswer() {
       let endIndex = Math.min(currentIndex + batchSize, data[currentBab].length);
       let boxes = document.querySelectorAll(".question-box");
