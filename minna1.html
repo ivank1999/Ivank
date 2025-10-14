@@ -2531,7 +2531,7 @@ const kanjiReadings = [
               kanaBtn = `<button class="show-kana-btn" onclick="this.nextElementSibling.style.display='block'; this.style.display='none';">Tampilkan Kana</button>`;
             }
             
-                   // 🔊 tombol suara
+                  // 🔊 tombol suara
             let audioBtn = `<button class="play-sound-btn" onclick="playSound('${q.kana}')"
                   style="
                     margin-top:6px;
@@ -2605,7 +2605,8 @@ const kanjiReadings = [
        container.appendChild(box);
        }
     } // <--- ini penutup showQuestion()
-    function playSound(text) {
+    
+function playSound(text) {
       if (!text) return;
       const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodeURIComponent(text)}`;
       const audio = new Audio(url);
