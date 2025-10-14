@@ -2607,11 +2607,9 @@ const kanjiReadings = [
     } // <--- ini penutup showQuestion()
     function playSound(text) {
       if (!text) return;
-      speechSynthesis.cancel(); // hentikan suara sebelumnya
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "ja-JP";
-      utterance.rate = 1;
-      speechSynthesis.speak(utterance);
+      const url = `https://translate.google.com/translate_tts?ie=UTF-8&tl=ja&client=tw-ob&q=${encodeURIComponent(text)}`;
+      const audio = new Audio(url);
+      audio.play();
     }
     function checkAnswer() {
       let endIndex = Math.min(currentIndex + batchSize, data[currentBab].length);
