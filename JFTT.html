@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Simulasi Ujian JFT</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    padding: 10px;
+}
+.container {
+    max-width: 600px;
+    margin: auto;
+    background: rgba(255, 255, 0, 0.2);  /* kuning transparan 20% */
+    padding: 15px;
+    border-radius: 10px;
+}
+.question {
+    margin-bottom: 30px;
+    background: #e3f2fd;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    
+}
+.answers label {
+    display: block;
+    background: #f5f5f5;
+    padding: 10px;
+    margin: 6px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 2px solid #2196F3;
+    
+}
+.correct { background:#4CAF50 !important; color:#fff; }
+.wrong { background:#F44336 !important; color:#fff; }
+.disabled { pointer-events:none; }
+
+.result {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+.dialog {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(255,165,0,0.1);   /* lebih transparan */
+          border: 1px solid rgba(255,165,0,0.2); /* border lebih transparan */
+          border-radius: 8px;
+          padding: 5px 8px;
+      
+      max-width: 400px;   /* maksimal lebar */
+      min-height: 50px;   /* minimal tinggi */
+      word-wrap: break-word; /* biar teks panjang dibungkus */
+  }
+.question img {
+    max-width: 100%;
+    max-height: 200px;      /* ATUR BESARNYA DI SINI */
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 10px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2 style="text-align:center;">JFT</h2>
+
+<!-- SOAL 1 -->
+<!-- SOAL 1 -->
+<div class="question">
+    <p><b>1.</b></p>
+
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soal1.jpg"
+         style="max-width:150px;">
+
+    <div class="answers"
+         data-correct="ちち"
+         data-options='["ちち","つま","はは","こども"]'>
+    </div>
+</div>
+
+<!-- SOAL 2 -->
+<div class="question">
+    <p><b>2.</b></p>
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soal2.jpg"style="max-width:150px;">
+    <div class="answers"
+         data-correct="晴れ"
+         data-options='["晴れ","雨","雪","天気"]'>
+    </div>
+</div>
+
+<!-- SOAL 3 -->
+<div class="question">
+    <p><b>3.</b></p>
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soal3.jpg"style="max-width:150px;">
+    <div class="answers"
+         data-correct="すてます"
+         data-options='["ひるします","すてます","はこびます","おるします"]'>
+    </div>
+</div>
+
+<div class="question">
+    <p><b>4.</b> かれはこのまちに
+        <b><span style="color:#000;">ゆうめい</span></b>
+        なんです。
+    </p>
+    <div class="answers"
+         data-correct="有名"
+         data-options='["有名","名前","有明"]'>
+    </div>
+</div>
+
+<!-- SOAL 5 -->
+<div class="question">
+    <p><b>5.</b> 私の車が
+        <b><span style="color:#000;">うごかない</span></b>
+        です。
+    </p>
+    <div class="answers"
+         data-correct="動かない"
+         data-options='["聞かない","泳がない","動かない"]'>
+    </div>
+</div>
+
+<!-- SOAL 6 -->
+<div class="question">
+    <p><b>6.</b> 待ち合わせは６時
+        <b><span style="color:red;">半</span></b>
+        どうですか。
+    </p>
+    <div class="answers"
+         data-correct="はん"
+         data-options='["ねん","はん","まえ"]'>
+    </div>
+</div>
+
+<!-- SOAL 7 -->
+<div class="question">
+    <p><b>7.</b> ______ がいたいですから、ちょっとトイレにいきます。</p>
+    <div class="answers"
+         data-correct="おなか"
+         data-options='["あたま","おなか","せなか"]'>
+    </div>
+</div>
+
+<!-- SOAL 8 -->
+<div class="question">
+  <p><b>8.</b></p>
+
+  <div class="dialog-container" style="display:flex; gap:10px; align-items:flex-start;">
+    <!-- Gambar soal di kiri -->
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soal8.png"
+         style="width:80px; height:auto;">
+
+    <!-- Percakapan di kanan -->
+    <div class="dialog-list" style="display:flex; flex-direction:column; gap:5px;">
+
+      <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+             style="width:45px; height:50px;">
+        • なにをのみますか？
+      </span>
+
+      <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg"
+             style="width:45px; height:50px;">
+        • _____ をのみます。
+      </span>
+
+    </div>
+  </div>
+
+  <!-- Jawaban -->
+  <div class="answers"
+       data-correct="牛乳"
+       data-options='["牛乳","お茶","ジュース"]'>
+  </div>
+</div>
+
+<!-- SOAL 9 -->
+<div class="question">
+    <p><b>9.</b></p>
+
+<p>
+     <span class="dialog">
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewekuning.jpg"
+         style="width:45px; height:50px;">
+    • 食べる前になんといいますか？
+  </span>
+</p>
+
+<p>
+    <span class="dialog">
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg"
+         style="width:45px; height:50px;">
+    • ________ といいます。
+  </span>
+</p>
+    <div class="answers"
+         data-correct="いただきます"
+         data-options='["ごちそうさまでした","いただきます","いってきます"]'>
+    </div>
+</div>
+
+<!-- SOAL 10 -->
+<div class="question">
+    <p><b>10.</b></p>
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soal10.png"style="max-width:200px;">
+        <p>
+    <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+                 style="width:45px; height:50px;">
+            • ごめんください。
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuninghitam.jpg"
+                 style="width:45px; height:50px;">
+            • いらっしゃい、どうぞあがってください。
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+                 style="width:45px; height:50px;">
+            • __________。
+          </span>
+        </p>
+    
+    <div class="answers"
+         data-correct="おじゃまします"
+         data-options='["こちらこそ","おせわになります","おじゃまします"]'>
+    </div>
+</div>
+<!-- SOAL 11 -->
+<div class="question">
+    <p><b>11.</b></p>
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soal11.png"style="max-width:150px;">
+         <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+                 style="width:45px; height:50px;">
+            • 休みはいつからですか？
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuninghitam.jpg"
+                 style="width:45px; height:50px;">
+            • 来月の10日からです。
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+                 style="width:45px; height:50px;">
+            • 休みの日はどこへ行きますか？
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuninghitam.jpg"
+                 style="width:45px; height:50px;">
+            • いいえ、________。
+          </span>
+        </p>
+    <div class="answers"
+         data-correct="どこもいきません"
+         data-options='["なにもしません","だれもいません","どこもいきません"]'>
+    </div>
+</div>
+
+<!-- SOAL 12 -->
+<div class="question">
+    <p><b>12.</b></p>
+         <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+                 style="width:45px; height:50px;">
+            • 福岡へ行ったことがありますか？、そこで有名なラーメンがありますよ。
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+                 style="width:45px; height:50px;">
+            • まだです。行ったことがありません。
+          </span>
+        </p>
+        
+        <p>
+              <span class="dialog">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+                 style="width:45px; height:50px;">
+            • ふくおかへ________、食べてみてください。
+          </span>
+        </p>
+    
+    
+    <div class="answers"
+         data-correct="いったら"
+         data-options='["いったら","きたら","かえったら"]'>
+    </div>
+</div>
+
+<!-- SOAL 13 -->
+<div class="question">
+    <p><b>13.</b></p>
+
+<p>
+  <span class="dialog">
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+         style="width:45px; height:50px;">
+    • 夏が好きですか？
+  </span>
+</p>
+
+<p>
+    <span class="dialog">
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+         style="width:45px; height:50px;">
+    • 好きじゃない。
+  </span>
+</p>
+
+<p>
+   <span class="dialog">
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+         style="width:45px; height:50px;">
+    • どうしてですか？
+  </span>
+</p>
+
+<p>
+      <span class="dialog">
+    <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg"
+         style="width:45px; height:50px;">
+    • 夏は暑い、________。
+  </span>
+</p>
+    <div class="answers"
+         data-correct="にがてですから"
+         data-options='["すずしいですから","たのしいですから","にがてですから"]'>
+    </div>
+</div>
+
+<!-- SOAL 14 -->
+<div class="question">
+    <p><b>14.</b></p>
+
+     <p>
+          <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg"
+             style="width:45px; height:50px;">
+        • ________、この料理を食べてみてください。
+      </span>
+    </p>
+    
+    <p>
+          <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewekuning.jpg"
+             style="width:45px; height:50px;">
+        • ありがとうございます。いただきます。
+      </span>
+    </p>
+
+    <div class="answers"
+         data-correct="よかったら"
+         data-options='["できれば","だったら","よかったら"]'>
+    </div>
+</div>
+
+<!-- SOAL 15 -->
+<div class="question">
+    <p><b>15.</b></p>
+       <p>
+          <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+             style="width:45px; height:50px;">
+        • 私の兄はイギリスに住んでいます。
+      </span>
+    </p>
+    
+    <p>
+          <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg"
+             style="width:45px; height:50px;">
+        • ええ、すごい。
+      </span>
+    </p>
+    
+    <p>
+          <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg"
+             style="width:45px; height:50px;">
+        • 兄はイギリスに留学した________。英語をうまくない。
+      </span>
+    </p>
+    
+    <p>
+          <span class="dialog">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg"
+             style="width:45px; height:50px;">
+        • そうなんですか？
+      </span>
+    </p>
+
+    <div class="answers"
+         data-correct="のに"
+         data-options='["ように","ので","のに"]'>
+    </div>
+</div>
+<div id="finalScore"
+     style="display:none;
+            margin-top:20px;
+            padding:15px;
+            border-radius:10px;
+            background:#e8f5e9;
+            border:2px solid #4CAF50;
+            text-align:center;
+            font-size:18px;
+            font-weight:bold;">
+</div>
+</div>
+
+<script>
+let totalSoal = document.querySelectorAll(".answers").length;
+let soalTerjawab = 0;
+let jawabanBenar = 0;
+
+// SHUFFLE ARRAY
+function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
+
+// BUILD ANSWERS
+document.querySelectorAll(".answers").forEach(box => {
+    let options = JSON.parse(box.dataset.options);
+    let correct = box.dataset.correct;
+
+    shuffle(options);
+
+    options.forEach((text, index) => {
+        let label = document.createElement("label");
+        let letter = String.fromCharCode(65 + index);
+        label.innerHTML = `<b>${letter}.</b> ${text}`;
+        label.onclick = () => check(label, text, correct, box);
+        box.appendChild(label);
+    });
+});
+
+// CHECK ANSWER
+function check(el, selected, correct, parent) {
+
+    if (parent.classList.contains("disabled")) return;
+
+    let result = document.createElement("div");
+    result.className = "result";
+
+    if (selected === correct) {
+        el.classList.add("correct");
+        result.textContent = "✅ Jawaban BENAR";
+        jawabanBenar++;
+    } else {
+        el.classList.add("wrong");
+        result.textContent = "❌ Jawaban SALAH";
+
+        [...parent.children].forEach(opt => {
+            if (opt.textContent.includes(correct)) {
+                opt.classList.add("correct");
+            }
+        });
+    }
+
+    parent.classList.add("disabled");
+    parent.after(result);
+
+    // CEK APAKAH SEMUA SOAL SUDAH DIJAWAB
+    let sisa = document.querySelectorAll(".answers:not(.disabled)").length;
+    if (sisa === 0) {
+        tampilkanNilai();
+    }
+}
+function mulaiUlang() {
+    window.location.href = window.location.pathname + "?reload=" + new Date().getTime();
+}
+// TAMPILKAN NILAI AKHIR
+function tampilkanNilai() {
+    let nilai = Math.round((jawabanBenar / totalSoal) * 100);
+    let box = document.getElementById("finalScore");
+
+    box.style.display = "block";
+    box.innerHTML = `
+        🎯 <br>
+        Jawaban Benar: ${jawabanBenar} / ${totalSoal}<br>
+        Nilai Akhir: <span style="font-size:26px;color:#2E7D32;">${nilai}</span><br><br>
+
+        <button onclick="mulaiUlang()"
+            style="
+                padding:10px 20px;
+                font-size:16px;
+                border:none;
+                border-radius:8px;
+                background:#2196F3;
+                color:white;
+                cursor:pointer;
+            ">
+            🔄 Mulai Ulang
+        </button>
+    `;
+}
+</script>
+
+</body>
+</html>
