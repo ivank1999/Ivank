@@ -1,0 +1,1545 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.6">
+<title>Simulasi Ujian</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: rgba(59, 130, 246, 0.30);
+  font-size: 10px;
+  font-weight: 500;
+
+  color: #000; /* 🔥 TEKS PUTIH */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+#questionImage {
+  display: block;
+  margin: 20px auto;   /* tetap tengah */
+  max-width: 100%;
+}
+.study{
+  border:2px solid #bfc8d8;
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:30px;
+  background:#eef2f8;
+}
+
+.question{
+  font-size:26px;
+  line-height:1.7;
+  font-weight:700;
+}
+
+.choice{
+  margin-top:12px;
+  margin-left:18px;
+  font-weight:600;
+}
+
+.answer{
+  color:#d32f2f;
+  font-weight:700;
+}
+
+.jp-text{
+  font-size:28px;
+  font-weight:800;
+  background:#fdeecb;
+  border:3px solid #f4a000;
+  padding:18px;
+  border-radius:12px;
+  margin-top:18px;
+  display:none;
+}
+
+.hidden{
+  display:none;
+  margin-top:15px;
+  background:#e9edf5;
+  padding:18px;
+  border-radius:10px;
+}
+.talker {
+  width: 50px;          /* 🔥 ukuran emoji */
+  height: 50px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.answers label.correct {
+  background: #c8e6c9;
+  border-color: #2e7d32;
+}
+
+.answers label.wrong {
+  background: #ffcdd2;
+  border-color: #c62828;
+}
+
+.sidebar button.wrong {
+  background: #f44336;
+  color: #fff;
+}
+.container {
+  display: flex;
+  width: 900px;
+  margin: 110px auto 20px auto; /* 🔥 TURUNKAN CONTAINER */
+
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px;
+}
+.session-bar {
+  position: absolute;
+  top: 80px;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  
+}
+
+.session-bar button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 3px solid #000;
+  cursor: pointer;
+  background: #ff9800;
+  margin-bottom: 8px;
+}
+
+.session-menu {
+  margin-top: 10px;
+  display: none;
+}
+
+.session-menu button {
+  margin: 5px;
+  padding: 10px 18px;
+  font-size: 16px;
+  border: 3px solid #000;
+  cursor: pointer;
+  background: #2196f3;
+  color: #fff;
+  
+}
+.answers input[type="radio"] {
+  transform: scale(1.3);   /* gedein bulatan */
+  margin-right: 12px;
+}
+.question-hint {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+
+  background: #e5e7eb;          /* abu-abu gelap */
+  border-left: 6px solid #6b7280; /* aksen abu tua */
+  padding: 10px 16px;
+  border-radius: 6px;
+
+  color: #111827;               /* teks hampir hitam */
+}
+/* SIDEBAR */
+.sidebar {
+  width: 80px;
+  border-right: 2px solid #000;
+  padding: 10px;
+}
+.kanji {
+  color: red;
+  font-weight: 700;
+text-decoration: underline; 
+}
+.sidebar button {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 3px solid #000;
+  background: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sidebar button.active {
+  background: #4caf50;
+  color: #fff;
+}
+
+.sidebar button.answered {
+  background: #2196f3;
+  color: #fff;
+}
+
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+.title {
+  position: absolute;
+  top: 10px;
+
+  width: 100%;
+  text-align: center;
+
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+  letter-spacing: 2px;
+}
+.answers label {
+  display: block;
+  border: 2px solid rgba(33, 150, 243, 0.5); /* 🔵 biru transparan */
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: 600;
+}
+.double-label {
+  display: inline-block;
+  font-size: 22px;
+  font-weight: 800;
+  background: #3b82f6;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 6px;
+}
+
+.double-question-text {
+  font-size: 26px;
+  font-weight: 550;
+  text-align: center;
+
+  background: rgba(255, 165, 0, 0.2);
+  border: 2px solid #ff9800;
+  padding: 14px 23px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+}
+.question-text {
+  font-size: 26px;
+  font-weight: 550;
+  text-align: center;
+
+  background: rgba(255, 165, 0, 0.2);
+  border: 1px solid #ff9800;
+  padding: 14px 23px;
+  margin-bottom: 30px;
+}
+/* FOOTER */
+.footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.footer button {
+  padding: 15px 30px;
+  border: 4px solid #000;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  background: #ff9800;
+  color: #000;
+}
+/* ================= BUTTON SESI 4 ================= */
+.session4 .buttons button {
+  font-size: 18px;        /* 🔥 BESARIN TEKS */
+  padding: 10px 16px;     /* 🔥 BESARIN TOMBOL */
+  margin: 6px 6px 6px 0;
+  font-weight: 700;
+
+  border: 3px solid #000;
+  background: #ff9800;
+  cursor: pointer;
+  border-radius: 10px;
+}
+/* ================= SESI 4 KHUSUS ================= */
+.session4-full {
+  width: 100%;
+}
+.session4 {
+  font-size: 22px;      /* ukuran dasar */
+  line-height: 1.7;
+}
+
+.session4 .question {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+.session4 .choice {
+  font-size: 22px;
+}
+
+.session4 .answer {
+  font-size: 22px;
+  color: #d32f2f;
+  font-weight: 700;
+}
+
+.session4 .hidden {
+  font-size: 21px;
+}
+
+.session4 .jp-text {
+  font-size: 26px;
+}
+.dialog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  font-size: 26px;
+  font-weight: 500;
+}
+
+/* 👩 CEWEK → putih + border hitam */
+.dialog.female {
+  background: #ffffff;
+  border: 3px solid #ff9800;
+  color: #000;
+}
+
+/* 👨 COWOK → TETAP ORANGE (JANGAN DIUBAH) */
+.dialog.male {
+  background: #ffffff;
+  border: 3px solid #3b82f6;
+  color: #000;
+}</style>
+</head>
+
+<body>
+<h1 class="title" id="title">OKIMASU SESI 1</h1>
+<div class="session-bar" id="sessionBar">
+  <button onclick="toggleSessionMenu()">📂 PILIH SESI</button>
+
+  <div class="session-menu" id="sessionMenu">
+    <button onclick="goSession(0)">SESI 1</button>
+    <button onclick="goSession(1)">SESI 2</button>
+    <button onclick="goSession(2)">SESI 3</button>
+    <button onclick="goSession(3)">SESI 4</button>
+  </div>
+</div>
+
+</div>
+<div class="container">
+  <div class="sidebar" id="sidebar"></div>
+
+  <div class="content">
+<div class="question-hint" id="questionHint" style="display:none;"></div>
+    <div class="question-text" id="questionText">
+      Lihatlah ilustrasi, kemudian pilihlah kata yang benar
+    </div>
+
+    <img id="questionImage" width="500" style="display:none;">
+
+    <div class="answers" id="answers"></div>
+<div class="footer">
+      <button id="prevBtn" style="display:none;">⬅ KEMBALI</button>
+      <button id="finishBtn" style="display:none;">SELESAI</button>
+      <button id="nextBtn" style="display:none;">LANJUT ➡</button>
+    </div>
+    
+<div id="result" style="
+      display:none;
+      margin-top:30px;
+      padding:20px;
+      border:3px solid #000;
+      background:#e8f5e9;
+      font-size:24px;
+      font-weight:bold;
+      text-align:center;
+    ">
+    </div>
+  </div>
+</div>
+
+<script>
+let questions = [
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/bangun.png",
+    imageWidth: 350,
+    hint : "lihatlah ilustrasi, kemudian pililah kata yang benar.",
+    choices: ["1. おきます", "2. ねます", "3. すわります"],
+    correct: 0
+  },
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/jalan.png",
+    imageWidth: 400,
+    hint : "lihatlah ilustrasi, kemudian pililah kata yang benar.",
+    choices: ["1. かるい", "2. くらい", "3. あかるい"],
+    correct: 2
+  },
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/pulau.png",
+    imageWidth: 500,
+    hint : "lihatlah ilustrasi, kemudian pililah kata yang benar.",
+    choices: ["1. しま", "2. いけ", "3. かわ"],
+    correct: 0
+  },
+  {
+    image: "",
+    hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    text: "この飲み物は,<span class='kanji'>無料</span>です。",
+    choices: ["A. むりょ", "B. むりょう", "C. むりょ"],
+    correct: 1
+  },
+  {
+      image: "",
+      hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+      text: "この本は,<span class='kanji'>大切な</span>ほんです。",
+      choices: ["A. たいへんな", "B. ひつような", "C. たいせつな"],
+      correct: 2
+    },
+  {
+        image: "",
+        hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+        text: "あの,<span class='kanji'>男</span>の人はかみのけが長いんです。",
+        choices: ["A. おんな", "B. おとこ", "C. おとうと"],
+        correct: 1
+      },
+  {
+          image: "",
+          hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+          text: "明日のパーティーは。,<span class='kanji'>中止する</span>つもりです。",
+          choices: ["A. ちゅうしする", "B. ちゅしする", "C. ちょうしする"],
+          correct: 0
+        },
+  {
+    image: "",
+    hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+    text: "休みの日は、音楽を聞いたり本を＿＿＿しています",
+    choices: ["A. 読して", "B. 読んだり", "C. 読む"],
+    correct: 1
+  },
+  {
+    image: "",
+    hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+    text: "机の上に＿＿＿ものを置いてください",
+    choices: ["A. 重い", "B. 遠い", "C. 強い"],
+    correct: 0
+  },
+  {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "ジュースを飲みたいんです＿＿＿がかわいたから",
+      choices: ["A. くび", "B. のど", "C. ゆび"],
+      correct: 1
+    },
+    {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "休みなので部屋の＿＿＿をしました",
+      choices: ["A. そうじ", "B. せんたく", "C. スポーツ"],
+      correct: 0
+    },
+    {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "かたが痛いときは、かたを＿＿＿いいです",
+      choices: ["A. まわってから", "B. まわすと", "C. まわるか"],
+      correct: 1
+    },
+    {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "春にさくらが＿＿＿",
+      choices: ["A. さきます", "B. すきます", "C. むきます"],
+      correct: 0
+    },
+    {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "今日、台風ですから、風が＿＿＿",
+      choices: ["A. かぶります", "B. ふきます", "C. ふります"],
+      correct: 1
+    },
+    {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "今日、友だちにかいものに＿＿＿",
+      choices: ["A. あいます", "B. もちます", "C. いきます"],
+      correct: 2
+    },
+    {
+      image: "",
+      hint : "Bacalah percakapan berikut, kemudian Pililah jawaban yang paling sesuai dengan bagian (____)",
+      text: "昨日の試合にかちました。しゃちょうさんに＿＿＿",
+      choices: ["A. ほめられる", "B. ほめられた", "C. ほめました"],
+      correct: 2
+    }
+];
+const questionsSession2 = [
+      {
+        image: "",
+        imageWidth: 300,
+        hint : "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+        text: `
+          <div class="dialog male">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg" class="talker">
+            タイ語＿＿＿人はさがしているんですが
+            　　おしえていただけませんか。
+          </div>
+        
+          <div class="dialog female">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg" class="talker">
+            タイ語ですね。さがしてみます。
+          </div>
+          
+          <div class="dialog male">
+            <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg" class="talker">
+            ありがとうございます。
+            　　　　よろしくお願いします。
+          </div>
+        `,
+        choices: [
+          "A. 話して ",
+          "B. 話せる",
+          "C. 話す"
+        ],
+        correct: 1
+      },
+
+  {
+    image: "",
+    imawgeWidth: 300,
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg" class="talker">
+        富士山の絵きれいですね。
+      </div>
+  
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priamerah.jpg" class="talker">
+        そうですね。私は特にふじさんの絵＿＿＿
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg" class="talker">
+        そうですね。
+      </div>
+    `,
+    choices: [
+      "A. すばらしいそうです",
+      "B. すばらしいと思います",
+      "C. すばらしくなります"
+    ],
+    correct: 1
+  },
+  {
+    image: "",
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        すみません、ちょっと手伝ってもらいませんか。
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ceweungu.jpg" class="talker">
+        ＿＿＿＿＿
+      </div>
+    `,
+    choices: [
+      "A. ええ、どうぞ",
+      "B. ええ、ありがとう",
+      "C. ええ、いいですよ"
+    ],
+    correct: 2
+  },
+  
+  {
+    image: "",
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        おべんとう買って、あたたかくしてますか。
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        いいえ、＿＿＿＿＿。
+      </div>
+    `,
+    choices: [
+      "A. だめです",
+      "B. ちょっと",
+      "C. けっこうです"
+    ],
+    correct: 2
+  },
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/pelari.png",
+    imawgeWidth: 300,
+    hint : "lihatlah ilustrasi, kemudian pililah kata yang benar.",
+    text: "＿＿＿町ですね。",
+    choices: [
+      "A. にぎやかな",
+      "B. にぎやかで",
+      "C. にぎやか"
+    ],
+    correct: 0
+  },
+  
+{
+    image: "",
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        そのカメラはいいですね。
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        ありがとうございます。
+      </div>
+  
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        どこで買ったんですか。
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        これは日本へ行く前に、父が買って＿＿＿。
+      </div>
+      
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        そうですか。
+      </div>
+    `,
+    choices: [
+        "A. あげました",
+        "B. くれました",
+        "C. もらいました"
+    ],
+    correct: 1
+   },
+
+  {
+    image: "",
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        今日の試験はどうでしたか。
+      </div>
+  
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        よく＿＿＿、ぜんぜんだめでした。
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        そうですか。
+      </div>
+    `,
+    choices: [
+      "A. 勉強したのに",
+      "B. 勉強したから",
+      "C. 勉強したら"
+        
+    ],
+    correct: 0
+  },
+  
+  {
+    image: "",
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        明日何時にしますか。
+      </div>
+  
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        7時はどうですか。
+      </div>
+  
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        ちょっと早いです。8時でもいいですか。
+      </div>
+      
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        ＿＿＿＿＿。
+      </div>
+    `,
+    choices: [
+      "A. よかったです",
+      "B. じゃあ、またあした",
+      "C. いいですよ"
+    ],
+    correct: 1
+  },
+  {
+    image: "",
+    hint: "dua orang sedang berbicara, baca dialog dan pililah ungkapan yang paling benar",
+    text: `
+      <div class="dialog female">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewebiru.jpg" class="talker">
+        山田さんの妻はどんな人ですか。
+      </div>
+  
+      <div class="dialog male">
+        <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/priakuning.jpg" class="talker">
+        そうですね。とても＿＿＿親切な人です。
+      </div>
+    `,
+    choices: [
+      "A. きれいな",
+      "B. きれくて",
+      "C. きれいで"
+    ],
+    correct: 2
+  }
+];
+
+const questionsSession3 = [
+  // 1
+  {
+    hint: "Dengarkan percakapan, lalu pilih jawaban yang benar",
+    text: "しゅみはなんですか。",
+    choices: [
+      "A. スポーツ",
+      "B. おんがく",
+      "C. りょこう"
+    ],
+    correct: 1
+  },
+
+  // 2
+  {
+    hint: "Dengarkan percakapan, lalu pilih jawaban yang benar",
+    text: "Bulan apa yang paling dingin",
+    choices: [
+      "A. ふゆはあたたかいです",
+      "B. でも1がつより2がつもとさむいです",
+      "C. 1がつがいちばんさむいです"
+    ],
+    correct: 1
+  },
+
+  // 3
+  {
+    hint: "Dengarkan percakapan, lalu pilih jawaban yang benar",
+    text: "Memutuskan untuk memberi hadiah apa mereka",
+    choices: [
+      "A. ビール",
+      "B. ワイン（ANGGUR PUTIH）",
+      "C. ジュース"
+    ],
+    correct: 1
+  },
+
+  // 4
+  {
+    hint: "Dengarkan percakapan, lalu pilih jawaban yang benar",
+    text: "Berapa harga barang",
+    choices: [
+      "A. 1000円です",
+      "B. 1500円です",
+      "C. 2000円です"
+    ],
+    correct: 1
+  },
+
+  // 5
+  {
+    hint: "Dengarkan percakapan, lalu pilih jawaban yang benar",
+    text: "Memutuskan untuk membeli baju yang mana?",
+    choices: [
+      "A. Baju yang warna Merah dan ukuran M",
+      "B. Baju yang warna hitam dan ukuran S",
+      "C. Baju yang warna Kuning dan ukuran L"
+    ],
+    correct: 1
+  },
+
+  // 6 DOUBLE
+  {
+    type: "double",
+    hint: "Dengarkan percakapan, lalu jawab pertanyaan A dan B",
+    questions: [
+      {
+        label: "A",
+        text: "Jam berapa kumpul di kelas",
+        choices: [
+          "1. Jam 9:30",
+          "2. Jam 9:50",
+          "3. Jam 10:00"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "Dilantai berapa diadakan",
+        choices: [
+          "1. Dilantai 1",
+          "2. Dilantai 2",
+          "3. Dilantai 3"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // 7 DOUBLE
+  {
+    type: "double",
+    hint: "Dengarkan percakapan, lalu jawab pertanyaan A dan B",
+    questions: [
+      {
+        label: "A",
+        text: "Dimana sampahnya akan dikumpulkan",
+        choices: [
+          "1. こうえんいりぐち",
+          "2. えきまえ",
+          "3. がっこう"
+        ],
+        correct: 0
+      },
+      {
+        label: "B",
+        text: "Sampai jam berapa kegiatannya",
+        choices: [
+          "1. Jam 9:30",
+          "2. Jam 10:00",
+          "3. Jam 10:30"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // 8 DOUBLE
+  {
+    type: "double",
+    hint: "Lihat gambar remote AC, lalu jawab pertanyaan A dan B",
+    questions: [
+      {
+        label: "A",
+        text: "Berapa suhu yang ditentukan",
+        choices: [
+          "1. 25°C",
+          "2. 26°C",
+          "3. 27°C"
+        ],
+        correct: 2
+      },
+      {
+        label: "B",
+        text: "Tombol apa yang ditekan untuk mengatur suhu",
+        choices: [
+          "1. まるのボタン",
+          "2. さんかくのボタン",
+          "3. しかくのボタン"
+        ],
+        correct: 1
+      }
+    ]
+  }
+];
+const questionsSession4 = [
+    {
+      type: "html",
+      html:`
+      <div class="session4">
+    <!-- ================= NO 1 ================= -->
+
+    <div class="study">
+    <div class="question">
+    <b>1.</b><br>
+    Gogo yasumi, byouin ni ikimasu.<br>
+    Gogo no shigoto Yamasita-san to …. kudasai
+    <div class="choice answer">
+    A. Gogo nani o shimasu ka（gambar orang berobat）<br>
+    B. Pekerjaannya dilakukan oleh siapa Yamasita
+    </div>
+    </div>
+    
+    <div id="jp1" class="jp-text">
+    午後休みです。病院に行きます。<br>
+    午後の仕事、山下さんと（　　）ください。<br><br>
+    A. 午後何をしますか。(gambar orang berobat)<br>
+    B. 山下さんの仕事はだれがしますか。
+    </div>
+    
+    <div class="buttons">
+    <button onclick="showJP('jp1')">🇯🇵 Jepang Full</button>
+    
+    <button onclick="toggle(this)">Kotoba</button>
+    <div class="hidden">
+    午後（ごご）= sore<br>
+    休み（やすみ）= libur<br>
+    病院（びょういん）= rumah sakit<br>
+    仕事（しごと）= pekerjaan<br>
+    だれ = siapa
+    </div>
+    
+    <button onclick="toggle(this)">Bunpou</button>
+    <div class="hidden">
+    ① ～てください = bentuk permintaan sopan<br>
+    ② Kata kerja dihilangkan (省略) dan dipahami dari konteks
+    </div>
+    
+    <button onclick="toggle(this)">Partikel</button>
+    <div class="hidden">
+    の = menghubungkan dua kata benda (午後の仕事)<br>
+    と = bersama (山下さんと)(Bersama Sdr.Yamasita)<br>
+    は = penanda topik (山下さんの仕事は…)<br>
+    が = penanda subjek / pelaku (だれがしますか)
+    </div>
+    <button onclick="toggle(this)">Kata Kerja</button>
+    <div class="hidden">
+    ・行きます（行く）= pergi（kata kerja aksi, bentuk sopan）<br>
+    </div>
+    <button onclick="toggle(this)">Kanji</button>
+    <div class="hidden">
+    病 = sakit<br>
+    院 = gedung / institusi<br><br>
+    仕 = melakukan<br>
+    事 = urusan<br><br>
+    山 = gunung<br>
+    下 = bawah
+    </div>
+    </div>
+    </div>
+    
+    <!-- ================= NO 2 ================= -->
+    <div class="study">
+    <div class="question">
+    <b>2.</b> Sakubun – ie no ryouri<br>
+    <div class="choice">
+    1. Hal yang benar tentang ie no ryouri<br>
+    → <span class="answer">Tatami no ie aru koto</span><br><br>
+    
+    2. Setelah selesai kelas ngapain<br>
+    → <span class="answer">Bento tsukuru you ni narimasu</span>
+    </div>
+    </div>
+    
+    <div id="jp2" class="jp-text">
+    家の料理について、正しいことはどれですか。<br>
+    ・畳の家があること。<br><br>
+    授業が終わったあと、どうしますか。<br>
+    ・弁当を作るようになります。
+    </div>
+    
+    <div class="buttons">
+    <button onclick="showJP('jp2')">🇯🇵 Jepang Full</button>
+    
+    <button onclick="toggle(this)">Kotoba</button>
+    <div class="hidden">
+    家（いえ）= rumah<br>
+    料理（りょうり）= masakan<br>
+    正しい（ただしい）= benar<br>
+    どれ = yang mana<br>
+    畳（たたみ）= tatami<br>
+    ある = ada<br>
+    授業（じゅぎょう）= pelajaran<br>
+    終わる（おわる）= selesai<br>
+    あと = setelah<br>
+    どう = bagaimana<br>
+    弁当（べんとう）= bekal<br>
+    作る（つくる）= membuat<br>
+    ～ようになります = menjadi terbiasa / mulai melakukan
+    </div>
+    
+    <button onclick="toggle(this)">Bunpou</button>
+    <div class="hidden">
+    ～について = menyatakan topik pembahasan (家の料理について)<br>
+    ～はどれですか = pola pertanyaan memilih jawaban yang benar<br>
+    ～がある = menyatakan keberadaan / fakta (畳の家がある)<br>
+    Vた + あと = menyatakan urutan waktu "setelah" (終わったあと)<br>
+    Vる + ようになります = menyatakan perubahan kebiasaan (作るようになります)
+    </div>
+    
+    <button onclick="toggle(this)">Kata Kerja</button>
+    <div class="hidden">
+    あります（ある）= ada / keberadaan<br>
+    終わります（終わる）= selesai<br>
+    します（する）= melakukan<br>
+    作ります（作る）= membuat<br>
+    なります（なる）= menjadi / berubah
+    </div>
+    
+    <button onclick="toggle(this)">Partikel</button>
+    <div class="hidden">
+    の = menghubungkan dua kata benda (家の料理 / 畳の家)<br>
+    について = menyatakan topik pembahasan<br>
+    は = penanda topik (正しいことは…)<br>
+    が = penanda subjek / keberadaan (家がある・授業が終わる)<br>
+    を = penanda objek (弁当を作る)
+    </div>
+    
+    <button onclick="toggle(this)">Kanji</button>
+    <div class="hidden">
+    家 / 料理 / 授業 / 弁当 / 畳
+    </div>
+    </div>
+    </div>
+    
+       → 
+    <!-- ================= NO 3 ================= -->
+    <div class="study">
+    <div class="question">
+    <b>3.</b> Pesan message HOA<br>
+    Nihon kaiwa kurabu totemo yokatta desu ne...dapat info dr...
+    <div class="choice answer">
+    → jawabannya Gambar orang duduk melingkar ky lagi makan tapi bukan<br> 
+    → jawabannya kirei na sakura (きれいな桜 = bunga sakura yang indah)
+    </div>
+    
+    <div id="jp3" class="jp-text">
+    日本会話クラブ、とてもよかったですね...この情報はどこから...。
+    </div>
+    
+    <div class="buttons">
+    <button onclick="showJP('jp3')">🇯🇵 Jepang Full</button>
+    
+    <button onclick="toggle(this)">Kotoba</button>
+    <div class="hidden">
+    会話（かいわ）= percakapan<br>
+    情報（じょうほう）= informasi
+    </div>
+    
+    <button onclick="toggle(this)">Partikel</button>
+    <div class="hidden">
+    から = dari (sumber informasi)
+    </div>
+    
+    <button onclick="toggle(this)">Bunpou</button>
+    <div class="hidden">
+    ～から = menyatakan asal / sumber informasi
+    </div>
+    
+    <button onclick="toggle(this)">Kanji</button>
+    <div class="hidden">
+    日本 / 会話 / 情報
+    </div>
+    </div>
+    </div>
+    
+    <!-- ================= NO 4 ================= -->
+    <div class="study">
+    <div class="question">
+    <b>4.</b> Kaya Ada Tabel
+    <div class="choice answer">
+    → Dalam situ boleh memilih apa, 出発日<br>
+    → Lupa
+    </div>
+    
+    <div id="jp4" class="jp-text">
+    この表で選べるのは、出発日。
+    </div>
+    
+    <div class="buttons">
+    <button onclick="showJP('jp4')">🇯🇵 Jepang Full</button>
+    
+    <button onclick="toggle(this)">Kotoba</button>
+    <div class="hidden">
+    表（ひょう）= tabel<br>
+    選ぶ（えらぶ）= memilih
+    </div>
+    
+    <button onclick="toggle(this)">Partikel</button>
+    <div class="hidden">
+    で = tempat / alat
+    </div>
+    
+    <button onclick="toggle(this)">Bunpou</button>
+    <div class="hidden">
+    ～のは～ = menekankan topik / hal yang dipilih
+    </div>
+    
+    <button onclick="toggle(this)">Kanji</button>
+    <div class="hidden">
+    表 / 選 / 出発日
+    </div>
+    </div>
+    </div>
+    
+    <!-- ================= NO 5 ================= -->
+    <div class="study">
+    <div class="question">
+    <b>5.</b> Tabel harga
+    <div class="choice answer">
+    → 女の人 いくらですか（1800円）<br>
+    → Harga paling murah → 1日
+    </div>
+    </div>
+    
+    <div id="jp5" class="jp-text">
+    女の人はいくらですか。(1800円)<br>
+    一日で一番安いです。
+    </div>
+    
+    <div class="buttons">
+    <button onclick="showJP('jp5')">🇯🇵 Jepang Full</button>
+    
+    <button onclick="toggle(this)">Kotoba</button>
+    <div class="hidden">
+    女（おんな）= perempuan<br>
+    一番（いちばん）= paling<br>
+    安い（やすい）= murah
+    </div>
+    
+    <button onclick="toggle(this)">Bunpou</button>
+    <div class="hidden">
+    ～はいくらですか = menanyakan harga<br>
+    一番～です = menyatakan yang paling
+    </div>
+    
+    <button onclick="toggle(this)">Partikel</button>
+    <div class="hidden">
+    は = topik<br>
+    で = dalam / pada
+    </div>
+    
+    <button onclick="toggle(this)">Kanji</button>
+    <div class="hidden">
+    女 / 円 / 一日 / 安
+    </div>
+    </div>
+    </div>
+    `
+  }
+];
+let current = 0;
+let answers = Array(questions.length).fill(null);
+let examFinished = false;
+const questionsSession1 = questions;
+
+const sessions = [
+  questionsSession1,
+  questionsSession2,
+  questionsSession3,
+  questionsSession4
+];
+
+let sessionIndex = 0; // mulai dari sesi 1
+const sidebar = document.getElementById("sidebar");
+const image = document.getElementById("questionImage");
+const answersDiv = document.getElementById("answers");
+const finishBtn = document.getElementById("finishBtn");
+finishBtn.addEventListener("click", finishExam);
+const questionText = document.getElementById("questionText");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+prevBtn.onclick = () => {
+  if (sessionIndex > 0) {
+    sessionIndex--;   // 🔥 balik ke sesi sebelumnya
+  }
+  startSession();     // reset sesi itu
+};
+nextBtn.onclick = () => {
+  if (sessionIndex < sessions.length - 1) {
+    sessionIndex++;
+    startSession();
+  } else {
+    alert("Semua sesi sudah selesai 🎉");
+  }
+};
+
+function updateTitle() {
+  document.getElementById("title").textContent =
+    `OKIMASU SESI ${sessionIndex + 1}`;
+}
+function startSession() {
+  questions = sessions[sessionIndex];
+
+  // 🔥 KHUSUS SESI 4: SEMBUNYIKAN SIDEBAR
+  if (sessionIndex === 3) {
+    sidebar.style.display = "none";
+  } else {
+    sidebar.style.display = "block";
+  }
+  if (!questions || questions.length === 0) {
+    alert(`Sesi  belum tersedia`);
+    return;
+  }
+  current = 0;
+  answers = Array(questions.length).fill(null);
+  examFinished = false;
+
+  document.getElementById("result").style.display = "none";
+
+  finishBtn.style.display = "none";
+  finishBtn.disabled = false;
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+
+  sidebar.innerHTML = "";
+  questions.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.onclick = () => loadQuestion(i);
+    sidebar.appendChild(btn);
+  });
+
+  updateTitle();
+  loadQuestion(0);
+}
+function toggleSessionMenu() {
+  const menu = document.getElementById("sessionMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function goSession(index) {
+  if (!sessions[index] || sessions[index].length === 0) {
+    alert("Sesi ini belum tersedia");
+    return;
+  }
+
+  sessionIndex = index;
+  document.getElementById("sessionMenu").style.display = "none";
+  startSession();
+}
+/* LOAD SOAL */
+function loadQuestion(index) {
+  current = index;
+  const q = questions[index];
+
+  
+  // 🔥 KHUSUS SESI 4 (HTML FULL)
+  if (q.type === "html") {
+    document.getElementById("questionHint").style.display = "none";
+    questionText.style.display = "none";
+    image.style.display = "none";
+  
+    answersDiv.innerHTML = q.html;
+  
+    updateSidebar();
+    return;
+  }
+if (q.type === "double") {
+    if (!Array.isArray(answers[current])) {
+      answers[current] = Array(q.questions.length).fill(undefined);
+    }
+    renderDoubleQuestion(q);
+    updateSidebar();
+    return;
+  }
+const hintDiv = document.getElementById("questionHint");
+
+if (q.hint) {
+  hintDiv.innerHTML = q.hint;
+  hintDiv.style.display = "block";
+} else {
+  hintDiv.style.display = "none";
+}
+  if (q.text) {
+    questionText.innerHTML = q.text;
+    questionText.style.display = "block";
+  } else {
+    questionText.style.display = "none";
+  }
+
+  if (q.image) {
+    image.src = q.image;
+    image.style.display = "block";
+  
+    // 🔥 ATUR UKURAN PER SOAL
+    image.style.width = q.imageWidth
+      ? q.imageWidth + "px"
+      : "600px"; // default kalau tidak diset
+  } else {
+    image.style.display = "none";
+  } 
+  answersDiv.innerHTML = "";
+
+  q.choices.forEach((choice, i) => {
+    const label = document.createElement("label");
+  
+    const userAnswer = answers[current];
+    const correctAnswer = q.correct;
+  
+    label.innerHTML = `
+      <input type="radio" name="jawaban_${current}">${choice} ${examFinished && i === correctAnswer ? " ✅  (jawaban benar) " : ""} ${examFinished && i === userAnswer && i !== correctAnswer ? "❌ (jawaban kamu)" : ""}
+    `;
+  
+    const input = label.querySelector("input");
+  
+    if (userAnswer === i) input.checked = true;
+  
+    if (examFinished) {
+      input.disabled = true;
+  
+      if (i === correctAnswer) label.classList.add("correct");
+      if (i === userAnswer && i !== correctAnswer) label.classList.add("wrong");
+    } else {
+      input.onclick = () => {
+        answers[current] = i;
+        updateSidebar();
+        checkFinish();
+      };
+    }
+  
+    answersDiv.appendChild(label);
+  });
+  updateSidebar();
+}
+function renderDoubleQuestion(q) {
+  answersDiv.innerHTML = "";
+
+  // tampilkan hint di div khusus
+  const hintDiv = document.getElementById("questionHint");
+  if (q.hint) {
+    hintDiv.innerHTML = q.hint;
+    hintDiv.style.display = "block";
+  } else {
+    hintDiv.style.display = "none";
+  }
+
+  // sembunyikan questionText karena double tidak punya text utama
+  questionText.style.display = "none";
+  if (q.image) {
+    image.src = q.image;
+    image.style.display = "block";
+  }
+
+  q.questions.forEach((subQ, subIndex) => {
+    const box = document.createElement("div");
+    box.style.marginBottom = "30px";
+
+    box.innerHTML = `
+      <div class="double-label"> Pertanyaan (${subQ.label})
+        </div>
+    
+      <div class="double-question-text">${subQ.text}
+        </div>
+    `;
+
+    subQ.choices.forEach((choice, i) => {
+      const label = document.createElement("label");
+
+      const userAnswer =
+        answers[current] ? answers[current][subIndex] : null;
+      
+      label.innerHTML = `
+        <input type="radio" 
+          name="q_${current}_${subIndex}">${choice}
+        
+        ${
+          examFinished && i === subQ.correct
+            ? " ✅ (jawaban benar)"
+            : ""
+        }
+        ${
+          examFinished &&
+          i === userAnswer &&
+          i !== subQ.correct
+            ? " ❌ (jawaban kamu)"
+            : ""
+        }
+      `;
+
+      const input = label.querySelector("input");
+      // ⬅️ FIX: balikin tanda biru kalau sudah pernah dijawab
+      if (
+        answers[current] &&
+        answers[current][subIndex] === i
+      ) {
+        input.checked = true;
+      }
+      if (examFinished) {
+        input.disabled = true;
+      
+        if (i === subQ.correct) label.classList.add("correct");
+        if (
+          answers[current] &&
+          answers[current][subIndex] === i &&
+          i !== subQ.correct
+        ) {
+          label.classList.add("wrong");
+        }
+      } else {
+        input.onclick = () => {
+          if (!answers[current]) answers[current] = [];
+          answers[current][subIndex] = i;
+         
+          updateSidebar();
+          checkFinish();
+        };
+      }
+
+      box.appendChild(label);
+    });
+
+    answersDiv.appendChild(box);
+  });
+}
+
+/* UPDATE SIDEBAR */
+function updateSidebar() {
+  [...sidebar.children].forEach((btn, i) => {
+    btn.classList.remove("active", "answered", "wrong");
+
+    // soal aktif
+    if (i === current) {
+      btn.classList.add("active");
+    }
+
+    // ===== MODE REVIEW (SETELAH SELESAI) =====
+    if (examFinished) {
+      if (questions[i].type === "double") {
+        const userAns = answers[i];
+        const total = questions[i].questions.length;
+
+        if (
+          !Array.isArray(userAns) ||
+          userAns.length < total ||
+          userAns.some(
+            (a, idx) => a !== questions[i].questions[idx].correct
+          )
+        ) {
+          btn.classList.add("wrong");
+        } else {
+          btn.classList.add("answered");
+        }
+      } else {
+        if (answers[i] === questions[i].correct) {
+          btn.classList.add("answered");
+        } else {
+          btn.classList.add("wrong");
+        }
+      }
+
+      return; // ⛔ STOP di sini, jangan lanjut ke mode ujian
+    }
+
+// ===== MODE UJIAN =====
+    if (questions[i].type === "double") {
+      if (
+        Array.isArray(answers[i]) &&
+        answers[i].some(a => a !== undefined)
+      ) {
+        btn.classList.add("answered");
+      }
+    } else {
+      if (answers[i] !== null) {
+        btn.classList.add("answered");
+      }
+    }
+  });
+}/* CEK SELESAI */
+function checkFinish() {
+  const selesai = questions.every((q, i) => {
+    if (q.type === "double") {
+      return (
+        Array.isArray(answers[i]) &&
+        answers[i].length === q.questions.length &&
+        answers[i].every(a => a !== undefined)
+      );
+    } else {
+      return answers[i] !== null;
+    }
+  });
+
+  if (selesai) {
+    finishBtn.style.display = "inline-block";
+  }
+}
+function resetExam() {
+  examFinished = false;
+  current = 0;
+  answers = Array(questions.length).fill(null);
+
+  document.getElementById("result").style.display = "none";
+
+  finishBtn.style.display = "none";
+  finishBtn.disabled = false;
+
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+
+  sidebar.innerHTML = "";
+  answersDiv.innerHTML = ""; // 🔥 INI YANG KURANG
+
+  questions.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.onclick = () => loadQuestion(i);
+    sidebar.appendChild(btn);
+  });
+
+  updateTitle();
+  loadQuestion(0);
+}
+function toggle(btn){
+  const box = btn.nextElementSibling;
+  box.style.display =
+    box.style.display === "block" ? "none" : "block";
+}
+
+function showJP(id){
+  document.getElementById(id).style.display = "block";
+}
+
+/* SELESAI */
+function finishExam() {
+  let score = 0;
+
+  questions.forEach((q, i) => {
+    if (q.type === "double") {
+      q.questions.forEach((sq, j) => {
+        if (answers[i] && answers[i][j] === sq.correct) {
+          score++;
+        }
+      });
+    } else {
+      if (answers[i] === q.correct) score++;
+    }
+  });
+
+  examFinished = true; // 🔥 MASUK MODE REVIEW
+  updateSidebar();
+  loadQuestion(current); // refresh tampilan soal
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = `
+    UJIAN SELESAI<br><br>
+    NILAI ANDA: <span style="color:red">${score}</span> / 
+  ${questions.length}`;
+
+  finishBtn.disabled = true;
+  /* 🔥 tampilkan tombol navigasi */
+    prevBtn.style.display = "inline-block";
+    nextBtn.style.display = "inline-block";
+  
+}
+
+/* INIT */
+startSession();
+</script>
+
+</body>
+</html>
