@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.6">
+<title>Simulasi Ujian</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: rgba(59, 130, 246, 0.30);
+  font-size: 10px;
+  font-weight: 500;
+
+  color: #000; /* 🔥 TEKS PUTIH */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+#questionImage {
+  display: block;
+  margin: 20px auto;   /* tetap tengah */
+  max-width: 100%;
+}
+.talker {
+  width: 50px;          /* 🔥 ukuran emoji */
+  height: 50px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.answers label.correct {
+  background: #c8e6c9;
+  border-color: #2e7d32;
+}
+
+.answers label.wrong {
+  background: #ffcdd2;
+  border-color: #c62828;
+}
+
+.sidebar button.wrong {
+  background: #f44336;
+  color: #fff;
+}
+.container {
+  display: flex;
+  width: 900px;
+  margin: 110px auto 20px auto; /* 🔥 TURUNKAN CONTAINER */
+
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px;
+}
+.session-bar {
+  position: absolute;
+  top: 80px;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  
+}
+
+.session-bar button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 3px solid #000;
+  cursor: pointer;
+  background: #ff9800;
+  margin-bottom: 8px;
+}
+
+.session-menu {
+  margin-top: 10px;
+  display: none;
+}
+
+.session-menu button {
+  margin: 5px;
+  padding: 10px 18px;
+  font-size: 16px;
+  border: 3px solid #000;
+  cursor: pointer;
+  background: #2196f3;
+  color: #fff;
+  
+}
+.answers input[type="radio"] {
+  transform: scale(1.3);   /* gedein bulatan */
+  margin-right: 12px;
+}
+.question-hint {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+
+  background: #e5e7eb;          /* abu-abu gelap */
+  border-left: 6px solid #6b7280; /* aksen abu tua */
+  padding: 10px 16px;
+  border-radius: 6px;
+
+  color: #111827;               /* teks hampir hitam */
+}
+/* SIDEBAR */
+.sidebar {
+  width: 80px;
+  border-right: 2px solid #000;
+  padding: 10px;
+}
+.kanji {
+  color: red;
+  font-weight: 700;
+text-decoration: underline; 
+}
+.sidebar button {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 3px solid #000;
+  background: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sidebar button.active {
+  background: #4caf50;
+  color: #fff;
+}
+
+.sidebar button.answered {
+  background: #2196f3;
+  color: #fff;
+}
+.double-label {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #f00;
+}
+
+.double-question-text {
+  font-size: 25px;
+  font-weight: 550;
+  text-align: center;
+
+  
+  margin-bottom: 20px;
+}
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+.title {
+  position: absolute;
+  top: 10px;
+
+  width: 100%;
+  text-align: center;
+
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+  letter-spacing: 2px;
+}
+.answers button {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.answers label {
+  display: block;
+  border: 2px solid rgba(33, 150, 243, 0.5); /* 🔵 biru transparan */
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: 600;
+}
+.question-text {
+  font-size: 25px;
+  font-weight: 550;
+  text-align: center;
+
+  background: rgba(255, 165, 0, 0.2);
+  border: 2px solid #ff9800;
+  padding: 14px 23px;
+  margin-bottom: 30px;
+}
+/* FOOTER */
+.footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.footer button {
+  padding: 15px 30px;
+  border: 4px solid #000;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  background: #ff9800;
+  color: #000;
+}
+.dialog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  font-size: 26px;
+  font-weight: 500;
+}
+
+/* 👩 CEWEK → putih + border hitam */
+.dialog.female {
+  background: #ffffff;
+  border: 3px solid #ff9800;
+  color: #000;
+}
+
+/* 👨 COWOK → TETAP ORANGE (JANGAN DIUBAH) */
+.dialog.male {
+  background: #ffffff;
+  border: 3px solid #3b82f6;
+  color: #000;
+}
+/* ===== FAKE AUDIO BUTTON ===== */
+.fake-audio {
+  width: 80%;
+  max-width: 420px;
+  margin: 15px auto;
+  padding: 12px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  background: #e5e7eb;
+  border: 3px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.fake-audio.playing {
+  background: #4caf50;
+  color: #fff;
+}
+</style>
+</head>
+
+<body>
+<h1 class="title" id="title">KUTSU SHITA SESI 1</h1>
+<div class="session-bar" id="sessionBar">
+  <button onclick="toggleSessionMenu()">📂 PILIH SESI</button>
+
+  <div class="session-menu" id="sessionMenu">
+    <button onclick="goSession(0)">SESI 1</button>
+    <button onclick="goSession(1)">SESI 2</button>
+    <button onclick="goSession(2)">SESI 3</button>
+    <button onclick="goSession(3)">SESI 4</button>
+  </div>
+</div>
+
+</div>
+<div class="container">
+  <div class="sidebar" id="sidebar"></div>
+
+  <div class="content">
+<div class="question-hint" id="questionHint" style="display:none;"></div>
+    <div class="question-text" id="questionText">
+      Lihatlah ilustrasi, kemudian pilihlah kata yang benar
+    </div>
+
+    <img id="questionImage" width="500" style="display:none;">
+
+    <div class="answers" id="answers"></div>
+<div class="footer">
+      <button id="prevBtn" style="display:none;">⬅ KEMBALI</button>
+      <button id="finishBtn" style="display:none;">SELESAI</button>
+      <button id="nextBtn" style="display:none;">LANJUT ➡</button>
+    </div>
+    
+<div id="result" style="
+      display:none;
+      margin-top:30px;
+      padding:20px;
+      border:3px solid #000;
+      background:#e8f5e9;
+      font-size:24px;
+      font-weight:bold;
+      text-align:center;
+    ">
+    </div>
+  </div>
+</div>
+
+<script>
+let questions = [
+  // ===== SOAL 1 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/kaoskaki.jpg",
+    imageWidth: 250,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. くつ",
+      "2. くつした",
+      "3. ぼうし",
+      "4. かばん"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 2 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/nyanyi.jpg",
+    imageWidth: 250,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. がくせい",
+      "2. せんせい",
+      "3. かしゅ",
+      "4. いしゃ"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 3 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/berenang.jpg",
+    imageWidth: 300,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. はしります",
+      "2. およぎます",
+      "3. のぼります",
+      "4. あるきます"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 4 =====
+  {
+    hint: "pilihlah kata yang tepat untuk melengkapi kalimat。",
+    text: "日本のラーメンは＿＿＿です。",
+    choices: [
+      "1. たかい",
+      "2. さむい",
+      "3. おいしい",
+      "4. ひろい"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 5 =====
+  {
+    hint: "pilihlah kata yang tepat untuk melengkapi kalimat。",
+    text: "道にまよって、10分ぐらい＿＿＿。",
+    choices: [
+      "1. いきます",
+      "2. きます",
+      "3. おくれます",
+      "4. たべます"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 6 =====
+  {
+    hint: "pilihlah kata yang tepat untuk melengkapi kalimat。",
+    text: "けっこんしきの＿＿＿におかねをあげます。",
+    choices: [
+      "1. おみやげ",
+      "2. しゅくだい",
+      "3. おいわい",
+      "4. たんじょうび"
+    ],
+    correct: 2
+  },
+  {
+  // ===== SOAL 7 =====
+    image: "",
+    hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    text: "雨がふったら<span class='kanji'>男</span>のほうがおおいです",
+    choices: [
+      "1. すくない",
+      "2. おとこ",
+      "3. せまい",
+      "4. ひくい"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 8 =====
+  {
+    hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    text: "雨がふったら、イベントが<span class='kanji'>中止</span>されます。",
+    choices: [
+      "1. あんない",
+      "2. ちゅうし",
+      "3. じゅんび",
+      "4. よてい"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 9 =====
+  {
+    hint : "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    text: "<span class='kanji'>同じ</span>くつを買ってください。",
+    choices: [
+      "1. べつ",
+      "2. あたらしい",
+      "3. おなじ",
+      "4. ふるい"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 10 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "（＿＿＿）でくすりをもらってから、行きます。",
+    choices: [
+      "1. 学校",
+      "2. 病院",
+      "3. 駅",
+      "4. 銀行"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 11 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：ダダンさん、朝はパンをたべますか。
+      </div>
+      <div class="dialog female">
+        B：はい、でもときどきごはんを（＿＿＿）。
+      </div>
+    `,
+    choices: [
+      "1. のみます",
+      "2. みます",
+      "3. 食べます",
+      "4. いきます"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 12 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "へやの（＿＿＿）に入ってください。",
+    choices: [
+      "1. 外",
+      "2. 上",
+      "3. 中",
+      "4. 下"
+    ],
+    correct: 2
+  }
+];
+const questionsSession2 = [
+  // ===== SOAL 1 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：今日はいい天気ですね。
+      </div>
+      <div class="dialog female">
+        B：はい、すずしくて＿＿＿。
+      </div>
+    `,
+    choices: [
+      "1. あついです",
+      "2. 気持ちがいいです",
+      "3. たのしいです",
+      "4. さむいです"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 2 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：さいふが＿＿＿。
+      </div>
+      <div class="dialog male">
+        B：かばんのなかに見ましたか。
+      </div>
+      <div class="dialog male">
+        A：はい、見ました。
+      </div>
+    `,
+    choices: [
+      "1. ありました",
+      "2. あります",
+      "3. ありましょう",
+      "4. ありません"
+    ],
+    correct: 3
+  },
+
+  // ===== SOAL 3 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：けっこんのパーティーへどんな服を着ればいいですか＿＿＿。
+      </div>
+      <div class="dialog female">
+        B：ワンピースのふくとかスーツを着たほうがいいですよ。しろいふくはだめです。
+      </div>
+    `,
+    choices: [
+      "1. どう思いますか",
+      "2. 教えてもらえませんか",
+      "3. どこで買えますか",
+      "4. いくらですか"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 4 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：コピーが終わりましたか。
+      </div>
+      <div class="dialog female">
+        B：あと15分ぐらい＿＿＿。
+      </div>
+      <div class="dialog male">
+        A：はい、つぎもってきてください。
+      </div>
+    `,
+    choices: [
+      "1. はじめます",
+      "2. だいじょうぶです",
+      "3. おわりそうです",
+      "4. もう終わりました"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 5 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：すみません、みどり駅まで＿＿＿？
+      </div>
+      <div class="dialog female">
+        B：180円です。
+      </div>
+    `,
+    choices: [
+      "1. どうやっていきますか",
+      "2. なんじですか",
+      "3. いくらですか",
+      "4. どこですか"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 6 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：今度、会社の人はベトナム人だけど、ベトナムの料理のおすすめはありますか。
+      </div>
+      <div class="dialog female">
+        B：バインカンというベトナムのうどんがおいしいですよ。＿＿＿食べてみてください。
+      </div>
+      <div class="dialog male">
+        A：はい、食べてみます。
+      </div>
+    `,
+    choices: [
+      "1. まだ",
+      "2. ぜったい",
+      "3. よかったら",
+      "4. すこし"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 7 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：昨日、やすんだそうですね。
+      </div>
+      <div class="dialog female">
+        B：はい、かぜと熱があったので。
+      </div>
+      <div class="dialog male">
+        A：でも、今日はだいじょうぶですか。
+      </div>
+      <div class="dialog female">
+        B：はい、だいじょうぶです。＿＿＿なります。
+      </div>
+    `,
+    choices: [
+      "1. しずかに",
+      "2. げんきに",
+      "3. べんりに",
+      "4. きれいに"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 8 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：なにしているんですか。
+      </div>
+      <div class="dialog female">
+        B：ネットショップでものを見ています。前のはこわれたので、また買いたいです。
+      </div>
+      <div class="dialog male">
+        B：＿＿＿。はやく買ったほうがいいですよ。
+      </div>
+    `,
+    choices: [
+      "1. それはいいですね",
+      "2. それはこまりましたね",
+      "3. それはちがいます",
+      "4. それはだめですね"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 9 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：またきてくださいね。＿＿＿。
+      </div>
+      <div class="dialog female">
+        B：はい、ありがとうございました。
+      </div>
+    `,
+    choices: [
+      "1. しつれいします",
+      "2. ただいま",
+      "3. きをつけて",
+      "4. いってきます"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 10 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：今日の夜、カラオケに行きましょうか。
+      </div>
+      <div class="dialog female">
+        B：いいですね。
+      </div>
+      <div class="dialog male">
+        A：7じにいきましょう。
+      </div>
+      <div class="dialog female">
+        B：はい、わかりました。＿＿＿。
+      </div>
+    `,
+    choices: [
+      "1. つかれました",
+      "2. だいじょうぶです",
+      "3. たのしみです",
+      "4. いそぎます"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 11 =====
+  {
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: `
+      <div class="dialog male">
+        A：どうやってきますか。
+      </div>
+      <div class="dialog female">
+        B：かたぐらいまできって、まえがみが＿＿＿してください。
+      </div>
+    `,
+    choices: [
+      "1. ながく",
+      "2. あかるく",
+      "3. みじかく",
+      "4. おおく"
+    ],
+    correct: 2
+  }
+];
+const questionsSession3 = [
+  // ===== SOAL 1 ====
+  {
+     type: "double",
+     hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+     text: `
+      <div style="text-align:center; font-size:22px;">
+        A：クリスさん、いつもカレーのりょうりかたはどうですか。<br>
+        B：トマトソースをつかって、ワインもつかいます。<br>
+        たなかさんはどうですか。<br>
+        A：わたしはチョコレートをつかいます。<br>
+        おいしいですよ。<br>
+        B：そうですか。わたしもそのつくりかたをしてみます。
+      </div>
+    `,
+     questions: [
+       {
+         label: "-",
+         text: "SAUDARA KRIS AKAN MASAK DENGAN APA?",
+         choices: [
+           "1. トマトソース",
+           "2. ワイン",
+           "3. チョコレート",
+           "4. チーズ"
+         ],
+         correct: 2
+       },
+     ]
+   },
+  // ===== SOAL 2 =====
+  {
+     type: "double",
+     hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+     text: `
+      <div style="text-align:center; font-size:22px;">
+        A：やまださん、なつやすみはどこにいきますか。<br>
+        B：やまにのぼります。<br>
+        ゆみこさんはどうですか。<br>
+        A：わたしは かいしゃのひとと うみに りょこうします。<br>
+        B：いいですね。
+      </div>
+    `,
+     questions: [
+       {
+         label: "-",
+         text: "YUMIKO AKAN PERGI KEMANA?",
+         choices: [
+             "1. やま",
+             "2. うみ",
+             "3. かわ",
+             "4. こうえん"
+           ],
+           correct: 1
+         },
+     ]
+   },
+  // ===== SOAL 3 =====
+  
+  {
+     type: "double",
+     hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+     text: `
+      <div style="text-align:center; font-size:22px;">
+        A：アリさん、いま どこに すんでいますか。<br>
+        B：えきから ちかくて、みせが いっぱい ある ところに すんでいます。<br>
+        べんりだけど、みどりが ないので、みどりが おおい ところに<br>
+        すみたいです。
+      </div>
+    `,
+     questions: [
+       {
+         label: "-",
+         text: "SAUDARA ARI SEKARANG TINGGAL DIMANA?",
+         choices: [
+                       `<div style="text-align:center">
+                          <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/padatpenduduk.jpg" width="230"><br> <span style="color:red; font-size:16px">（KOTA PADAT PENDUDUK,TIDAK ADA PEPOHONAN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                        </div>`,
+                       `<div style="text-align:center">
+                          <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/lautan.jpg" width="230"><br> <span style="color:red; font-size:16px">（DAERAH PANTAI / LAUT)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                        </div>`,
+                       `<div style="text-align:center">
+                          <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/pepohonan.jpg" width="230"><br> <span style="color:red; font-size:16px">（DAERAH HIJAU / BANYAK PEPOHONAN )<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                        </div>`
+                     ],
+             correct: 0
+           },
+     ]
+   },
+
+  // ===== SOAL 4 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div style="text-align:center; font-size:22px;">
+        スーパーのおしらせです。<br>
+        スーパーは８かいまでです。１かいから６かいまではせいひんうりばです。<br>
+        レストランが７かいにあります。８かいはちゅうしゃじょうです。<br>
+        ごご８じになったら、かいだんやエスカレーターがつかえないので、エレベーターをつかってください。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "RESTAURANT ADA DI LANTAI BERAPA?",
+        choices: [
+          "1. ６かい",
+          "2. ７かい",
+          "3. ８かい"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "SETELAH JAM 8 MALAM MEMAKAI APA?",
+        choices: [
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/eskalator.jpg" width="230"><br> <span style="color:red; font-size:16px">（エスカレーター)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`,
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/tangga.jpg" width="230"><br> <span style="color:red; font-size:16px">（かいだん)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`,
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/lift.jpg" width="230"><br> <span style="color:red; font-size:16px">（エレベーター)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 5 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah informasi berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div style="text-align:center; font-size:22px;">
+        ぼうさいボランティアのおしらせです。<br>
+        １０がつ５かにあります。<br>
+        さんかしたいひとは、１０がつ２かまでにEメールでとうろくしてください。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "KAPAN PENANGGULANGAN BENCANA DI ADAKAN?",
+        choices: [
+          "1. １０がつ２か",
+          "2. １０がつ５か",
+          "3. １０がつ１０か"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "BAGAIMANA MENDAFTARNYA?",
+        choices: [
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/menulis.jpg" width="200"><br> <span style="color:red; font-size:16px">（ORANG LAGI MENDAFTAR LEWAT FORMULIR)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`,
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/menelpon.jpg" width="200"><br> <span style="color:red; font-size:16px">（ORANG LAGI MENDAFTAR LEWAT TELPHONE)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`,
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/daftar.jpg" width="250"><br> <span style="color:red; font-size:16px">（ORANG DI DEPAN LAPTOP LAGI MENDAFTAR E-MAIL)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 6 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah percakapan berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div class="dialog male">
+        先生：ほんやへ行って、あおいボールペンを４ほんとA４のかみを２５まいかってください。
+      </div>
+      <div class="dialog female">
+        学生：はい、わかりました。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "BOLPOIN APAKAH YANG AKAN DIBELI?",
+        choices: [
+          "1. あかいボールペン",
+          "2. あおいボールペン",
+          "3. くろいボールペン"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: ")KERTASNYA BERAPA LEMBAR?",
+        choices: [
+          "1. ２０まい",
+          "2. ２５まい",
+          "3. ３０まい"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // ===== SOAL 7 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/pedagang.JPG",
+    imageWidth: 500,
+    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    text: "AKAN MEMBELI DAGING YANG HARGA BERAPA?",
+    choices: [
+      "1. 300円",
+      "2. 500円",
+      "3. 600円",
+      "4. 1000円"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 8 =====
+{
+     type: "double",
+     hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+     text: `
+      <div style="text-align:center; font-size:22px;">
+        A：すみません、みなみこうえんに いきたいんですが。どうやって いきますか。<br>
+        B：ここから ひかりえきまで あるいて、ついたら バスが あります。<br>
+        A：はい、わかりました。
+      </div>
+    `,
+     questions: [
+       {
+         label: "-",
+         text: "PERGI KE MINAMI KOUEN NAIK APA?",
+             choices: [
+                 "1. でんしゃ",
+                 "2. タクシー",
+                 "3. バス",
+                 "4. じてんしゃ"
+               ],
+               correct: 2
+             }
+     ]
+   },
+];
+const questionsSession4 = [
+  // ===== SOAL 1 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah percakapan berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div class="dialog male">
+        Bさん、きょうのひるごはんをいっしょにたべましょうか。
+      </div>
+      <div class="dialog male">
+        １２じにかいしゃのげんかんまえにあいましょう。
+      </div>
+      <div class="dialog male">
+        １１じ、まちます。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "BERTEMU JAM BERAPA?",
+        choices: [
+          "1. １１時",
+          "2. １２時",
+          "3. １時"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "BERTEMU DIMANA?",
+        choices: [
+          "1. レストラン",
+          "2. かいしゃのへや",
+          "3. かいしゃのげんかんまえ"
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 2 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah perkenalan berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div>
+        はじめまして、モーです。ベトナムからきました。
+        日本には３年前きました。
+        ２年間せんもんがっこうでべんきょうして、
+        いま、１年目にしごとしています。
+        私はアニメが好きで、休みの日に見ます。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "SAUDARA MO- SUDAH BERAPA LAMA DI JEPANG?",
+        choices: [
+          "1. １年間",
+          "2. ２年間",
+          "3. ３年間"
+        ],
+        correct: 2
+      },
+      {
+        label: "B",
+        text: "APA HOBI SAUDARA MO-?",
+        choices: [
+          "1. スポーツをします",
+          "2. アニメを見ます",
+          "3. えいがを見ます"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // ===== SOAL 3 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah peraturan berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div>
+        工場のルール<br>
+        １．シャツはズボンの中に入れてください。くびにタオルをかけないで。<br>
+        ２．どうぐをつかったら、いつももとのところにかえしてください。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "CARA BERPAKAIANNYA BAGAIMANA?",
+        choices: [
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/masukan.jpg" width="200"><br> <span style="color:red; font-size:16px">（ ORANG BAJUNYA DI MASUKKAN CELANA TANPA MEMAKAI HANDUK DI LEHER)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`,
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/masukanleher.jpg" width="200"><br> <span style="color:red; font-size:16px">（ORANG BAJUNYA DIMASUKAN KE CELANA DAN MEMAKAI HANDUK DILEHER)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`,
+          `<div style="text-align:center">
+             <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/handukleher.jpg" width="250"><br> <span style="color:red; font-size:16px">（ORANG BAJUNYA TIDAK DIMASUKAN KE CELANA TIDAK MEMAKAI HANDUK DI LEHER)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+           </div>`
+        ],
+        correct: 0
+      },
+      {
+        label: "B",
+        text: "UNTUK KESELAMATAN KERJA HARUS BAGAIMANA?",
+        choices: [
+          "1. そのままにします",
+          "2. すてます",
+          "3. どうぐをつかったら、もとのところにかえします"
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 4 (DOUBLE) =====
+  {
+   image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/tabel.jpg",
+    imageWidth: 480,
+    type: "double",
+    hint: "bacalah tabel berikut, lalu jawab pertanyaan A dan B",
+    questions: [
+      {
+        label: "A",
+        text: "BUS TUJUAN MANA?",
+        choices: [
+          "1. ひがしえき",
+          "2. みなみこうえん",
+          "3. にしえき"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "PADA JAM 11 BUS DATANG PADA MENIT BERAPA?",
+        choices: [
+          "1. １１：１０",
+          "2. １１：１５",
+          "3. １１：１７"
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 5 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div>
+        ギターきょうしつ<br>
+        ＊ 毎週の木曜日です。１９：００〜２０：００<br>
+        ＊ さんかしたい人はメールをおくってください。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "KELAS GITAR BUKA PADA HARI APA?",
+        choices: [
+          "1. 月曜日",
+          "2. 水曜日",
+          "3. 木曜日"
+        ],
+        correct: 2
+      },
+      {
+        label: "B",
+        text: "BAGAIMANA CARA BERGABUNGNYA?",
+        choices: [
+          "1. でんわします",
+          "2. メールする",
+          "3. いきます"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // ===== SOAL 6 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah pamflet berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div>
+        「PAMFLET OBAT MATA GATAL」<br>
+        いしゃにそうだんするひと：<br>
+        １．目がひどくかゆいひと。<br>
+        ２．薬アレルギー人
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "MEMBAHAS TENTANG OBAT APA?",
+        choices: [
+          "1. かぜのくすり",
+          "2. めがかゆいくすり",
+          "3. あたまのくすり"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "ORANG YG ALERGI OBAT SEBAIKNYA BAGAIMANA?",
+        choices: [
+          "1. そのままのみます",
+          "2. いしゃにそうだんする",
+          "3. すぐのみます"
+        ],
+        correct: 1
+      }
+    ]
+  }
+
+];
+let current = 0;
+let answers = Array(questions.length).fill(null);
+let examFinished = false;
+const questionsSession1 = questions;
+
+const sessions = [
+  questionsSession1,
+  questionsSession2,
+  questionsSession3,
+  questionsSession4
+];
+
+let sessionIndex = 0; // mulai dari sesi 1
+const sidebar = document.getElementById("sidebar");
+const image = document.getElementById("questionImage");
+const answersDiv = document.getElementById("answers");
+const finishBtn = document.getElementById("finishBtn");
+finishBtn.addEventListener("click", finishExam);
+const questionText = document.getElementById("questionText");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const imageCache = {};
+
+function preloadImages() {
+  const urls = new Set();
+
+  sessions.forEach(session => {
+    session.forEach(q => {
+      if (q.image) urls.add(q.image);
+    });
+  });
+
+  urls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+    imageCache[url] = img;
+  });
+}
+
+prevBtn.onclick = () => {
+  if (sessionIndex > 0) {
+    sessionIndex--;   // 🔥 balik ke sesi sebelumnya
+  }
+  startSession();     // reset sesi itu
+};
+nextBtn.onclick = () => {
+  if (sessionIndex < sessions.length - 1) {
+    sessionIndex++;
+    startSession();
+  } else {
+    alert("Semua sesi sudah selesai 🎉");
+  }
+};
+
+function updateTitle() {
+  document.getElementById("title").textContent =
+    `KUTSU SHITA SESI ${sessionIndex + 1}`;
+}
+function startSession() {
+  questions = sessions[sessionIndex];
+
+  // 🔥 KHUSUS SESI 4: SEMBUNYIKAN SIDEBAR
+/*  if (sessionIndex === 3) {
+    sidebar.style.display = "none";
+  } else {
+    sidebar.style.display = "block";
+  }        */
+   sidebar.style.display = "block";
+   
+  if (!questions || questions.length === 0) {
+    alert(`Sesi  belum tersedia`);
+    return;
+  }
+  current = 0;
+  answers = Array(questions.length).fill(null);
+  examFinished = false;
+
+  document.getElementById("result").style.display = "none";
+
+  finishBtn.style.display = "none";
+  finishBtn.disabled = false;
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+image.style.display = "none";
+image.src = "";
+  sidebar.innerHTML = "";
+  questions.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.onclick = () => loadQuestion(i);
+    sidebar.appendChild(btn);
+  });
+
+  updateTitle();
+  loadQuestion(0);
+}
+function toggleSessionMenu() {
+  const menu = document.getElementById("sessionMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function goSession(index) {
+  if (!sessions[index] || sessions[index].length === 0) {
+    alert("Sesi ini belum tersedia");
+    return;
+  }
+
+  sessionIndex = index;
+  document.getElementById("sessionMenu").style.display = "none";
+  startSession();
+}
+/* LOAD SOAL */
+function loadQuestion(index) {
+  current = index;
+  const q = questions[index];
+
+  
+  // 🔥 KHUSUS SESI 4 (HTML FULL)
+  if (q.type === "html") {
+    document.getElementById("questionHint").style.display = "none";
+    questionText.style.display = "none";
+    image.style.display = "none";
+  
+    answersDiv.innerHTML = q.html;
+  
+    updateSidebar();
+    return;
+  }
+if (q.type === "double") {
+    if (!Array.isArray(answers[current])) {
+      answers[current] = Array(q.questions.length).fill(undefined);
+    }
+    renderDoubleQuestion(q);
+    updateSidebar();
+    return;
+  }
+const hintDiv = document.getElementById("questionHint");
+
+if (q.hint) {
+  hintDiv.innerHTML = q.hint;
+  hintDiv.style.display = "block";
+} else {
+  hintDiv.style.display = "none";
+}
+  if (q.text) {
+    questionText.innerHTML = q.text;
+    questionText.style.display = "block";
+  } else {
+    questionText.style.display = "none";
+  }
+
+// 🔥 RESET GAMBAR SETIAP PINDAH SOAL
+  image.style.display = "none";
+  image.src = "";
+  
+  if (q.image) {
+    image.src = q.image;
+    image.style.display = "block";
+    image.style.maxWidth = "none";
+    image.style.width = q.imageWidth
+      ? q.imageWidth + "px"
+      : "470px";
+    image.style.height = "auto";
+  }
+  answersDiv.innerHTML = "";
+    
+  // ===== CUSTOM AUDIO BUTTON =====
+    const oldFake = document.getElementById("fakeAudio");
+    if (oldFake) oldFake.remove();
+    
+    const oldReal = document.getElementById("realAudio");
+    if (oldReal) oldReal.remove();
+    
+    if (q.audio) {
+      const fakeBtn = document.createElement("div");
+      fakeBtn.id = "fakeAudio";
+      fakeBtn.className = "fake-audio";
+      fakeBtn.textContent = "▶️ Putar Audio";
+    
+      const audio = document.createElement("audio");
+      audio.id = "realAudio";
+      audio.src = q.audio;
+      audio.preload = "metadata";
+      audio.style.display = "none";
+    
+      questionText.insertAdjacentElement("afterend", fakeBtn);
+      fakeBtn.insertAdjacentElement("afterend", audio);
+    
+      audio.onloadedmetadata = () => {
+        fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+      };
+    
+      let timer;
+    
+      fakeBtn.onclick = () => {
+        if (!audio.paused) {
+          audio.pause();
+          fakeBtn.classList.remove("playing");
+          clearInterval(timer);
+          fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration - audio.currentTime)})`;
+        } else {
+          audio.play();
+          fakeBtn.classList.add("playing");
+      
+          clearInterval(timer);
+          timer = setInterval(() => {
+            fakeBtn.textContent =
+              `⏸️ Memutar... (${formatTime(audio.duration - audio.currentTime)})`;
+          }, 300);
+        }
+      };
+    
+      audio.onended = () => {
+        clearInterval(timer);
+        fakeBtn.classList.remove("playing");
+        fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+      };
+    }
+
+  q.choices.forEach((choice, i) => {
+    const label = document.createElement("label");
+  
+    const userAnswer = answers[current];
+    const correctAnswer = q.correct;
+  
+    label.innerHTML = `
+      <input type="radio" name="jawaban_${current}">${choice} ${examFinished && i === correctAnswer ? " ✅  (jawaban benar) " : ""} ${examFinished && i === userAnswer && i !== correctAnswer ? "❌ (jawaban kamu)" : ""}
+    `;
+  
+    const input = label.querySelector("input");
+  
+    if (userAnswer === i) input.checked = true;
+  
+    if (examFinished) {
+      input.disabled = true;
+  
+      if (i === correctAnswer) label.classList.add("correct");
+      if (i === userAnswer && i !== correctAnswer) label.classList.add("wrong");
+    } else {
+      input.onclick = () => {
+        answers[current] = i;
+        updateSidebar();
+        checkFinish();
+      };
+    }
+  
+    answersDiv.appendChild(label);
+  });
+  updateSidebar();
+}
+function renderDoubleQuestion(q) {
+  answersDiv.innerHTML = "";
+  // ===== CUSTOM AUDIO BUTTON UNTUK DOUBLE QUESTION =====
+  const oldFake = document.getElementById("fakeAudio");
+  if (oldFake) oldFake.remove();
+  
+  const oldReal = document.getElementById("realAudio");
+  if (oldReal) oldReal.remove();
+  
+  if (q.audio) {
+    const fakeBtn = document.createElement("div");
+    fakeBtn.id = "fakeAudio";
+    fakeBtn.className = "fake-audio";
+    fakeBtn.textContent = "▶️ Putar Audio";
+  
+    const audio = document.createElement("audio");
+    audio.id = "realAudio";
+    audio.src = q.audio;
+    audio.preload = "metadata";
+    audio.style.display = "none";
+  
+    answersDiv.insertAdjacentElement("afterbegin", fakeBtn);
+    fakeBtn.insertAdjacentElement("afterend", audio);
+  
+    audio.onloadedmetadata = () => {
+      fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+    };
+  
+    let timer;
+    fakeBtn.onclick = () => {
+      if (!audio.paused) {
+        audio.pause();
+        fakeBtn.classList.remove("playing");
+        clearInterval(timer);
+        fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration - audio.currentTime)})`;
+      } else {
+        audio.play();
+        fakeBtn.classList.add("playing");
+    
+        clearInterval(timer);
+        timer = setInterval(() => {
+          fakeBtn.textContent =
+            `⏸️ Memutar... (${formatTime(audio.duration - audio.currentTime)})`;
+        }, 300);
+      }
+    };
+  
+    audio.onended = () => {
+      clearInterval(timer);
+      fakeBtn.classList.remove("playing");
+      fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+    };
+  }
+  // tampilkan hint di div khusus
+  const hintDiv = document.getElementById("questionHint");
+  if (q.hint) {
+    hintDiv.innerHTML = q.hint;
+    hintDiv.style.display = "block";
+  } else {
+    hintDiv.style.display = "none";
+  }
+// tampilkan text utama
+ if (q.text) {
+   const mainText = document.createElement("div");
+   mainText.className = "double-question-text"; // pakai class CSS
+   mainText.innerHTML = q.text;
+   answersDiv.appendChild(mainText);
+ }
+  // sembunyikan questionText karena double tidak punya text utama
+  questionText.style.display = "none";
+  if (q.image) {
+  image.src = q.image;
+  image.style.display = "block";
+  image.style.maxWidth = "none";
+  image.style.width = q.imageWidth
+    ? q.imageWidth + "px"
+    : "470px";
+  image.style.height = "auto";
+} else {
+  image.style.display = "none";
+  image.src = "";
+}
+
+  q.questions.forEach((subQ, subIndex) => {
+    const box = document.createElement("div");
+    box.style.marginBottom = "30px";
+
+    box.innerHTML = `
+      <div class="double-label"> Pertanyaan (${subQ.label})
+        </div>
+    
+      <div class="double-question-text">${subQ.text}
+        </div>
+    `;
+
+    subQ.choices.forEach((choice, i) => {
+      const label = document.createElement("label");
+
+      const userAnswer =
+        answers[current] ? answers[current][subIndex] : null;
+      
+      label.innerHTML = `
+        <input type="radio" 
+          name="q_${current}_${subIndex}">${choice}
+        
+        ${
+          examFinished && i === subQ.correct
+            ? " ✅ (jawaban benar)"
+            : ""
+        }
+        ${
+          examFinished &&
+          i === userAnswer &&
+          i !== subQ.correct
+            ? " ❌ (jawaban kamu)"
+            : ""
+        }
+      `;
+
+      const input = label.querySelector("input");
+      // ⬅️ FIX: balikin tanda biru kalau sudah pernah dijawab
+      if (
+        answers[current] &&
+        answers[current][subIndex] === i
+      ) {
+        input.checked = true;
+      }
+      if (examFinished) {
+        input.disabled = true;
+      
+        if (i === subQ.correct) label.classList.add("correct");
+        if (
+          answers[current] &&
+          answers[current][subIndex] === i &&
+          i !== subQ.correct
+        ) {
+          label.classList.add("wrong");
+        }
+      } else {
+        input.onclick = () => {
+          if (!answers[current]) answers[current] = [];
+          answers[current][subIndex] = i;
+         
+          updateSidebar();
+          checkFinish();
+        };
+      }
+
+      box.appendChild(label);
+    });
+
+    answersDiv.appendChild(box);
+  });
+}
+
+/* UPDATE SIDEBAR */
+function updateSidebar() {
+  [...sidebar.children].forEach((btn, i) => {
+    btn.classList.remove("active", "answered", "wrong");
+
+    // soal aktif
+    if (i === current) {
+      btn.classList.add("active");
+    }
+
+    // ===== MODE REVIEW (SETELAH SELESAI) =====
+    if (examFinished) {
+      if (questions[i].type === "double") {
+        const userAns = answers[i];
+        const total = questions[i].questions.length;
+
+        if (
+          !Array.isArray(userAns) ||
+          userAns.length < total ||
+          userAns.some(
+            (a, idx) => a !== questions[i].questions[idx].correct
+          )
+        ) {
+          btn.classList.add("wrong");
+        } else {
+          btn.classList.add("answered");
+        }
+      } else {
+        if (answers[i] === questions[i].correct) {
+          btn.classList.add("answered");
+        } else {
+          btn.classList.add("wrong");
+        }
+      }
+
+      return; // ⛔ STOP di sini, jangan lanjut ke mode ujian
+    }
+
+// ===== MODE UJIAN =====
+    if (questions[i].type === "double") {
+      if (
+        Array.isArray(answers[i]) &&
+        answers[i].some(a => a !== undefined)
+      ) {
+        btn.classList.add("answered");
+      }
+    } else {
+      if (answers[i] !== null) {
+        btn.classList.add("answered");
+      }
+    }
+  });
+}/* CEK SELESAI */
+function checkFinish() {
+  const selesai = questions.every((q, i) => {
+    if (q.type === "double") {
+      return (
+        Array.isArray(answers[i]) &&
+        answers[i].length === q.questions.length &&
+        answers[i].every(a => a !== undefined)
+      );
+    } else {
+      return answers[i] !== null;
+    }
+  });
+
+  if (selesai) {
+    finishBtn.style.display = "inline-block";
+  }
+}
+function resetExam() {
+  examFinished = false;
+  current = 0;
+  answers = Array(questions.length).fill(null);
+
+  document.getElementById("result").style.display = "none";
+
+  finishBtn.style.display = "none";
+  finishBtn.disabled = false;
+
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+
+  sidebar.innerHTML = "";
+  answersDiv.innerHTML = ""; // 🔥 INI YANG KURANG
+
+  questions.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.onclick = () => loadQuestion(i);
+    sidebar.appendChild(btn);
+  });
+
+  updateTitle();
+  loadQuestion(0);
+}
+function toggle(btn){
+  const box = btn.nextElementSibling;
+  box.style.display =
+    box.style.display === "block" ? "none" : "block";
+}
+
+function showJP(id){
+  document.getElementById(id).style.display = "block";
+}
+
+/* SELESAI */
+function finishExam() {
+  let score = 0;
+
+  questions.forEach((q, i) => {
+    if (q.type === "double") {
+      q.questions.forEach((sq, j) => {
+        if (answers[i] && answers[i][j] === sq.correct) {
+          score++;
+        }
+      });
+    } else {
+      if (answers[i] === q.correct) score++;
+    }
+  });
+
+  examFinished = true; // 🔥 MASUK MODE REVIEW
+  updateSidebar();
+  loadQuestion(current); // refresh tampilan soal
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = `
+    UJIAN SELESAI<br><br>
+    NILAI ANDA: <span style="color:red">${score}</span> / 
+  ${questions.length}`;
+
+  finishBtn.disabled = true;
+  /* 🔥 tampilkan tombol navigasi */
+    prevBtn.style.display = "inline-block";
+    nextBtn.style.display = "inline-block";
+  
+}
+function formatTime(sec) {
+  sec = Math.ceil(sec);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s.toString().padStart(2,"0")}`;
+}
+/* INIT */
+startSession();
+</script>
+
+</body>
+</html>
