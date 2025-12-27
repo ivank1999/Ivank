@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <title>HOAX Button</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: radial-gradient(circle, #111, #000);
+            font-family: 'Arial Black', Arial, sans-serif;
+        }
+
+        #container {
+            text-align: center;
+        }
+
+        button {
+            font-size: 60px;
+            padding: 40px 90px;
+            border: none;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ff0000, #ff6600);
+            color: white;
+            cursor: pointer;
+            box-shadow: 0 15px 40px rgba(255,0,0,0.6);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        button:active {
+            transform: scale(0.95);
+            box-shadow: 0 8px 20px rgba(255,0,0,0.8);
+        }
+
+        #hasil {
+            margin-top: 50px;
+            font-size: 120px;
+            font-weight: 900;
+            color: red;
+            text-shadow: 0 0 20px red, 0 0 40px darkred;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <button onclick="munculHoax()">KLIK DI SINI</button>
+    <div id="hasil">HOAX BAE KONTOL</div>
+</div>
+
+<script>
+    function munculHoax() {
+        document.getElementById("hasil").style.display = "block";
+    }
+</script>
+
+</body>
+</html>
