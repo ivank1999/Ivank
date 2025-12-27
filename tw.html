@@ -51,11 +51,19 @@
     <button onclick="munculHoax()">KLIK DI SINI</button>
     <div id="hasil">HOAX BAE KONTOL</div>
 </div>
-
-<script>
-    function munculHoax() {
-        document.getElementById("hasil").style.display = "block";
-    }
+<!-- AUDIO -->
+    <audio id="sound">
+        <source src="https://raw.githubusercontent.com/ivank1999/Ivank/main/hoax.mp3" type="audio/mpeg">
+    </audio>
+    
+    <script>
+        function munculHoax() {
+            document.getElementById("hasil").style.display = "block";
+    
+            const audio = document.getElementById("sound");
+            audio.currentTime = 0;
+            audio.play();
+       }
 </script>
 
 </body>
