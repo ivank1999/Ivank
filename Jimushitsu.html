@@ -1,0 +1,2621 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=0.6">
+<title>Simulasi Ujian</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: rgba(59, 130, 246, 0.30);
+  font-size: 10px;
+  font-weight: 500;
+
+  color: #000; /* 🔥 TEKS PUTIH */
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+#questionImage {
+  display: block;
+  margin: 20px auto;   /* tetap tengah */
+  max-width: 100%;
+}
+.talker {
+  width: 50px;          /* 🔥 ukuran emoji */
+  height: 50px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.answers label.correct {
+  background: #c8e6c9;
+  border-color: #2e7d32;
+}
+
+.answers label.wrong {
+  background: #ffcdd2;
+  border-color: #c62828;
+}
+
+.sidebar button.wrong {
+  background: #f44336;
+  color: #fff;
+}
+.container {
+  display: flex;
+  width: 900px;
+  margin: 110px auto 20px auto; /* 🔥 TURUNKAN CONTAINER */
+
+  background: #ffffff;
+  border: 2px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 20px;
+}
+.session-bar {
+  position: absolute;
+  top: 80px;
+  width: 100%;
+  text-align: center;
+  z-index: 10;
+  
+}
+
+.session-bar button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: 3px solid #000;
+  cursor: pointer;
+  background: #ff9800;
+  margin-bottom: 8px;
+}
+
+.session-menu {
+  margin-top: 10px;
+  display: none;
+}
+
+.session-menu button {
+  margin: 5px;
+  padding: 10px 18px;
+  font-size: 16px;
+  border: 3px solid #000;
+  cursor: pointer;
+  background: #2196f3;
+  color: #fff;
+  
+}
+.answers input[type="radio"] {
+  transform: scale(1.3);   /* gedein bulatan */
+  margin-right: 12px;
+}
+.question-hint {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 12px;
+
+  background: #e5e7eb;          /* abu-abu gelap */
+  border-left: 6px solid #6b7280; /* aksen abu tua */
+  padding: 10px 16px;
+  border-radius: 6px;
+
+  color: #111827;               /* teks hampir hitam */
+}
+/* SIDEBAR */
+.sidebar {
+  width: 80px;
+  border-right: 2px solid #000;
+  padding: 10px;
+}
+.kanji {
+  color: red;
+  font-weight: 700;
+text-decoration: underline; 
+}
+.sidebar button {
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 10px;
+  border: 3px solid #000;
+  background: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sidebar button.active {
+  background: #4caf50;
+  color: #fff;
+}
+
+.sidebar button.answered {
+  background: #2196f3;
+  color: #fff;
+}
+.double-label {
+  font-size: 22px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 8px;
+  color: #f00;
+}
+
+.double-question-text {
+  font-size: 25px;
+  font-weight: 550;
+  text-align: center;
+
+  
+  margin-bottom: 20px;
+}
+/* CONTENT */
+.content {
+  flex: 1;
+  padding: 20px;
+}
+.title {
+  position: absolute;
+  top: 10px;
+
+  width: 100%;
+  text-align: center;
+
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+
+  text-shadow: 0 0 15px rgba(168, 85, 247, 0.8);
+  letter-spacing: 2px;
+}
+.answers button {
+  margin-bottom: 10px;
+  padding: 10px 15px;
+  font-size: 18px;
+  cursor: pointer;
+}
+.answers label {
+  display: block;
+  border: 2px solid rgba(33, 150, 243, 0.5); /* 🔵 biru transparan */
+  padding: 15px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  font-size: 25px;
+  font-weight: 600;
+}
+.question-text {
+  font-size: 25px;
+  font-weight: 550;
+  text-align: center;
+
+  background: rgba(255, 165, 0, 0.2);
+  border: 2px solid #ff9800;
+  padding: 14px 23px;
+  margin-bottom: 30px;
+}
+/* FOOTER */
+.footer {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.footer button {
+  padding: 15px 30px;
+  border: 4px solid #000;
+  font-weight: bold;
+  font-size: 20px;
+  cursor: pointer;
+  background: #ff9800;
+  color: #000;
+}
+.dialog {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+
+  font-size: 26px;
+  font-weight: 500;
+}
+
+/* 👩 CEWEK → putih + border hitam */
+.dialog.female {
+  background: #ffffff;
+  border: 3px solid #ff9800;
+  color: #000;
+}
+
+/* 👨 COWOK → TETAP ORANGE (JANGAN DIUBAH) */
+.dialog.male {
+  background: #ffffff;
+  border: 3px solid #3b82f6;
+  color: #000;
+}
+/* ===== FAKE AUDIO BUTTON ===== */
+.fake-audio {
+  width: 80%;
+  max-width: 420px;
+  margin: 15px auto;
+  padding: 12px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  background: #e5e7eb;
+  border: 3px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.fake-audio.playing {
+  background: #4caf50;
+  color: #fff;
+}
+</style>
+</head>
+
+<body>
+<h1 class="title" id="title">BASU SESI 1</h1>
+<div class="session-bar" id="sessionBar">
+  <button onclick="toggleSessionMenu()">📂 PILIH SESI</button>
+
+  <div class="session-menu" id="sessionMenu">
+    <button onclick="goSession(0)">SESI 1</button>
+    <button onclick="goSession(1)">SESI 2</button>
+    <button onclick="goSession(2)">SESI 3</button>
+    <button onclick="goSession(3)">SESI 4</button>
+  </div>
+</div>
+
+</div>
+<div class="container">
+  <div class="sidebar" id="sidebar"></div>
+
+  <div class="content">
+<div class="question-hint" id="questionHint" style="display:none;"></div>
+    <div class="question-text" id="questionText">
+      Lihatlah ilustrasi, kemudian pilihlah kata yang benar
+    </div>
+
+    <img id="questionImage" width="500" style="display:none;">
+
+    <div class="answers" id="answers"></div>
+<div class="footer">
+      <button id="prevBtn" style="display:none;">⬅ KEMBALI</button>
+      <button id="finishBtn" style="display:none;">SELESAI</button>
+      <button id="nextBtn" style="display:none;">LANJUT ➡</button>
+    </div>
+    
+<div id="result" style="
+      display:none;
+      margin-top:30px;
+      padding:20px;
+      border:3px solid #000;
+      background:#e8f5e9;
+      font-size:24px;
+      font-weight:bold;
+      text-align:center;
+    ">
+    </div>
+  </div>
+</div>
+
+<script>
+let questions = [
+
+  // ===== SOAL 1 =====
+  {
+   image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/kantor.PNG",
+    imageWidth: 450,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. じむしつ",
+      "2. きょうしつ",
+      "3. かいぎしつ",
+      "4. へや"
+    ],
+    correct: 0
+  },
+
+  // ===== SOAL 2 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/kawai.jpg",
+        imageWidth: 300,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. きれい",
+      "2. かわいい",
+      "3. たかい",
+      "4. あたらしい"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 3 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/gantungan.jpg",
+        imageWidth: 300,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. かばん",
+      "2. さいふ",
+      "3. キーホルダー",
+      "4. とけい"
+    ],
+    correct: 2
+  },
+
+  // ===== SOAL 4 =====
+  {
+   image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/daging.jpg",
+        imageWidth: 400,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar。",
+    choices: [
+      "1. たべる",
+      "2. かける",
+      "3. のむ",
+      "4. やく"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 5 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "ホールのいりぐちでなまえを＿＿＿ください。",
+    choices: [
+      "1. 言います",
+      "2. 言って",
+      "3. 読みます",
+      "4. 話します"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 6 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "こうえんにきれいな＿＿＿がさいています。",
+    choices: [
+      "1. 木",
+      "2. 花",
+      "3. 草",
+      "4. 水"
+    ],
+    correct: 1
+  },
+
+  // ===== SOAL 7 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "えいごがすこし＿＿＿。",
+    choices: [
+      "1. はなします",
+      "2. できます",
+      "3. あります",
+      "4. いきます"
+    ],
+    correct: 1
+  },
+  // ===== SOAL 8 =====
+ {
+    hint: "pilihlah kata yang tepat。",
+    text: "すきなかしゅがみられなくて、＿＿＿でした。",
+    choices: [
+      "1. 嬉しい / うれしい",
+      "2. 楽しい / たのしい",
+      "3. 残念 / ざんねん",
+      "4. 大丈夫 / だいじょうぶ"
+    ],
+    correct: 2
+  },
+
+ // ===== SOAL 9 =====
+ {
+   image: "",
+   hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+   text: "まいとし、<span class='kanji'>外国</span>へ行きたいです",
+   choices: [
+     "1. こくさい",
+     "2. がいこく",
+     "3. そとくに",
+     "4. かいがい"
+   ],
+   correct: 1
+ },
+ 
+ // ===== SOAL 10 =====
+ {
+   image: "",
+   hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+   text: "日本語を<span class='kanji'>上手</span>になりたいです",
+   choices: [
+     "1. たかい",
+     "2. じょうず",
+     "3. うえ",
+     "4. うまい"
+   ],
+   correct: 1
+ },
+ 
+ // ===== SOAL 11 =====
+ {
+   image: "",
+   hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+   text: "まいばん、日本語を<span class='kanji'>勉強します</span>",
+   choices: [
+     "1. べんきょうします",
+     "2. がんばります",
+     "3. ならいます",
+     "4. おぼえます"
+   ],
+   correct: 0
+ },
+ 
+ // ===== SOAL 12 =====
+ {
+   image: "",
+   hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+   text: "にわに<span class='kanji'>小さい</span>ねこがいます",
+   choices: [
+     "1. ちいさい",
+     "2. すこし",
+     "3. ひくい",
+     "4. せまい"
+   ],
+   correct: 0
+ }
+
+];
+const questionsSession2 = [
+  // ===== SOAL 1 =====
+  {
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：さようなら
+      </div>
+      <div class="dialog female">
+        B：＿＿＿＿
+      </div>
+    `,
+    choices: [
+      "1. こんにちは",
+      "2. じゃ、また",
+      "3. ありがとう",
+      "4. すみません"
+    ],
+    correct: 1
+  },
+  
+  // ===== SOAL 2 =====
+  {
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：誕生日＿＿＿＿
+      </div>
+      <div class="dialog female">
+        B：ありがとう
+      </div>
+    `,
+    choices: [
+      "1. すごいですね",
+      "2. おめでとうございます",
+      "3. げんきですか",
+      "4. さようなら"
+    ],
+    correct: 1
+  },
+  
+  // ===== SOAL 3 =====
+  {
+    hint: "pilihlah kalimat yang tepat。",
+    text: "しょるいのかきかたを＿＿＿＿＿＿＿＿",
+    choices: [
+      "1. かいてください",
+      "2. せつめいします",
+      "3. せつめいしてもらえますか",
+      "4. みせてください"
+    ],
+    correct: 2
+  },
+  
+  // ===== SOAL 4 =====
+  {
+    hint: "pilihlah kalimat yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：上手になるようによく日本語を使ってください
+      </div>
+      <div class="dialog female">
+        B：毎日、日本語でにっきを＿＿＿＿
+      </div>
+    `,
+    choices: [
+      "1. 書きます",
+      "2. 話します",
+      "3. 読みます",
+      "4. 書いてみます"
+    ],
+    correct: 3
+  },
+  
+  // ===== SOAL 5 =====
+  {
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/paspor.jpg",
+    imageWidth: 400,
+    hint: "pilihlah kalimat yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：明日までに、パスポートをあつめてください
+      </div>
+      <div class="dialog female">
+        B：だれに＿＿＿知っていますか？
+      </div>
+      <div class="dialog male">
+        A：マリア先生です
+      </div>
+    `,
+    choices: [
+      "1. わたしますか",
+      "2. もらいますか",
+      "3. 出すか",
+      "4. あげますか"
+    ],
+    correct: 2
+  },
+  
+  // ===== SOAL 6 =====
+  {
+   image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/pointcard.jpg",
+    imageWidth: 300,
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：ポイントカードを持ちますか？
+      </div>
+      <div class="dialog female">
+        B：すみません、＿＿＿＿
+      </div>
+    `,
+    choices: [
+      "1. ありません",
+      "2. 持っていません",
+      "3. 忘れてしまいました",
+      "4. 要りません"
+    ],
+    correct: 2
+  },
+  
+  // ===== SOAL 7 =====
+  {
+   image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/orangminum.jpg",
+    imageWidth: 400,
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：何を＿＿＿＿
+      </div>
+      <div class="dialog female">
+        B：水をのみます
+      </div>
+    `,
+    choices: [
+      "1. 食べますか",
+      "2. 飲みますか",
+      "3. 買いますか",
+      "4. しますか"
+    ],
+    correct: 1
+  },
+  
+  // ===== SOAL 8 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "つまの誕生日のプレゼントにあかいバッグを＿＿＿",
+    choices: [
+      "1. 選びます",
+      "2. 買います",
+      "3. もらいます",
+      "4. あげます"
+    ],
+    correct: 0
+  },
+  
+  // ===== SOAL 9 =====
+  {
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：ゆうびんきょくがどこですか
+      </div>
+      <div class="dialog female">
+        B：右にまがって＿＿＿、ゆうびんきょくがみえます
+      </div>
+    `,
+    choices: [
+      "1. まっすぐ",
+      "2. そうすると",
+      "3. つぎに",
+      "4. それから"
+    ],
+    correct: 1
+  },
+  
+  // ===== SOAL 10 =====
+  {
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：もしもし、すみません温水が朝から今まで出ません。
+      </div>
+      <div class="dialog female">
+        B：まず、温水のボタンをチェックして、出来なかったらまた電話してください
+      </div>
+    `,
+    choices: [
+      "1. どうしますか",
+      "2. どうしたらいいですか",
+      "3. なんですか",
+      "4. だいじょうぶですか"
+    ],
+    correct: 1
+  },
+  
+  // ===== SOAL 11 =====
+  {
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：おかしはすごくおいしいです
+      </div>
+      <div class="dialog female">
+        B：よかったらもうひとつ＿＿＿
+      </div>
+      <div class="dialog male">
+        A：はい、いただきます
+      </div>
+    `,
+    choices: [
+      "1. いかがですか",
+      "2. どうですか",
+      "3. たべますか",
+      "4. ください"
+    ],
+    correct: 1
+  },
+  
+  // ===== SOAL 12 =====
+  {
+    hint: "pilihlah jawaban yang tepat。",
+    text: `
+      <div class="dialog male">
+        A：この料理にソースをつけるとおいしいですよ<br>Kalau ditambahkan saus, masakan ini jadi enak, lho.
+      </div>
+      <div class="dialog female">
+        B：辛い料理はにがてなんだ<br>Saya tidak suka / kurang bisa makan masakan pedas
+      </div>
+      <div class="dialog male">
+        A：何もつけないそのまま食べてください<br>Kalau begitu, jangan pakai apa-apa, silakan dimakan langsung apa adanya
+      </div>
+    `,
+    choices: [
+      "1. -",
+      "2. -",
+      "3. -"
+    ],
+    correct: 0
+  },
+  
+  // ===== SOAL 13 =====
+  {
+    hint: "pilihlah kata yang tepat。",
+    text: "KARENA SAKIT HARUS MAKAN MAKANAN YANG LEMBUT",
+    choices: [
+      "1. やわらかいもの",
+      "2. つめたいもの",
+      "3. あまいもの",
+      "4. からいもの"
+    ],
+    correct: 0
+  }
+];
+const questionsSession3 = [
+  // ===== SOAL 1 =====
+  {
+      type: "double",
+      hint: "bacalah pengumuman berikut, lalu jawab pertanyaan A dan B",
+      text: `
+        <div style="font-size:20px; line-height:1.6;">
+          <div><b style="color:red;">Contoh Percakapan</b></div>
+        
+          <div>
+            <b style="color:red;">
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            <ruby>今日<rt style="color:red;font-size:0.5em;">きょう</rt></ruby>は
+            いい
+            <ruby>天気<rt style="color:red;font-size:0.5em;">てんき</rt></ruby>ですね。
+          </div>
+        
+          <div>
+            <b style="color:green;">
+              <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            そうですね。ちょっと
+            <ruby>暑<rt style="color:red;font-size:0.5em;">あつ</rt></ruby>いですね。
+          </div>
+        
+          <div>
+            <b style="color:red;">
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            <ruby>今<rt style="color:red;font-size:0.5em;">いま</rt></ruby>、
+            <ruby>会社<rt style="color:red;font-size:0.5em;">かいしゃ</rt></ruby>へ
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きますか。
+          </div>
+        
+          <div>
+            <b style="color:green;">
+              <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            いいえ、
+            <ruby>今日<rt style="color:red;font-size:0.5em;">きょう</rt></ruby>は
+            <ruby>会社<rt style="color:red;font-size:0.5em;">かいしゃ</rt></ruby>へ
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きません。
+          </div>
+        
+          <div>
+            <b style="color:red;">
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            じゃあ、どこへ
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きますか。
+          </div>
+        
+          <div>
+            <b style="color:green;">
+              <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            このあと、
+            <ruby>友<rt style="color:red;font-size:0.5em;">とも</rt></ruby>だちの
+            うちへ
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きます。
+          </div>
+        
+          <div>
+            <b style="color:red;">
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            そうですか。ここから
+            <ruby>近<rt style="color:red;font-size:0.5em;">ちか</rt></ruby>いですか。
+          </div>
+        
+          <div>
+            <b style="color:green;">
+              <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+            </b>
+            はい、ここから
+            <ruby>歩<rt style="color:red;font-size:0.5em;">ある</rt></ruby>いて
+            <ruby>十分<rt style="color:red;font-size:0.5em;">じゅっぷん</rt></ruby>ぐらいです。
+          </div>
+        </div>
+      `,
+      questions: [
+        {
+          label: "A",
+          text: " LAKI - LAKI TERSEBUT PERGI KEMANA ?",
+          choices: [
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/kesupermarket.jpg" width="300"><br> <span style="color:red; font-size:16px">（スーパー)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`,
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/kerumahteman.jpg" width="300"><br> <span style="color:red; font-size:16px">（ともだちのうち)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`,
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/kekantor.jpg" width="300"><br> <span style="color:red; font-size:16px">（かいしゃ)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`
+          ],
+          correct: 1
+        },
+      ]
+    },
+
+  // ===== SOAL 2 =====
+  {
+    type: "double",
+    hint: "bacalah percakapan berikut, lalu jawab pertanyaan",
+    text: `
+      <div style="font-size:20px; line-height:1.6;">
+        <div><b style="color:red;">Contoh Percakapan</b></div>
+  
+        <div><b style="color:green;">男の人：</b>おうちは どこですか。</div>
+        <div><b style="color:red;">女の人：</b>しずかな ところです。</div>
+  
+        <div><b style="color:green;">男の人：</b>そうですか。まわりは どんな ところですか。</div>
+        <div><b style="color:red;">女の人：</b>いえの ちかくに かわが あります。</div>
+  
+        <div><b style="color:green;">男の人：</b>そうですか。</div>
+  
+        <div><b style="color:red;">女の人：</b>じゃあ、あなたの おうちは？</div>
+        <div><b style="color:green;">男の人：</b>えきの ちかくです。</div>
+  
+        <div><b style="color:red;">女の人：</b>にぎやかですね。</div>
+        <div><b style="color:green;">男の人：</b>はい、にぎやかです。</div>
+      </div>
+    `,
+    questions: [
+      {
+        label: "-",
+        text: "RUMAH PEREMPUAN TERSEBUT DEKAT DENGAN APA ?",
+        choices: [
+                    `<div style="text-align:center">
+                       <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/dekatstasiun.jpg" width="180"><br> <span style="color:red; font-size:16px">（えさがちかくにあります)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                     </div>`,
+                    `<div style="text-align:center">
+                       <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/dekatsungai.jpg" width="180"><br> <span style="color:red; font-size:16px">（かわがちかくにあります)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                     </div>`,
+                    `<div style="text-align:center">
+                       <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/dekatkantor.jpg" width="180"><br> <span style="color:red; font-size:16px">（こうえんがちかくにあります)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                     </div>`
+                  ],
+        correct: 1
+      }
+    ]
+  },
+
+  // ===== SOAL 3 =====
+  {
+    type: "double",
+    hint: "bacalah percakapan berikut, lalu jawab pertanyaan",
+    text: `
+      <div style="font-size:20px; line-height:1.6;">
+      
+        <div><b style="color:red;">Contoh Percakapan</b></div>
+      
+        <div>
+          <b style="color:green;">
+            <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          きのう、
+          にくが やすいと いいましたね。
+        </div>
+      
+        <div>
+          <b style="color:red;">
+            <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          はい、そうです。
+        </div>
+      
+        <div>
+          <b style="color:green;">
+            <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          いつ にくが やすいですか。
+        </div>
+      
+        <div>
+          <b style="color:red;">
+            <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          <ruby>月曜日<rt style="color:red;font-size:0.5em;">げつようび</rt></ruby>と
+          <ruby>水曜日<rt style="color:red;font-size:0.5em;">すいようび</rt></ruby>です。
+        </div>
+      
+        <div>
+          <b style="color:green;">
+            <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          そうですか。じゃあ、その日に
+          スーパーへ
+          <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きましたか。
+        </div>
+      
+        <div>
+          <b style="color:red;">
+            <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          はい、
+          <ruby>月曜日<rt style="color:red;font-size:0.5em;">げつようび</rt></ruby>に
+          スーパーへ
+          <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きました。
+        </div>
+      
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "PEREMPUAN TERSEBUT PERGI KE SUPERMARKET HARI APA ?",
+        choices: [
+          "げつようび（月曜日）",
+          "かようび（火曜日）",
+          "すいようび（水曜日）"
+        ],
+        correct: 0
+      }
+    ]
+  },
+
+  // ===== SOAL 4 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "つぎの あんないを よんで、こたえてください",
+    text: `
+       <div style="font-size:20px; line-height:1.6;">
+      
+        <div><b style="color:red;">Contoh Percakapan</b></div>
+      
+        <div style="font-size:20px; line-height:1.6;">
+          <div>
+            <b style="color:red;">
+              バスの
+              <ruby>案内<rt style="color:red;font-size:0.5em;">あんない</rt></ruby>
+            </b>
+          </div>
+      
+          <div>
+            つぎの
+            <ruby>案内<rt style="color:red;font-size:0.5em;">あんない</rt></ruby>
+            を みてください。
+          </div><br>
+      
+          <div>
+            ５４
+            <ruby>番<rt style="color:red;font-size:0.5em;">ばん</rt></ruby>
+            の バスは
+            <ruby>福岡空港<rt style="color:red;font-size:0.5em;">ふくおかくうこう</rt></ruby>
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きです。
+          </div>
+      
+          <div>
+            ２３
+            <ruby>番<rt style="color:red;font-size:0.5em;">ばん</rt></ruby>
+            の バスは
+            <ruby>博多駅<rt style="color:red;font-size:0.5em;">はかたえき</rt></ruby>
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きです。
+          </div>
+      
+          <div>
+            １８
+            <ruby>番<rt style="color:red;font-size:0.5em;">ばん</rt></ruby>
+            の バスは
+            <ruby>市民病院<rt style="color:red;font-size:0.5em;">しみんびょういん</rt></ruby>
+            <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きです。
+          </div><br>
+      
+          <div>
+            <ruby>目的<rt style="color:red;font-size:0.5em;">もくてき</rt></ruby>
+            に あった バスに
+            のってください。
+          </div>
+        </div>
+      
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "BUS YANG KE BANDARA FUKUOKA NOMOR BERAPA ?",
+        choices: [
+          "１８番",
+          "２３番",
+          "５４番"
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 5 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah teks berikut, lalu pilih jawaban yang benar",
+    text: `
+      <div style="font-size:20px; line-height:1.7;">
+      
+        <div><b style="color:red;">Contoh Soal</b></div>
+      
+        <div>
+          <ruby>今日<rt style="color:red;font-size:0.5em;">きょう</rt></ruby>は
+          <ruby>天気<rt style="color:red;font-size:0.5em;">てんき</rt></ruby>が
+          いいです。
+        </div>
+      
+        <div>
+          <ruby>朝<rt style="color:red;font-size:0.5em;">あさ</rt></ruby>
+          <ruby>早<rt style="color:red;font-size:0.5em;">はや</rt></ruby>く
+          <ruby>起<rt style="color:red;font-size:0.5em;">お</rt></ruby>きて、
+          <ruby>運動<rt style="color:red;font-size:0.5em;">うんどう</rt></ruby>の
+          じゅんびを しました。
+        </div>
+      
+        <div>
+          <ruby>朝<rt style="color:red;font-size:0.5em;">あさ</rt></ruby>、
+          <ruby>家<rt style="color:red;font-size:0.5em;">いえ</rt></ruby>の
+          <ruby>近<rt style="color:red;font-size:0.5em;">ちか</rt></ruby>くの
+          ジムへ
+          <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>きました。
+        </div>
+      
+        <div>
+          そのあと、
+          <ruby>家<rt style="color:red;font-size:0.5em;">いえ</rt></ruby>に
+          <ruby>帰<rt style="color:red;font-size:0.5em;">かえ</rt></ruby>って、
+          <ruby>少<rt style="color:red;font-size:0.5em;">すこ</rt></ruby>し
+          <ruby>休<rt style="color:red;font-size:0.5em;">やす</rt></ruby>みました。
+        </div>
+      
+        <br>
+      
+        <div>
+          <ruby>午後<rt style="color:red;font-size:0.5em;">ごご</rt></ruby>、
+          また
+          <ruby>外<rt style="color:red;font-size:0.5em;">そと</rt></ruby>へ
+          <ruby>出<rt style="color:red;font-size:0.5em;">で</rt></ruby>て、
+          <ruby>運動<rt style="color:red;font-size:0.5em;">うんどう</rt></ruby>を
+          しました。
+        </div>
+      
+        <div>
+          <ruby>公園<rt style="color:red;font-size:0.5em;">こうえん</rt></ruby>の
+          <ruby>近<rt style="color:red;font-size:0.5em;">ちか</rt></ruby>くで
+          ジョギングを しました。
+        </div>
+      
+        <div>
+          ジョギングの あと、
+          <ruby>体<rt style="color:red;font-size:0.5em;">からだ</rt></ruby>が
+          すっきり しました。
+        </div>
+      
+        <div>
+          <ruby>今日<rt style="color:red;font-size:0.5em;">きょう</rt></ruby>は
+          たくさん
+          <ruby>運動<rt style="color:red;font-size:0.5em;">うんどう</rt></ruby>が
+          できて、
+          うれしかったです。
+        </div>
+      
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "HARI INI AKTIVITAS SELAIN GYM , APA ?",
+        choices: [
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/joging.jpg" width="150"><br> <span style="color:red; font-size:16px">（JOGGING)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`,
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/bulking.jpg" width="150"><br> <span style="color:red; font-size:16px">（MAKAN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`,
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/walking.jpg" width="150"><br> <span style="color:red; font-size:16px">（JALANKAKI)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`
+          ],
+        correct: 0
+      }
+    ]
+  },
+
+  // ===== SOAL 6 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah percakapan berikut, lalu jawab pertanyaan.",
+    text: `
+      <div style="font-size:20px; line-height:1.6;">
+      
+        <div><b style="color:red;">Contoh percakapan</b></div>
+      
+        <div>
+          <b style="color:green;">
+            <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          <ruby>今<rt style="color:red;font-size:0.5em;">いま</rt></ruby>、
+          どこに いますか。
+        </div>
+      
+        <div>
+          <b style="color:red;">
+            <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          <ruby>今<rt style="color:red;font-size:0.5em;">いま</rt></ruby>、
+          <ruby>事務所<rt style="color:red;font-size:0.5em;">じむしょ</rt></ruby>に います。
+        </div>
+      
+        <div>
+          <b style="color:green;">
+            <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          そうですか。
+          <ruby>仕事中<rt style="color:red;font-size:0.5em;">しごとちゅう</rt></ruby>ですか。
+        </div>
+      
+        <div>
+          <b style="color:red;">
+            <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          はい、
+          <ruby>今<rt style="color:red;font-size:0.5em;">いま</rt></ruby>、
+          <ruby>仕事<rt style="color:red;font-size:0.5em;">しごと</rt></ruby>を
+          しています。
+        </div>
+      
+        <div>
+          <b style="color:green;">
+            <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          わかりました。
+          あとで
+          <ruby>連絡<rt style="color:red;font-size:0.5em;">れんらく</rt></ruby>します。
+        </div>
+      
+        <div>
+          <b style="color:red;">
+            <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+            <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+          </b>
+          はい、また あとで。
+        </div>
+      
+      </div>
+    `,
+    questions: [
+      {
+        text: "PEREMPUAN NYA ADA DIMANA ?",
+        choices: [
+          "1．Di Stasiun",
+          "2．Di Rumah",
+          "3．Di kantor"
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 7 =====
+  {
+      type: "double",
+      hint: "bacalah teks berikut, lalu jawab pertanyaan A dan B",
+      text: `
+        <div style="font-size:20px; line-height:1.6;">
+        <div><b style="color:red;">Contoh Soal</b></div>
+        <div>
+          わたしの
+          <ruby>家<rt style="color:red;font-size:0.5em;">いえ</rt></ruby>
+          に
+          <ruby>果物<rt style="color:red;font-size:0.5em;">くだもの</rt></ruby>
+          と
+          <ruby>卵<rt style="color:red;font-size:0.5em;">たまご</rt></ruby>
+          が あります。<br>
+        
+          <ruby>家<rt style="color:red;font-size:0.5em;">いえ</rt></ruby>
+          に
+          <ruby>林檎<rt style="color:red;font-size:0.5em;">りんご</rt></ruby>
+          と
+          <ruby>卵<rt style="color:red;font-size:0.5em;">たまご</rt></ruby>
+          が あります。<br>
+        
+          <ruby>林檎<rt style="color:red;font-size:0.5em;">りんご</rt></ruby>
+          は
+          <ruby>三つ<rt style="color:red;font-size:0.5em;">みっつ</rt></ruby>
+          あって、
+          <ruby>冷蔵庫<rt style="color:red;font-size:0.5em;">れいぞうこ</rt></ruby>
+          に あります。<br>
+        
+          <ruby>卵<rt style="color:red;font-size:0.5em;">たまご</rt></ruby>
+          は
+          <ruby>二つ<rt style="color:red;font-size:0.5em;">ふたつ</rt></ruby>
+          あって、
+          <ruby>机<rt style="color:red;font-size:0.5em;">つくえ</rt></ruby>
+          の
+          <ruby>上<rt style="color:red;font-size:0.5em;">うえ</rt></ruby>
+          に あります。<br>
+        
+          <ruby>林檎<rt style="color:red;font-size:0.5em;">りんご</rt></ruby>
+          と
+          <ruby>卵<rt style="color:red;font-size:0.5em;">たまご</rt></ruby>
+          を
+          <ruby>取<rt style="color:red;font-size:0.5em;">と</rt></ruby>って ください。
+        </div>
+      `,
+      questions: [
+        {
+          label: "A",
+          text: "ADA BERAPA APEL DAN TELUR ?",
+          choices: [
+            "1. りんごひとつとたまごふたつ",
+            "2. りんごみっつとたまごふたつ",
+            "3. りんごみっつとたまごひとつ"
+          ],
+          correct: 1
+        },
+        {
+          label: "B",
+          text: "TELUR NYA ADA DIMANA ?",
+          choices: [
+            "1. いすのうえ",
+            "2. れいぞうこのなか",
+            "3. つくえのうえ"
+          ],
+          correct: 2
+        }
+      ]
+    },
+
+  // ===== SOAL 8 =====
+  {
+    type: "double",
+    hint: "Bacalah pesan berikut, lalu jawab pertanyaan A dan B",
+    text: `
+     <div style="font-size:20px; line-height:1.6;">
+                <div><b style="color:red;">Contoh Soal</b></div>
+  
+        「マリアさん、今日は
+        <ruby>午前<rt style="color:red;font-size:0.5em;">ごぜん</rt></ruby>
+        <ruby>二時三十分<rt style="color:red;font-size:0.5em;">にじさんじゅっぷん</rt></ruby>です。<br>
+        社員が もう
+        <ruby>会社<rt style="color:red;font-size:0.5em;">かいしゃ</rt></ruby>に
+        いるか かくにんしてください。<br>
+        <ruby>午前<rt style="color:red;font-size:0.5em;">ごぜん</rt></ruby>
+        <ruby>三時五十五分<rt style="color:red;font-size:0.5em;">さんじごじゅうごふん</rt></ruby>に
+        <ruby>上司<rt style="color:red;font-size:0.5em;">じょうし</rt></ruby>から
+        お知らせが あります。<br>
+        よろしく おねがいします。」
+        <br><br>
+  
+        メッセージを もらってから、<br>
+        マリアさんは すぐ
+        コピー
+        <ruby>室<rt style="color:red;font-size:0.5em;">しつ</rt></ruby>へ
+        行きました。<br>
+        マリアさんは
+        コピー
+        <ruby>室<rt style="color:red;font-size:0.5em;">しつ</rt></ruby>と
+        コピー
+        <ruby>機<rt style="color:red;font-size:0.5em;">き</rt></ruby>を
+        かくにんしました。
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "PENGUMUMANNYA JAM BERAPA?",
+        choices: [
+          "1. 02.30",
+          "2. 03.55",
+          "3. 05.35"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "APA YANG DILAKUKAN MARIA?",
+        choices: [
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cekrapat.jpg" width="300"><br> <span style="color:red; font-size:16px">（MENGECEK RUANG RAPAT)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`,
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cekfotokopy.jpg" width="300"><br> <span style="color:red; font-size:16px">（MENGECEK RUANG FOTOCOPY)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`,
+            `<div style="text-align:center">
+               <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cekkaryawan.jpg" width="300"><br> <span style="color:red; font-size:16px">（MENGECEK RUANG KARYAWAN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+             </div>`
+          ],
+        correct: 1
+      }
+    ]
+  },
+  {
+      type: "double",
+      hint: "Bacalah pesan berikut, lalu jawab pertanyaan A dan B",
+      text: `
+        <div style="font-size:20px; line-height:1.6;">
+              <div><b style="color:red;">Contoh Percakapan</b></div>
+        
+              <div>
+                <b style="color:red;">A:</b>
+                こんにちは。ご注文は何にしますか。
+              </div>
+        
+              <div>
+                <b style="color:green;">B:</b>
+                すしセットと そばを お願いします。
+              </div>
+        
+              <div>
+                <b style="color:red;">A:</b>
+                申し訳ありません。きょうは そばが ありません。
+              </div>
+        
+              <div>
+                <b style="color:green;">B:</b>
+                そうですか。じゃあ、そばは いりません。
+              </div>
+        
+              <div>
+                <b style="color:red;">A:</b>
+                ほかの メニューに かえますか。
+              </div>
+        
+              <div>
+                <b style="color:green;">B:</b>
+                はい。そばを あたたかい みそに かえて ください。
+              </div>
+        
+              <div>
+                <b style="color:red;">A:</b>
+                わかりました。すしセットと あたたかい みそですね。
+              </div>
+        
+              <div>
+                <b style="color:green;">B:</b>
+                はい、そうです。ありがとうございます。
+              </div>
+            </div>
+          
+      `,
+      questions: [
+        {
+          label: "-",
+          text: "PESAN MAKANAN APA?",
+          choices: [
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/soba.PNG" width="300"><br> <span style="color:red; font-size:16px">（SET SUSHI DAN  TEISHOKU)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`,
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/miso.jpg" width="300"><br> <span style="color:red; font-size:16px">（SET SUSHI DAN ATATAKAI MISO)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`,
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/ramen.jpg" width="300"><br> <span style="color:red; font-size:16px">（SET SUSHI DAN ATATAKAI RAMEN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`
+            ],
+          correct: 1
+        }
+      ]
+    },
+    {
+          type: "double",
+          hint: "bacalah teks berikut, lalu jawab pertanyaan A dan B",
+          text: `
+            <div style="font-size:20px; line-height:1.6;">
+              <div><b style="color:red;">Contoh Percakapan</b></div>
+            
+              <div>
+                <b style="color:red;">
+                  <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+                  <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+                </b>
+                １
+                <ruby>時間<rt style="color:red;font-size:0.5em;">じかん</rt></ruby>
+                <ruby>後<rt style="color:red;font-size:0.5em;">ご</rt></ruby>に
+                <ruby>会議<rt style="color:red;font-size:0.5em;">かいぎ</rt></ruby>
+                ですよね。
+              </div>
+            
+              <div>
+                <b style="color:green;">
+                  <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+                  <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+                </b>
+                はい、１
+                <ruby>時間<rt style="color:red;font-size:0.5em;">じかん</rt></ruby>
+                <ruby>後<rt style="color:red;font-size:0.5em;">ご</rt></ruby>に
+                <ruby>始<rt style="color:red;font-size:0.5em;">はじ</rt></ruby>まります。
+              </div>
+            
+              <div>
+                <b style="color:red;">
+                  <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+                  <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+                </b>
+                じゃあ、
+                <ruby>準備<rt style="color:red;font-size:0.5em;">じゅんび</rt></ruby>
+                しましょう。
+              </div>
+            
+              <div>
+                <b style="color:green;">
+                  <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+                  <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+                </b>
+                はい。
+                <ruby>先<rt style="color:red;font-size:0.5em;">さき</rt></ruby>に
+                <ruby>会議室<rt style="color:red;font-size:0.5em;">かいぎしつ</rt></ruby>を
+                <ruby>確認<rt style="color:red;font-size:0.5em;">かくにん</rt></ruby>して、
+                プロジェクターと
+                <ruby>椅子<rt style="color:red;font-size:0.5em;">いす</rt></ruby>を
+                <ruby>見<rt style="color:red;font-size:0.5em;">み</rt></ruby>てきます。
+              </div>
+            
+              <div>
+                <b style="color:red;">
+                  <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+                  <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+                </b>
+                わかりました。
+                <ruby>私<rt style="color:red;font-size:0.5em;">わたし</rt></ruby>は
+                <ruby>参加者<rt style="color:red;font-size:0.5em;">さんかしゃ</rt></ruby>
+                <ruby>全員<rt style="color:red;font-size:0.5em;">ぜんいん</rt></ruby>の
+                <ruby>資料<rt style="color:red;font-size:0.5em;">しりょう</rt></ruby>を
+                <ruby>準備<rt style="color:red;font-size:0.5em;">じゅんび</rt></ruby>します。
+              </div>
+            </div>
+          `,
+          questions: [
+            {
+              label: "A",
+              text: "APA YANG DILAKUKAN OLEH LAKI-LAKI NYA?",
+              choices: [
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/lakidokumen.jpg" width="200"><br> <span style="color:red; font-size:16px">（MENYIAPKAN DOKUMEN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`,
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/lakirapat.jpg" width="200"><br> <span style="color:red; font-size:16px">（MENGECEK RUANG RAPAT)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`,
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/lakihidangan.jpg" width="200"><br> <span style="color:red; font-size:16px">（SETMENYIAPKAN KONSUMSI)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`
+            ],
+              correct: 1
+            },
+            {
+              label: "B",
+              text: "APA YANG DILAKUKAN OLEH PEREMPUAN NYA?",
+              choices: [
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewerapat.jpg" width="200"><br> <span style="color:red; font-size:16px">（MENGECEK RUANG RAPAT)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`,
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewehidangan.jpg" width="200"><br> <span style="color:red; font-size:16px">（MENYIAPKAN KONSUMSI)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`,
+              `<div style="text-align:center">
+                 <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/cewedokumen.jpg" width="200"><br> <span style="color:red; font-size:16px">（MENYIAPKAN DOKUMEN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+               </div>`
+            ],
+              correct: 2
+            }
+          ]
+        },
+   {
+       type: "double",
+       hint: "Bacalah pesan berikut, lalu jawab pertanyaan A dan B",
+       text: `
+         <div style="font-size:20px; line-height:1.6;">
+           <div><b style="color:red;">Contoh Percakapan</b></div>
+         
+           <div>
+             <b style="color:red;">
+               <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             これは
+             <ruby>医者<rt style="color:red;font-size:0.5em;">いしゃ</rt></ruby>からの
+             <ruby>薬<rt style="color:red;font-size:0.5em;">くすり</rt></ruby>です。
+           </div>
+         
+           <div>
+             <b style="color:green;">
+               <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             どれを
+             <ruby>飲<rt style="color:red;font-size:0.5em;">の</rt></ruby>みますか。
+           </div>
+         
+           <div>
+             <b style="color:red;">
+               <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             <ruby>黄色<rt style="color:red;font-size:0.5em;">きいろ</rt></ruby>の
+             <ruby>薬<rt style="color:red;font-size:0.5em;">くすり</rt></ruby>は
+             <ruby>一日<rt style="color:red;font-size:0.5em;">いちにち</rt></ruby>
+             <ruby>三回<rt style="color:red;font-size:0.5em;">さんかい</rt></ruby>、
+             <ruby>白<rt style="color:red;font-size:0.5em;">しろ</rt></ruby>の
+             <ruby>薬<rt style="color:red;font-size:0.5em;">くすり</rt></ruby>は
+             <ruby>一日<rt style="color:red;font-size:0.5em;">いちにち</rt></ruby>
+             <ruby>二回<rt style="color:red;font-size:0.5em;">にかい</rt></ruby>
+             <ruby>飲<rt style="color:red;font-size:0.5em;">の</rt></ruby>みます。
+           </div>
+         
+           <div>
+             <b style="color:green;">
+               <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             <ruby>食後<rt style="color:red;font-size:0.5em;">しょくご</rt></ruby>ですか。
+           </div>
+         
+           <div>
+             <b style="color:red;">
+               <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             はい。
+             <ruby>薬<rt style="color:red;font-size:0.5em;">くすり</rt></ruby>は
+             <ruby>涼<rt style="color:red;font-size:0.5em;">すず</rt></ruby>しい
+             <ruby>場所<rt style="color:red;font-size:0.5em;">ばしょ</rt></ruby>に
+             <ruby>置<rt style="color:red;font-size:0.5em;">お</rt></ruby>いてください。
+           </div>
+         
+           <div>
+             <b style="color:green;">
+               <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             じゃあ、
+             <ruby>暑<rt style="color:red;font-size:0.5em;">あつ</rt></ruby>い
+             <ruby>場所<rt style="color:red;font-size:0.5em;">ばしょ</rt></ruby>は
+             だめですか。
+           </div>
+         
+           <div>
+             <b style="color:red;">
+               <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             はい。
+             <ruby>暑<rt style="color:red;font-size:0.5em;">あつ</rt></ruby>い
+             <ruby>場所<rt style="color:red;font-size:0.5em;">ばしょ</rt></ruby>や
+             <ruby>窓<rt style="color:red;font-size:0.5em;">まど</rt></ruby>の
+             <ruby>近<rt style="color:red;font-size:0.5em;">ちか</rt></ruby>くに
+             <ruby>置<rt style="color:red;font-size:0.5em;">お</rt></ruby>かないでください。
+           </div>
+         
+           <div>
+             <b style="color:green;">
+               <ruby>男<rt style="color:red;font-size:0.5em;">おとこ</rt></ruby>の
+               <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>：
+             </b>
+             わかりました。
+             <ruby>薬箱<rt style="color:red;font-size:0.5em;">くすりばこ</rt></ruby>に
+             <ruby>入<rt style="color:red;font-size:0.5em;">い</rt></ruby>れます。
+           </div>
+         </div>
+       `,
+       questions: [
+         {
+           label: "A",
+           text: "OBAT YANG PUTIH, 1 HARI DIMINUM BERAPA KALI?",
+           choices: [
+             "1. 1かい",
+             "2. 2かい",
+             "3. 3かい"
+           ],
+           correct: 1
+         },
+         {
+           label: "B",
+           text: "BERIKUT ADALAH TEMPAT MENYIMPAN OBAT YANG BENAR, KECUALI?",
+           choices: [
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/obatsejuk.jpg" width="230"><br> <span style="color:red; font-size:16px">（TEMPAT SEJUK)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`,
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/panasjendela.jpg" width="230"><br> <span style="color:red; font-size:16px">（TEMPAT YANG PANAS DAN DEKAT JENDELA)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`,
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/kotakobat.jpg" width="230"><br> <span style="color:red; font-size:16px">（KOTAK OBAT)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`
+             ],
+           correct: 1
+         }
+       ]
+     }
+];
+const questionsSession4 = [
+  // ===== SOAL 1 (DOUBLE) =====
+  {
+        type: "double",
+        hint: "bacalah teks berikut, lalu jawab pertanyaan A dan B",
+        text: `
+          <div style="font-size:20px; line-height:1.6;">
+            <div><b style="color:black;">ADA SOAL CERITA</b></div>
+          <div style="font-size:20px; line-height:1.6;">
+                
+                  <div><b style="color:red;">Contoh Cerita</b></div>
+            <div>
+              <ruby>田中<rt style="color:red;font-size:0.5em;">たなか</rt></ruby>さんは
+              <ruby>今日<rt style="color:red;font-size:0.5em;">きょう</rt></ruby>、
+              <ruby>熱<rt style="color:red;font-size:0.5em;">ねつ</rt></ruby>が
+              あります。
+            </div>
+          
+            <div>
+              そのため、
+              <ruby>明日<rt style="color:red;font-size:0.5em;">あした</rt></ruby>、
+              <ruby>病院<rt style="color:red;font-size:0.5em;">びょういん</rt></ruby>へ
+              <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>く
+              つもりです。
+            </div>
+          
+            <div>
+              <ruby>本当<rt style="color:red;font-size:0.5em;">ほんとう</rt></ruby>は、
+              <ruby>明日<rt style="color:red;font-size:0.5em;">あした</rt></ruby>
+              <ruby>映画<rt style="color:red;font-size:0.5em;">えいが</rt></ruby>を
+              <ruby>見<rt style="color:red;font-size:0.5em;">み</rt></ruby>に
+              <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>く
+              <ruby>予定<rt style="color:red;font-size:0.5em;">よてい</rt></ruby>でした。
+            </div>
+          
+            <div>
+              でも、
+              <ruby>熱<rt style="color:red;font-size:0.5em;">ねつ</rt></ruby>が
+              あるので、
+              <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>けません。
+            </div>
+          
+            <div>
+              <ruby>田中<rt style="color:red;font-size:0.5em;">たなか</rt></ruby>さんは
+              <ruby>言<rt style="color:red;font-size:0.5em;">い</rt></ruby>いました。
+            </div>
+          
+            <div>
+              <ruby>来週<rt style="color:red;font-size:0.5em;">らいしゅう</rt></ruby>
+              <ruby>見<rt style="color:red;font-size:0.5em;">み</rt></ruby>るのは
+              どうですか。
+              <ruby>本当<rt style="color:red;font-size:0.5em;">ほんとう</rt></ruby>に
+              すみません。
+            </div>
+          </div>
+        `,
+        questions: [
+          {
+            label: "A",
+            text: "SAUDARA TANAKA KENAPA ?",
+            choices: [
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/sakitperut.jpg" width="150"><br> <span style="color:red; font-size:16px">（SAKIT PERUT)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`,
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/demam.jpg" width="150"><br> <span style="color:red; font-size:16px">（DEMAM)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`,
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/sakitkaki.jpg" width="150"><br> <span style="color:red; font-size:16px">（KAKI LUKA)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`
+             ],
+            correct: 1
+          },
+          {
+            label: "B",
+            text: "KAPAN SAUDARA TANAKA PERGI MENONTON FILM ?",
+            choices: [
+              "1. 今日です",
+              "2. 明日です",
+              "3. 来t週です"
+            ],
+            correct: 2
+          }
+        ]
+      },
+
+  // ===== SOAL 2 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah text berikut, lalu jawab pertanyaan A dan B",
+    text: `
+      <div style="font-size:20px; line-height:2.0;">
+      
+        <div><b style="color:black;">ADA CERITA BAU TIDAK SEDAP DI DALAM KULKAS</b></div>
+        <div style="font-size:20px; line-height:1.6;">
+      
+        <div><b style="color:red;">Contoh Cerita</b></div>
+      
+        <div>
+          れいぞうこの
+          <ruby>中<rt style="color:red;font-size:0.5em;">なか</rt></ruby>が
+          <ruby>におい</ruby>が
+          よくないです。
+        </div>
+      
+        <div>
+          みんなは
+          その
+          <ruby>におい</ruby>について
+          はなしています。
+        </div>
+      
+        <div>
+          れいぞうこの
+          <ruby>中<rt style="color:red;font-size:0.5em;">なか</rt></ruby>に
+          バナナが
+          ありました。
+        </div>
+      
+        <div>
+          でも、
+          その バナナは
+          <ruby>なまえ</ruby>が
+          ありませんでした。
+        </div>
+      
+        <div>
+          だれの バナナか
+          わからなかったので、
+          すてることが
+          できませんでした。
+        </div>
+      
+        <div>
+          それから、
+          これからは
+          れいぞうこの
+          <ruby>食<rt style="color:red;font-size:0.5em;">た</rt></ruby>べものに
+          <ruby>なまえ</ruby>を
+          <ruby>書<rt style="color:red;font-size:0.5em;">か</rt></ruby>くことに
+          しました。
+        </div>
+      </div>
+    `,
+    questions: [
+      {
+        label: "A",
+        text: "BERBICARA TENTANG APA?",
+        choices: [
+          "1. 食べものが ありません",
+          "2. れいぞうこが こわれています",
+          "3. においがよくない"
+        ],
+        correct: 2
+      },
+      {
+        label: "B",
+        text: "APA YANG DILAKUKAN AGAR TIDAK BAU ?",
+        choices: [
+          "1. MENCUCI KULKAS",
+          "2. MENULIS NAMA PADA BARANG (PISANG) + なまえ",
+          "3. MEMBUANG MAKANAN YANG BAU"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // ===== SOAL 3 (DOUBLE) =====
+  {
+    type: "double",
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/denah.PNG",
+    imageWidth: 450,
+    hint: "lihatlah ilustrasi, kemudian pililah kata yang benar",
+    text: "Contoh Gambar Denah",
+    questions: [
+      {
+        label: "-",
+        text: "トイレはどこにありますか？",
+        choices: [
+          "1. １かい",
+          "2. １かいと２かい",
+          "3. ２かい"
+        ],
+        correct: 1
+      }
+    ]
+  },
+
+  // ===== SOAL 4 (DOUBLE) =====
+  {
+   image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/jadwal.jpg",
+    imageWidth: 480,
+    type: "double",
+    hint: "bacalah tabel berikut, lalu jawab pertanyaan A dan B",
+    text: "CONTOH JADWAL MENGENAI KELAS BAHASA JEPANG",
+    questions: [
+      {
+        label: "A",
+        text: "BERAPA LAMA KELAS BAHASA JEPANG NYA ?",
+        choices: [
+          "1. 2 JAM (DARI JAM 10.00 - 12.00)",
+          "2. 2 JAM (DARI JAM 01.00 - 03.00)",
+          "3. 2 JAM (DARI JAM 09.00 - 11.00)"
+        ],
+        correct: 1
+      },
+      {
+        label: "B",
+        text: "KAPAN WAKTU YANG TEPAT UNTUK MENGIKUTI ?",
+        choices: [
+          "1. 11月25日",
+          "2. 12月2日",
+          "3. 11月22日"
+        ],
+        correct: 2
+      }
+    ]
+  },
+
+  // ===== SOAL 5 (DOUBLE) =====
+  {
+      type: "double",
+      hint: "bacalah text berikut, lalu jawab pertanyaan A dan B",
+      text: `
+        <div style="font-size:20px; line-height:2.0;">
+        
+          <div><b style="color:black;">ADA CERITA MENGENAI PEREMPUAN DI KANTOR</b></div>
+        
+          <div style="font-size:20px; line-height:1.6;">
+        
+            <div><b style="color:red;">Contoh Cerita</b></div>
+        
+            <div>
+              かいしゃで
+              <ruby>働<rt style="color:red;font-size:0.5em;">はたら</rt></ruby>いている
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>が
+              います。
+            </div>
+        
+            <div>
+              <ruby>上司<rt style="color:red;font-size:0.5em;">じょうし</rt></ruby>は
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>に
+              いいました。
+            </div>
+        
+            <div>
+              「十一
+              <ruby>時<rt style="color:red;font-size:0.5em;">じ</rt></ruby>に
+              かいぎしつに
+              <ruby>来<rt style="color:red;font-size:0.5em;">き</rt></ruby>てください。」
+            </div>
+        
+            <div>
+              <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+              <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>は
+              うなずいて、
+              かいぎしつに
+              <ruby>行<rt style="color:red;font-size:0.5em;">い</rt></ruby>く
+              <ruby>準備<rt style="color:red;font-size:0.5em;">じゅんび</rt></ruby>を
+              しました。
+            </div>
+        
+          </div>
+        </div>
+      `,
+      questions: [
+        {
+          label: "A",
+          text: "PEREMPUAN TERSEBUT MELAKUKAN APA ?",
+          choices: [
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/karyawanmakan.jpg" width="150"><br> <span style="color:red; font-size:16px">（MAKAN)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`,
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/karyawancektoilet.jpg" width="150"><br> <span style="color:red; font-size:16px">（MENGECEK TOILET)<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`,
+               `<div style="text-align:center">
+                  <img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/datangrapat.jpg" width="150"><br> <span style="color:red; font-size:16px">（DATANG KE RUANG PERTEMUAN )<br><span style="color:black; font-size:16px">(Contoh gambar bukan dari Jft asli)</span>
+                </div>`
+             ],
+          correct: 2
+        },
+        {
+          label: "B",
+          text: "何時にしますか？",
+          choices: [
+            "1. 10時です",
+            "2. 11時です",
+            "3. 12時です"
+          ],
+          correct: 1
+        }
+      ]
+    },
+
+  // ===== SOAL 6 (DOUBLE) =====
+  {
+    type: "double",
+    hint: "bacalah pamflet berikut, lalu jawab pertanyaan A dan B",
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/jadwalreceptionis.PNG",
+    text: "CONTOH JADWAL RUANGAN",
+    imageWidth: 450,
+    questions: [
+      {
+        label: "-",
+        text: "RESEPSIONIST NYA SAMPAI JAM BERAPA ?",
+        choices: [
+          "1. JAM 17：00",
+          "2. JAM 18：00",
+          "3. JAM 20：00"
+        ],
+        correct: 0
+      }
+    ]
+  },
+  // ===== SOAL 7 (DOUBLE) =====
+  {
+        type: "double",
+        hint: "bacalah text berikut, lalu jawab pertanyaan A dan B",
+        text: `
+          <div style="font-size:20px; line-height:2.0;">
+          
+            <div><b style="color:black;">ADA CERITA TENTANG MAKAN DAN KERETA</b></div>
+          
+            <div style="font-size:20px; line-height:1.6;">
+          
+              <div><b style="color:red;">Contoh Cerita</b></div>
+          
+              <div>
+                <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+                <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>は
+                <ruby>夕方<rt style="color:red;font-size:0.5em;">ゆうがた</rt></ruby>に
+                <ruby>仕事<rt style="color:red;font-size:0.5em;">しごと</rt></ruby>が
+                <ruby>終<rt style="color:red;font-size:0.5em;">お</rt></ruby>わりました。
+              </div>
+          
+              <div>
+                <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+                <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>は
+                まだ
+                <ruby>食事<rt style="color:red;font-size:0.5em;">しょくじ</rt></ruby>を
+                していません。
+              </div>
+          
+              <div>
+                いつもは、
+                <ruby>仕事<rt style="color:red;font-size:0.5em;">しごと</rt></ruby>の
+                あとで
+                <ruby>食事<rt style="color:red;font-size:0.5em;">しょくじ</rt></ruby>を
+                します。
+              </div>
+          
+              <div>
+                そして、
+                いつも
+                けたやよいで
+                <ruby>食事<rt style="color:red;font-size:0.5em;">しょくじ</rt></ruby>を
+                します。
+              </div>
+          
+              <div>
+                <ruby>今日<rt style="color:red;font-size:0.5em;">きょう</rt></ruby>は、
+                <ruby>食事<rt style="color:red;font-size:0.5em;">しょくじ</rt></ruby>の
+                まえに、
+                <ruby>先<rt style="color:red;font-size:0.5em;">さき</rt></ruby>に
+                <ruby>家<rt style="color:red;font-size:0.5em;">いえ</rt></ruby>に
+                <ruby>帰<rt style="color:red;font-size:0.5em;">かえ</rt></ruby>らなければ
+                なりません。
+              </div>
+          
+              <div>
+                <ruby>女<rt style="color:red;font-size:0.5em;">おんな</rt></ruby>の
+                <ruby>人<rt style="color:red;font-size:0.5em;">ひと</rt></ruby>は
+                <ruby>電車<rt style="color:red;font-size:0.5em;">でんしゃ</rt></ruby>で
+                <ruby>帰<rt style="color:red;font-size:0.5em;">かえ</rt></ruby>ります。
+              </div>
+          
+              <div>
+                １７<ruby>時<rt style="color:red;font-size:0.5em;">じ</rt></ruby>２０<ruby>分<rt style="color:red;font-size:0.5em;">ぷん</rt></ruby>までに
+                <ruby>駅<rt style="color:red;font-size:0.5em;">えき</rt></ruby>に
+                <ruby>着<rt style="color:red;font-size:0.5em;">つ</rt></ruby>かなければ
+                なりません。
+              </div>
+          
+              <div>
+                なぜなら、
+                １７<ruby>時<rt style="color:red;font-size:0.5em;">じ</rt></ruby>３０<ruby>分<rt style="color:red;font-size:0.5em;">ぷん</rt></ruby>の
+                <ruby>電車<rt style="color:red;font-size:0.5em;">でんしゃ</rt></ruby>に
+                <ruby>乗<rt style="color:red;font-size:0.5em;">の</rt></ruby>らなければ
+                ならないからです。
+              </div>
+          
+              <div>
+                そのあと、
+                いつもどおり
+                <ruby>食事<rt style="color:red;font-size:0.5em;">しょくじ</rt></ruby>を
+                する
+                <ruby>予定<rt style="color:red;font-size:0.5em;">よてい</rt></ruby>です。
+              </div>
+          
+            </div>
+          </div>
+        `,
+        questions: [
+          {
+            label: "A",
+            text: "DIMANA BIASANYA MAKAN ?",
+            choices: [
+              "1. かいしゃの しょくどう(KAISHA NO SHOKUDOU)",
+              "2. レストラン(RESUTORAN)",
+              "3. けたやよい(KETAYAYOI)"
+            ],
+            correct: 2
+          },
+          {
+            label: "B",
+            text: "HARUS MASUK KE KERETA JAM BERAPA ？",
+            choices: [
+              "1. JAM 17.20",
+              "2. JAM 17.30",
+              "3. JAM 17.40"
+            ],
+            correct: 1
+          }
+        ]
+      }
+
+];
+let current = 0;
+let answers = Array(questions.length).fill(null);
+let examFinished = false;
+const questionsSession1 = questions;
+
+const sessions = [
+  questionsSession1,
+  questionsSession2,
+  questionsSession3,
+  questionsSession4
+];
+
+let sessionIndex = 0; // mulai dari sesi 1
+const sidebar = document.getElementById("sidebar");
+const image = document.getElementById("questionImage");
+const answersDiv = document.getElementById("answers");
+const finishBtn = document.getElementById("finishBtn");
+finishBtn.addEventListener("click", finishExam);
+const questionText = document.getElementById("questionText");
+const prevBtn = document.getElementById("prevBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const imageCache = {};
+
+function preloadImages() {
+  const urls = new Set();
+
+  sessions.forEach(session => {
+    session.forEach(q => {
+      if (q.image) urls.add(q.image);
+    });
+  });
+
+  urls.forEach(url => {
+    const img = new Image();
+    img.src = url;
+    imageCache[url] = img;
+  });
+}
+
+prevBtn.onclick = () => {
+  if (sessionIndex > 0) {
+    sessionIndex--;   // 🔥 balik ke sesi sebelumnya
+  }
+  startSession();     // reset sesi itu
+};
+nextBtn.onclick = () => {
+  if (sessionIndex < sessions.length - 1) {
+    sessionIndex++;
+    startSession();
+  } else {
+    alert("Semua sesi sudah selesai 🎉");
+  }
+};
+
+function updateTitle() {
+  document.getElementById("title").textContent =
+    `JIMUSHITSU SESI ${sessionIndex + 1}`;
+}
+function startSession() {
+  questions = sessions[sessionIndex];
+
+  // 🔥 KHUSUS SESI 4: SEMBUNYIKAN SIDEBAR
+/*  if (sessionIndex === 3) {
+    sidebar.style.display = "none";
+  } else {
+    sidebar.style.display = "block";
+  }        */
+   sidebar.style.display = "block";
+   
+  if (!questions || questions.length === 0) {
+    alert(`Sesi  belum tersedia`);
+    return;
+  }
+  current = 0;
+  answers = Array(questions.length).fill(null);
+  examFinished = false;
+
+  document.getElementById("result").style.display = "none";
+
+  finishBtn.style.display = "none";
+  finishBtn.disabled = false;
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+  image.style.display = "none";
+  image.src = "";
+  sidebar.innerHTML = "";
+  questions.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.onclick = () => loadQuestion(i);
+    sidebar.appendChild(btn);
+  });
+
+  updateTitle();
+  loadQuestion(0);
+}
+function toggleSessionMenu() {
+  const menu = document.getElementById("sessionMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function goSession(index) {
+  if (!sessions[index] || sessions[index].length === 0) {
+    alert("Sesi ini belum tersedia");
+    return;
+  }
+
+  sessionIndex = index;
+  document.getElementById("sessionMenu").style.display = "none";
+  startSession();
+}
+/* LOAD SOAL */
+function loadQuestion(index) {
+  current = index;
+  const q = questions[index];
+
+  
+  // 🔥 KHUSUS SESI 4 (HTML FULL)
+  if (q.type === "html") {
+    document.getElementById("questionHint").style.display = "none";
+    questionText.style.display = "none";
+    image.style.display = "none";
+  
+    answersDiv.innerHTML = q.html;
+  
+    updateSidebar();
+    return;
+  }
+if (q.type === "double") {
+    if (!Array.isArray(answers[current])) {
+      answers[current] = Array(q.questions.length).fill(undefined);
+    }
+    renderDoubleQuestion(q);
+    updateSidebar();
+    return;
+  }
+const hintDiv = document.getElementById("questionHint");
+
+if (q.hint) {
+  hintDiv.innerHTML = q.hint;
+  hintDiv.style.display = "block";
+} else {
+  hintDiv.style.display = "none";
+}
+  if (q.text) {
+    questionText.innerHTML = q.text;
+    questionText.style.display = "block";
+  } else {
+    questionText.style.display = "none";
+  }
+
+  // 🔥 RESET GAMBAR SETIAP PINDAH SOAL
+    image.style.display = "none";
+    image.src = "";
+    
+    if (q.image) {
+      image.src = q.image;
+      image.style.display = "block";
+      image.style.maxWidth = "none";
+      image.style.width = q.imageWidth
+        ? q.imageWidth + "px"
+        : "470px";
+      image.style.height = "auto";
+    }
+  answersDiv.innerHTML = "";
+    
+  // ===== CUSTOM AUDIO BUTTON =====
+    const oldFake = document.getElementById("fakeAudio");
+    if (oldFake) oldFake.remove();
+    
+    const oldReal = document.getElementById("realAudio");
+    if (oldReal) oldReal.remove();
+    
+    if (q.audio) {
+      const fakeBtn = document.createElement("div");
+      fakeBtn.id = "fakeAudio";
+      fakeBtn.className = "fake-audio";
+      fakeBtn.textContent = "▶️ Putar Audio";
+    
+      const audio = document.createElement("audio");
+      audio.id = "realAudio";
+      audio.src = q.audio;
+      audio.preload = "metadata";
+      audio.style.display = "none";
+    
+      questionText.insertAdjacentElement("afterend", fakeBtn);
+      fakeBtn.insertAdjacentElement("afterend", audio);
+    
+      audio.onloadedmetadata = () => {
+        fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+      };
+    
+      let timer;
+    
+      fakeBtn.onclick = () => {
+        if (!audio.paused) {
+          audio.pause();
+          fakeBtn.classList.remove("playing");
+          clearInterval(timer);
+          fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration - audio.currentTime)})`;
+        } else {
+          audio.play();
+          fakeBtn.classList.add("playing");
+      
+          clearInterval(timer);
+          timer = setInterval(() => {
+            fakeBtn.textContent =
+              `⏸️ Memutar... (${formatTime(audio.duration - audio.currentTime)})`;
+          }, 300);
+        }
+      };
+    
+      audio.onended = () => {
+        clearInterval(timer);
+        fakeBtn.classList.remove("playing");
+        fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+      };
+    }
+
+  q.choices.forEach((choice, i) => {
+    const label = document.createElement("label");
+  
+    const userAnswer = answers[current];
+    const correctAnswer = q.correct;
+  
+    label.innerHTML = `
+      <input type="radio" name="jawaban_${current}">${choice} ${examFinished && i === correctAnswer ? " ✅  (jawaban benar) " : ""} ${examFinished && i === userAnswer && i !== correctAnswer ? "❌ (jawaban kamu)" : ""}
+    `;
+  
+    const input = label.querySelector("input");
+  
+    if (userAnswer === i) input.checked = true;
+  
+    if (examFinished) {
+      input.disabled = true;
+  
+      if (i === correctAnswer) label.classList.add("correct");
+      if (i === userAnswer && i !== correctAnswer) label.classList.add("wrong");
+    } else {
+      input.onclick = () => {
+        answers[current] = i;
+        updateSidebar();
+        checkFinish();
+      };
+    }
+  
+    answersDiv.appendChild(label);
+  });
+  updateSidebar();
+}
+function renderDoubleQuestion(q) {
+  answersDiv.innerHTML = "";
+  // ===== CUSTOM AUDIO BUTTON UNTUK DOUBLE QUESTION =====
+  const oldFake = document.getElementById("fakeAudio");
+  if (oldFake) oldFake.remove();
+  
+  const oldReal = document.getElementById("realAudio");
+  if (oldReal) oldReal.remove();
+  
+  if (q.audio) {
+    const fakeBtn = document.createElement("div");
+    fakeBtn.id = "fakeAudio";
+    fakeBtn.className = "fake-audio";
+    fakeBtn.textContent = "▶️ Putar Audio";
+  
+    const audio = document.createElement("audio");
+    audio.id = "realAudio";
+    audio.src = q.audio;
+    audio.preload = "metadata";
+    audio.style.display = "none";
+  
+    answersDiv.insertAdjacentElement("afterbegin", fakeBtn);
+    fakeBtn.insertAdjacentElement("afterend", audio);
+  
+    audio.onloadedmetadata = () => {
+      fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+    };
+  
+    let timer;
+    fakeBtn.onclick = () => {
+      if (!audio.paused) {
+        audio.pause();
+        fakeBtn.classList.remove("playing");
+        clearInterval(timer);
+        fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration - audio.currentTime)})`;
+      } else {
+        audio.play();
+        fakeBtn.classList.add("playing");
+    
+        clearInterval(timer);
+        timer = setInterval(() => {
+          fakeBtn.textContent =
+            `⏸️ Memutar... (${formatTime(audio.duration - audio.currentTime)})`;
+        }, 300);
+      }
+    };
+  
+    audio.onended = () => {
+      clearInterval(timer);
+      fakeBtn.classList.remove("playing");
+      fakeBtn.textContent = `▶️ Putar Audio (${formatTime(audio.duration)})`;
+    };
+  }
+  // tampilkan hint di div khusus
+  const hintDiv = document.getElementById("questionHint");
+  if (q.hint) {
+    hintDiv.innerHTML = q.hint;
+    hintDiv.style.display = "block";
+  } else {
+    hintDiv.style.display = "none";
+  }
+// tampilkan text utama
+ if (q.text) {
+   const mainText = document.createElement("div");
+   mainText.className = "double-question-text"; // pakai class CSS
+   mainText.innerHTML = q.text;
+   answersDiv.appendChild(mainText);
+ }
+  // sembunyikan questionText karena double tidak punya text utama
+  questionText.style.display = "none";
+    if (q.image) {
+  image.src = q.image;
+  image.style.display = "block";
+  image.style.maxWidth = "none";
+  image.style.width = q.imageWidth
+    ? q.imageWidth + "px"
+    : "470px";
+  image.style.height = "auto";
+} else {
+  image.style.display = "none";
+  image.src = "";
+}
+
+  q.questions.forEach((subQ, subIndex) => {
+    const box = document.createElement("div");
+    box.style.marginBottom = "30px";
+
+    box.innerHTML = `
+      <div class="double-label"> Pertanyaan (${subQ.label})
+        </div>
+    
+      <div class="double-question-text">${subQ.text}
+        </div>
+    `;
+
+    subQ.choices.forEach((choice, i) => {
+      const label = document.createElement("label");
+
+      const userAnswer =
+        answers[current] ? answers[current][subIndex] : null;
+      
+      label.innerHTML = `
+        <input type="radio" 
+          name="q_${current}_${subIndex}">${choice}
+        
+        ${
+          examFinished && i === subQ.correct
+            ? " ✅ (jawaban benar)"
+            : ""
+        }
+        ${
+          examFinished &&
+          i === userAnswer &&
+          i !== subQ.correct
+            ? " ❌ (jawaban kamu)"
+            : ""
+        }
+      `;
+
+      const input = label.querySelector("input");
+      // ⬅️ FIX: balikin tanda biru kalau sudah pernah dijawab
+      if (
+        answers[current] &&
+        answers[current][subIndex] === i
+      ) {
+        input.checked = true;
+      }
+      if (examFinished) {
+        input.disabled = true;
+      
+        if (i === subQ.correct) label.classList.add("correct");
+        if (
+          answers[current] &&
+          answers[current][subIndex] === i &&
+          i !== subQ.correct
+        ) {
+          label.classList.add("wrong");
+        }
+      } else {
+        input.onclick = () => {
+          if (!answers[current]) answers[current] = [];
+          answers[current][subIndex] = i;
+         
+          updateSidebar();
+          checkFinish();
+        };
+      }
+
+      box.appendChild(label);
+    });
+
+    answersDiv.appendChild(box);
+  });
+}
+
+/* UPDATE SIDEBAR */
+function updateSidebar() {
+  [...sidebar.children].forEach((btn, i) => {
+    btn.classList.remove("active", "answered", "wrong");
+
+    // soal aktif
+    if (i === current) {
+      btn.classList.add("active");
+    }
+
+    // ===== MODE REVIEW (SETELAH SELESAI) =====
+    if (examFinished) {
+      if (questions[i].type === "double") {
+        const userAns = answers[i];
+        const total = questions[i].questions.length;
+
+        if (
+          !Array.isArray(userAns) ||
+          userAns.length < total ||
+          userAns.some(
+            (a, idx) => a !== questions[i].questions[idx].correct
+          )
+        ) {
+          btn.classList.add("wrong");
+        } else {
+          btn.classList.add("answered");
+        }
+      } else {
+        if (answers[i] === questions[i].correct) {
+          btn.classList.add("answered");
+        } else {
+          btn.classList.add("wrong");
+        }
+      }
+
+      return; // ⛔ STOP di sini, jangan lanjut ke mode ujian
+    }
+
+// ===== MODE UJIAN =====
+    if (questions[i].type === "double") {
+      if (
+        Array.isArray(answers[i]) &&
+        answers[i].some(a => a !== undefined)
+      ) {
+        btn.classList.add("answered");
+      }
+    } else {
+      if (answers[i] !== null) {
+        btn.classList.add("answered");
+      }
+    }
+  });
+}/* CEK SELESAI */
+function checkFinish() {
+  const selesai = questions.every((q, i) => {
+    if (q.type === "double") {
+      return (
+        Array.isArray(answers[i]) &&
+        answers[i].length === q.questions.length &&
+        answers[i].every(a => a !== undefined)
+      );
+    } else {
+      return answers[i] !== null;
+    }
+  });
+
+  if (selesai) {
+    finishBtn.style.display = "inline-block";
+  }
+}
+function resetExam() {
+  examFinished = false;
+  current = 0;
+  answers = Array(questions.length).fill(null);
+
+  document.getElementById("result").style.display = "none";
+
+  finishBtn.style.display = "none";
+  finishBtn.disabled = false;
+
+  prevBtn.style.display = "none";
+  nextBtn.style.display = "none";
+
+  sidebar.innerHTML = "";
+  answersDiv.innerHTML = ""; // 🔥 INI YANG KURANG
+
+  questions.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = i + 1;
+    btn.onclick = () => loadQuestion(i);
+    sidebar.appendChild(btn);
+  });
+
+  updateTitle();
+  loadQuestion(0);
+}
+function toggle(btn){
+  const box = btn.nextElementSibling;
+  box.style.display =
+    box.style.display === "block" ? "none" : "block";
+}
+
+function showJP(id){
+  document.getElementById(id).style.display = "block";
+}
+
+/* SELESAI */
+function finishExam() {
+  let score = 0;
+
+  questions.forEach((q, i) => {
+    if (q.type === "double") {
+      q.questions.forEach((sq, j) => {
+        if (answers[i] && answers[i][j] === sq.correct) {
+          score++;
+        }
+      });
+    } else {
+      if (answers[i] === q.correct) score++;
+    }
+  });
+
+  examFinished = true; // 🔥 MASUK MODE REVIEW
+  updateSidebar();
+  loadQuestion(current); // refresh tampilan soal
+
+  const resultDiv = document.getElementById("result");
+  resultDiv.style.display = "block";
+  resultDiv.innerHTML = `
+    UJIAN SELESAI<br><br>
+    NILAI ANDA: <span style="color:red">${score}</span> / 
+  ${questions.length}`;
+
+  finishBtn.disabled = true;
+  /* 🔥 tampilkan tombol navigasi */
+    prevBtn.style.display = "inline-block";
+    nextBtn.style.display = "inline-block";
+  
+}
+function formatTime(sec) {
+  sec = Math.ceil(sec);
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${m}:${s.toString().padStart(2,"0")}`;
+}
+/* INIT */
+startSession();
+</script>
+
+</body>
+</html>
