@@ -11,80 +11,117 @@
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
   }
 
+  * {
+    box-sizing: border-box;
+    font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+  
   body {
     margin: 0;
     min-height: 100vh;
-    background: linear-gradient(135deg, #6d5dfc, #8b7bff);
+    background: linear-gradient(135deg, #a18cd1, #fbc2eb);
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
   }
-
+  
+  /* CARD UTAMA */
   .card {
     width: 100%;
-    max-width: 380px;
-    background: #fff;
-    border-radius: 20px;
-    padding: 28px 20px 24px;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    max-width: 390px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 24px;
+    padding: 30px 22px 26px;
+    box-shadow: 0 25px 45px rgba(0,0,0,0.25);
+    animation: fadeIn 0.6s ease;
   }
-
+  
+  /* JUDUL */
   h2 {
     text-align: center;
-    margin: 0 0 24px;
-    font-size: 22px;
-    color: #333;
+    margin: 0 0 26px;
+    font-size: 24px;
+    font-weight: 700;
+    color: #4b3cc4;
   }
-
+  
+  /* GRID TOMBOL */
   .btn-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 18px;
   }
-
+  
+  /* TOMBOL */
   .btn {
     height: 64px;
     border: none;
-    border-radius: 16px;
-    background: #5b4ef3;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #6a5af9, #8f7bff);
     color: white;
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 600;
     cursor: pointer;
-    transition: 0.15s ease;
+    letter-spacing: 0.4px;
+    box-shadow: 0 10px 20px rgba(106,90,249,0.45);
+    transition: all 0.2s ease;
   }
-
+  
+  /* HOVER & CLICK */
+  .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(106,90,249,0.6);
+  }
+  
   .btn:active {
-    transform: scale(0.97);
-    background: #4a3fe0;
+    transform: scale(0.95);
+    box-shadow: 0 6px 14px rgba(106,90,249,0.35);
   }
-
+  
+  /* RESULT BOX */
   .result {
-    margin-top: 22px;
-    padding: 16px;
-    border-radius: 14px;
-    background: #f1f5f9;
+    margin-top: 26px;
+    padding: 18px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #fdfbfb, #ebedee);
     text-align: center;
     min-height: 72px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-  }
-
-  .kanji {
-    font-size: 26px;
-    font-weight: bold;
-  }
-
-  .romaji {
     font-size: 15px;
     color: #555;
   }
-
-  .arti {
-    margin-top: 4px;
+  
+  /* TEKS */
+  .kanji {
+    font-size: 28px;
+    font-weight: 700;
+    color: #5b4ef3;
+  }
+  
+  .romaji {
     font-size: 15px;
+    color: #666;
+  }
+  
+  .arti {
+    margin-top: 6px;
+    font-size: 15px;
+    color: #333;
+  }
+  
+  /* ANIMASI */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 </style>
 </head>
