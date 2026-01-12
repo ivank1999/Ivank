@@ -215,7 +215,33 @@ text-decoration: underline;
   background: #ffffff;
   border: 3px solid #3b82f6;
   color: #000;
-}</style>
+}
+.btn-back {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 9999;
+
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 600;
+
+  border: 2px solid #000;
+  border-radius: 8px;
+
+  background: #ff9800;
+  color: #000;
+
+  cursor: pointer;
+}
+
+.btn-back:active {
+  transform: scale(0.95);
+}
+
+
+
+</style>
 </head>
 
 <body>
@@ -247,7 +273,11 @@ text-decoration: underline;
       <button id="finishBtn" style="display:none;">SELESAI</button>
       <button id="nextBtn" style="display:none;">LANJUT ➡</button>
     </div>
-    
+    <button class="btn-back" onclick="goBackMenu()">
+      ⬅ Daftar
+    </button>
+
+
 <div id="result" style="
       display:none;
       margin-top:30px;
@@ -1042,6 +1072,9 @@ function resetExam() {
 
   updateTitle();
   loadQuestion(0);
+}
+function goBackMenu() {
+  window.location.href = "https://ivank1999.github.io/Ivank/kisikisijfta2.html";
 }
 /* SELESAI */
 function finishExam() {
