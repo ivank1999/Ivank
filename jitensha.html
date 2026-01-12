@@ -340,11 +340,11 @@ let questions = [
     imageWidth: 450,
     hint: "",
     choices: [
-      "つける",
-      "のせる",
-      "かける"
+      "つける (付ける)",
+      "のせる (載せる)",
+      "かける (掛ける)"
     ],
-    correct: 2
+    correct: 0
   },
 
   // ===== SOAL 4 =====
@@ -526,9 +526,9 @@ const questionsSession2 = [
       </div>
     `,
     choices: [
-      "1. やすんでもいですか",
-      "2. やすんでもいいですか",
-      "3. やすんでもいいです"
+      "1. 休んでもいですか",
+      "2. 休んでもいいですか？",
+      "3. 休んでもいいです"
     ],
     correct: 1
   },
@@ -748,7 +748,7 @@ const questionsSession3 = [
   // ===== 2 =====
   {
     image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/abc.PNG",
-    hint: "bertanya tentang ikeda san",
+    hint: "Nanya orang. Ada 3 orang, lagi duduk 2 & diri pojok sendiri. nah pilih yang lg duduk pakai kacamata / めがね.",
     text: "Ikeda-san yang mana?",
     choices: [
       "1. A",
@@ -764,7 +764,7 @@ const questionsSession3 = [
     text: "Piringnya diletakkan di mana?",
     choices: [
       `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/piring1.PNG" width="230"><br>Opsi 1</div>`,
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/piring2.PNG" width="230"><br>Opsi 2</div>`,
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/piring2.PNG" width="230"><br>コーヒーカップの横</div>`,
       `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/piring3.PNG" width="230"><br>Opsi 3</div>`
     ],
     correct: 1
@@ -775,9 +775,9 @@ const questionsSession3 = [
     hint: "Sumpit diletakkan di mana?",
     text: "Sumpit nya di taruh mana?<br>Nanti di pilihan jawaban ada kotak persegi panjang berwarna hijau, kuning, coklat diatas nya ada sumpit jawabnya yang COKLAT",
     choices: [
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxkuning.PNG" width="230"><br>Kuning</div>`,
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxhijau.PNG" width="230"><br>Hijau</div>`,
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxcoklat.PNG" width="230"><br>Coklat</div>`
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxkuning.PNG" width="230"><br>黄色</div>`,
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxhijau.PNG" width="230"><br>緑</div>`,
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxcoklat.PNG" width="230"><br>茶色</div>`
     ],
     correct: 2
   },
@@ -809,8 +809,8 @@ const questionsSession3 = [
   // ===== 8 =====
   {
     hint: "Percakapan tentang kulkas lama ",
-    text: "Apa yang harus dilakukan terhadap kulkas lama?",
-    choices: ["diisi makanan", "dibakar", "dibuang"],
+    text: "Laki harus melakukan apa dengan kulkas? ",
+    choices: ["gambar ngeluarin buah²an", "dibakar", "dibuang"],
     correct: 0
   },
 
@@ -833,9 +833,9 @@ const questionsSession3 = [
     choices: [
       "2 obat putih 1 obat merah",
       "3 obat merah",
-      "2 obat merah 1 obat putih"
+      "1 obat putih 2 obat merah"
     ],
-    correct: 0
+    correct: 2
   },
 
 
@@ -860,20 +860,34 @@ const questionsSession3 = [
 const questionsSession4 = [
 
   // ===== SOAL 1 =====
-  {
-    hint: "Ucapan selamat",
-    text: "Ada masangger tentang ucapan selamat? <br>#ucapan tentang apa ? ",
-    choices: ["gambar hari ulang tahun", "gambar wisuda", "gambar menikah"],
-    correct: 0
-  },
+{
+         image: "",
+          imageWidth: 480,
+          type: "double",
+           hint: "Messenger お誕⽣日おめでとう <br> lalu jawab pertanyaan A dan B",
+          questions: [
+            {
+              label: "A",
+              text: "sedang melakukan apa?",
+              choices: [
+                      "Gambar kue ulang tahun",
+                      "Gambar Wisuda",
+                      "Gambar Nikahan"
+              ],
+              correct: 0
+            },
+            {
+              label: "B",
+              text: "Hari ini pergi ke pesta?",
+              choices: ["gambar piknik", "gambar Pesta", "gambar bakar"],
+                    correct: 1
+           
+            }
+          ]
+        },
+  
 
   // ===== 14 =====
-  {
-    hint: "Ada acara apa?",
-    text: "Disana ada acara apa?",
-    choices: ["gambar piknik", "gambar pesta", "gambar bakar"],
-    correct: 1
-  },
 
   // ===== 15 =====
   {
@@ -932,7 +946,7 @@ const questionsSession4 = [
             label: "A",
             text: "kenapa saudara niko membeli mesin pembersih debu itu?",
             choices: [
-                    "ともだちからいいといったから",
+                    "友達からいいといいました",
                     "ともだちからやすいといったから",
                     "ともだちからゆうめいといったから"
             ],
@@ -942,7 +956,7 @@ const questionsSession4 = [
             label: "B",
             text: "hal apa yg di sesali setelah beli vacum cleaner ?",
             choices: [
-              "1. サイズ は すこし 大きいこと",
+              "1. サイズは大きです",
               "2. サイズ は あまり 大きくないこと"
              
             ],
