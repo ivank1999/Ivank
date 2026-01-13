@@ -390,51 +390,42 @@ let questions = [
 
   // ===== SOAL 5 =====
   {
-    hint: "pilihlah kata yang paling sesuai。",
-    text: "朝 シャワー を________",
-    choices: [
-      "行きます",
-      "浴びます",
-      "乗ります"
-    ],
+      "hint": "pilihlah kata yang paling sesuai。",
+      "text": "甘いものは_______",
+      "choices": [
+        "走ります (はしります)",
+        "苦手です (にがてです)",
+        "昨日です (きのうです)"
+      ],
+    
     correct: 1
   },
 
   // ===== SOAL 6 =====
   {
-    hint: "pilihlah kata yang paling sesuai。",
-    text: "あまいもの が______です",
-    choices: [
-      "が",
-      "おおい",
-      "にがて"
-    ],
-    correct: 2
-  },
+      "hint": "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+      "text": "あまり<span class='kanji'>面白くなかった</span>",
+      "choices": [
+        "おもしろくなかった",
+        "めんしろくなかった",
+        "おもはくなかった"
+      ],
+      "correct": 0
+    },
 
   // ===== SOAL 7 =====
   {
-    hint: "pilihlah kata yang paling sesuai。",
-    text: "昨日 の 映画 は あまり______",
-    choices: [
-      "おもしろかった",
-      "おもしろいかった",
-      "おもしろくなかった"
+    "hint": "pilihlah kata yang paling sesuai。",
+    "text": "シャワーを______",
+    "choices": [
+      "食べます (たべます)",
+      "走ります (はしります)",
+      "浴びます (あびます)"
     ],
-    correct: 2
+    "correct": 2
   },
 
   // ===== SOAL 8 =====
-  {
-    hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
-    text: "今日はいい<span class='kanji'>天気</span>ですね",
-    choices: [
-      "てんき",
-      "でんき",
-      "げんき"
-    ],
-    correct: 0
-  },
 
   // ===== SOAL 9 =====
   {
@@ -450,14 +441,14 @@ let questions = [
 
   // ===== SOAL 10 =====
   {
-    hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
-    text: "さくら<span class='kanji'>病院</span>で ごはん を 食べましょう",
-    choices: [
-      "びよういん",
-      "びょいん",
-      "びょういん"
+    "hint": "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    "text": "<span class='kanji'>天気</span>",
+    "choices": [
+      "げんき",
+      "てんけ",
+      "てんき"
     ],
-    correct: 2
+    "correct": 2
   },
 
   // ===== SOAL 11 =====
@@ -474,26 +465,26 @@ let questions = [
 
   // ===== SOAL 12 =====
   {
-    hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
-    text: "とりで <span class='kanji'>映画</span>を み に いきます",
-    choices: [
-      "えいが",
-      "がっか",
-      "えいご"
+    "hint": "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    "text": "とりで <span class='kanji'>映画</span>を見ました",
+    "choices": [
+      "えいがをみました",
+      "もとをみました",
+      "ぼんをみました"
     ],
-    correct: 0
+    "correct": 0
   },
 
   // ===== SOAL 13 =====
   {
-    hint: "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
-    text: "このへや の もの を ホール に <span class='kanji'>運んで</span>ください",
-    choices: [
-      "はこんで",
-      "あそんで",
-      "よんで"
+    "hint": "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+    "text": "<span class='kanji'>病院</span>",
+    "choices": [
+      "びょういん",
+      "びょうえん",
+      "やまいいん"
     ],
-    correct: 0
+    "correct": 0
   }
 
 ];
@@ -501,156 +492,98 @@ const questionsSession2 = [
 
   // ===== SOAL 1 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：これは私が作りました、料理です。
-      </div>
-      <div class="dialog female">
-        B：ありがとうございます。
-      </div>
-    `,
-    choices: [
-      "1. りょうり",
-      "2. りょり",
-      "3. りうり"
-    ],
-    correct: 0
-  },
+      "hint": "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+      "text": "趣味は読書で、<span class='kanji'>特に</span>歴史の本を読みます",
+      "choices": [
+        "とくに",
+        "とっきに",
+        "とくじ"
+      ],
+      "correct": 0
+    },
 
   // ===== SOAL 2 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：やすみはどこへ行きましたか。
-      </div>
-      <div class="dialog female">
-        B：どこにも行きませんでした。家で映画をみました。
-      </div>
-      <div class="dialog male">
-        A：映画はどうでしたか。
-      </div>
-      <div class="dialog female">
-        B：あまり. .。
-      </div>
-    `,
-    choices: [
-      "1. おもしろかったです",
-      "2. おもしました",
-      "3. おもしろくなかった"
+    "hint": "MOBIL MACET",
+    "text": "車が____ので、渋滞が起こっています。",
+    "choices": [
+      "1. 眠い (ねむい)",
+      "2. 甘い (あまい)",
+      "3. 多すぎる (おおすぎる)"
     ],
-    correct: 2
+    "correct": 2
   },
 
   // ===== SOAL 3 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：金曜日に午後、銀行に行きたいですか。
-      </div>
-      <div class="dialog female">
-        B：そうだですか、はい大丈夫です
-      </div>
-    `,
-    choices: [
-      "1. 休んでもいですか",
-      "2. 休んでもいいですか？",
-      "3. 休んでもいいです"
-    ],
-    correct: 1
-  },
+      "hint": "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+      "text": "よていのほかのひとが______",
+      "choices": [
+        "1. おしらせするために",
+        "2. ねむいです",
+        "3. あまかった"
+      ],
+      "correct": 0
+    },
 
   // ===== SOAL 4 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：京都のシアワイカがデシタカ。
-      </div>
-      <div class="dialog female">
-        B：きれいなお寺たくさん見られて、よかったです。
-      </div>
-      <div class="dialog male">
-        A：午後はよかったです。
-      </div>
-      <div class="dialog female">
-        B：デモ、京都のクルマが. 、重体でつかれちゃいました。
-      </div>
-    `,
-    choices: [
-      "1. おおいすぎ",
-      "2. おおすぎ",
-      "3. おすぎ"
-    ],
-    correct: 1
-  },
+      "hint": "Pililah cara baca yang tepat dari Kanji yang digarisbawahi",
+      "text": "バナナの<span class='kanji'>料理です。</span>",
+      "choices": [
+        "りょうりです",
+        "りょうりいです",
+        "りょりです"
+      ],
+      "correct": 0
+    },
 
 
   // ===== SOAL 5 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：すみません、これはなんですか。
-      </div>
-      <div class="dialog female">
-        B：ああ、これですか？みんなの羊飼いが増えています。ほのかの人のように、知られないように使います。
-      </div>
+    "hint": "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    "text": `
+        <div class="dialog male">
+          A：すみません、ここは_____。
+        </div>
     `,
-    choices: [
-      "1. しらせるために",
-      "2. しらせ",
-      "3. しれば"
+    "choices": [
+      "1. ききますか",
+      "2. どこですか",
+      "3. たべますか"
     ],
-    correct: 0
+    "correct": 1
   },
   // ===== SOAL 6 =====
   {
     hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
     text: `
       <div class="dialog male">
-        A：インタネット を みて、びっくりしました。
-      </div>
-      <div class="dialog female">
-        B：どうしたんですか。
-      </div>
-      <div class="dialog male">
-        A：わたし の くに の ゆうめいなサッカー選手 が にほんじん の かしゅ と。。。。。。。。。。
-      </div>
-      <div class="dialog female">
-        B：すごいですね。
-            </div>
-      <div class="dialog female">
-        A：すきなかしゅですから、うれしいです。
+        A：結婚した_____。
       </div>
     `,
     choices: [
       "1. けっこん",
-      "2. けっこんするように",
-      "3. けっこんしたそうです"
+      "2. ように",
+      "3. そうです"
     ],
     correct: 2
   },
 
   // ===== SOAL 7 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：すみません、ここは_____。
-      </div>
-      <div class="dialog female">
-        B：東京です。
-      </div>
+    "hint": "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    "text": `
+        <div class="dialog male">
+          A：ジュース_____。
+        </div>
     `,
-    choices: [
-      "1. いつですか",
-      "2. なんですか",
-      "3. どこですか"
+    "choices": [
+      "1. 歩きます",
+      "2. 書きます",
+      "3. お願いします"
     ],
-    correct: 2
+    "correct": 2
   },
 
   // ===== SOAL 8 =====
@@ -658,14 +591,11 @@ const questionsSession2 = [
     hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
     text: `
       <div class="dialog male">
-        A：おきゃくさまはなにをのみますか。
-      </div>
-      <div class="dialog female">
-        B：えっと、ジュースを_____。
+        A：これから、____。
       </div>
     `,
     choices: [
-      "1. お願いします",
+      "1. どうしたんですか",
       "2. しています",
       "3. してもらえませんか"
     ],
@@ -674,109 +604,55 @@ const questionsSession2 = [
 
   // ===== SOAL 9 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：あなたのしゅみはなんですか。
-      </div>
-      <div class="dialog female">
-        B：本をよむことです。
-      </div>
-      <div class="dialog male">
-        A：どんな本ですか。
-      </div>
-      <div class="dialog female">
-        B：_____歴史の本です。
-      </div>
+    "hint": "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    "text": `
+        <div class="dialog male">
+          A：仕事を_____。
+        </div>
     `,
-    choices: [
-      "1. とくに",
-      "2. たしかに",
-      "3. そのままに"
+    "choices": [
+      "1. 食べてもいいですか",
+      "2. 飲んでもいいですか",
+      "3. 休んでもいいですか"
     ],
-    correct: 0
+    "correct": 2
   },
   // ===== SOAL 10 =====
   {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
+    hint: "Bunpou untuk menunjukkan bahwa sesuatu yang telah dilakukan lebih baik atau lebih disukai dibandingkan dengan pilihan lain yang tidak dilakukan.",
     text: `
       <div class="dialog male">
-        A：このあと。
+        A：風邪をひきました。
       </div>
       <div class="dialog female">
-        B：おなかがすきましたね、なにか食べましょう。
-      </div>
-      <div class="dialog male">
-        A：そうですね、食べましょう。
+        B：もっと休む_____。
       </div>
     `,
     choices: [
-      "1. どうしたんですか",
-      "2. どうしますか",
-      "3. どうします"
+      "1. たいです",
+      "2. ほうがいいです",
+      "3. です"
     ],
     correct: 1
-  },
-
-  // ===== SOAL 11 =====
-  {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：5月に北海道に行きたいですけど、ナニをモッタライデスカ 。
-      </div>
-      <div class="dialog female">
-        B：5月はまだサムイですよ。せーたーやうわぎをもっと大事におもいます 。
-      </div>
-      <div class="dialog male">
-        A：*そうなんですか *もうあたかいとおもいます
-      </div>
-    `,
-    choices: [
-      "1. そうなんですか",
-      "2. それなら",
-      "3. そして"
-    ],
-    correct: 0
-  },
-
-  // ===== SOAL 12 =====
-  {
-    hint: "bacalah percakapan berikut, kemudian pilihlah jawaban yang paling sesuai。",
-    text: `
-      <div class="dialog male">
-        A：あれ！さいふがありません、コンビニにいるときあたのに 。
-      </div>
-      <div class="dialog female">
-        B：_____。
-      </div>
-    `,
-    choices: [
-      "1. にわかに",
-      "2. もちろん",
-      "3. もしかしたら"
-    ],
-    correct: 2
   }
-
 ];
 const questionsSession3 = [
 
   // ===== 1 =====
   {
-    hint: "",
+    hint: "池田さんは休日は<br>Ikeda hari libur ",
     text: "Di hari libur melakukan apa?",
     choices: [
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/berenang.PNG" width="300"><br>Opsi 1</div>`,
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/basket.PNG" width="300"><br>Opsi 2</div>`,
-      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/sepakbola.PNG" width="300"><br>Opsi 3</div>`
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/berenang.PNG" width="300"><br>泳ぎます</div>`,
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/basket.PNG" width="300"><br>バスケットボールをします</div>`,
+      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/sepakbola.PNG" width="300"><br>サッカーをします</div>`
     ],
     correct: 2
   },
 
   // ===== 2 =====
   {
-    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/abc.PNG",
+    image: "https://raw.githubusercontent.com/ivank1999/Ivank/main/ABC.PNG",
     hint: "Nanya orang. Ada 3 orang, lagi duduk 2 & diri pojok sendiri. nah pilih yang lg duduk pakai kacamata / めがね.",
     text: "Ikeda-san yang mana?",
     choices: [
@@ -801,8 +677,8 @@ const questionsSession3 = [
 
   // ===== 4 =====
   {
-    hint: "Sumpit diletakkan di mana?",
-    text: "Sumpit nya di taruh mana?<br>Nanti di pilihan jawaban ada kotak persegi panjang berwarna hijau, kuning, coklat diatas nya ada sumpit jawabnya yang COKLAT",
+    hint: "Nanti di pilihan jawaban ada kotak persegi panjang berwarna hijau, kuning, coklat diatas nya ada sumpit",
+    text: "Sumpit nya di taruh mana?",
     choices: [
       `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxkuning.PNG" width="230"><br>黄色</div>`,
       `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/boxhijau.PNG" width="230"><br>緑</div>`,
@@ -813,15 +689,15 @@ const questionsSession3 = [
 
   // ===== 5 =====
   {
-    hint: "Kegiatan di Okinawa",
-    text: "Di okinawa melakukan apa ?<br>Telah melakukan diving tapi harus berhenti karena hujan setelah itu saya naik perahu",
-    choices: ["Gambar Perahu", "Gambar Diving", "Gambar Jetsky"],
-    correct: 0
+    hint: "Telah melakukan diving tapi harus berhenti karena hujan setelah itu saya naik perahu",
+    text: "Tanya perempuan ke okinawa ngapain?",
+    choices: ["Gambar Orang Diving", "Gambar Orang Naik Perahu", "Gambar Orang naik Jetsky"],
+    correct: 1
   },
 
   // ===== 6 =====
   {
-    hint: "Membeli tiket",
+    hint: "Nanya harga tiket",
     text: "Percakapan tentang membeli tiket Ada cewek membeli tiket harga?",
     choices: ["250円", "100円", "500円"],
     correct: 0
@@ -829,7 +705,7 @@ const questionsSession3 = [
 
   // ===== 7 =====
   {
-    hint: "",
+    hint: "Tanya² kelas hari apa aja & materinya apa, dia mau ikut kelas kaiwa",
     text: "Percakapan tentang kelas jepang Kelas kaiwa hari apa?",
     choices: ["水曜日", "土曜日", "木曜日"], 
     correct: 1
@@ -839,101 +715,165 @@ const questionsSession3 = [
   {
     hint: "Percakapan tentang kulkas lama ",
     text: "Laki harus melakukan apa dengan kulkas? ",
-    choices: ["gambar ngeluarin buah²an", "dibakar", "dibuang"],
+    choices: ["gambar ngeluarin buah²an", "gambar dibakar", "gambar dibuang"],
     correct: 0
   },
 
   // ===== 9 =====
   {
-    hint: "Dokter dan buah",
-    text: "percakapan dengan dokter, <br>apakah boleh makan buah? buah apa yang boleh di makan",
-    choices: [
-          `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/jeruk2.PNG" width="230"><br>Opsi 1</div>`,
-          `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/apelmerah.PNG" width="230"><br>Opsi 2</div>`,
-          `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/gedang.PNG" width="230"><br>Opsi 3</div>`
-        ],
-    correct: 2
+     image: "",
+      imageWidth: 480,
+      type: "double",
+      hint: "LAGI PERIKSA DI RUMAH SAKIT",
+      questions: [
+        {
+          label: "A",
+          text: "Ditanya buah apa yg boleh dimakan?",
+          choices: [
+          `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/jeruk2.PNG" width="230"><br>みかん</div>`,
+                      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/apelmerah.PNG" width="230"><br>りんご</div>`,
+                      `<div style="text-align:center"><img src="https://raw.githubusercontent.com/ivank1999/Ivank/main/gedang.PNG" width="230"><br>バナナ</div>`
+          ],
+          correct: 2
+        },
+        {
+          label: "B",
+          text: "Obat apa yang diminum?",
+          choices: [
+                "2 obat putih 1 obat merah",
+                "3 obat merah",
+                "1 obat putih 2 obat merah"
+              ],
+              correct: 2
+        }
+      ]
   },
 
   // ===== 10 =====
-  {
-    hint: "Obat pagi hari",
-    text: "Obat apa yang diminum pagi hari?",
-    choices: [
-      "2 obat putih 1 obat merah",
-      "3 obat merah",
-      "1 obat putih 2 obat merah"
-    ],
-    correct: 2
-  },
-
-
+  
+{
+     image: "",
+      imageWidth: 480,
+      type: "double",
+      hint: "Ada pengumuman panjang tentang persiapan meeting dan makan bento",
+      questions: [
+        {
+          label: "A",
+          text: "Apa yang harus dilakukan pada jam 10",
+          choices: ["Gambar カフェ (cafe)", "gambar 警察署 (kantor polisi)", "Gambar 受付 (resepsionis)"],
+                  correct: 2
+        },
+        {
+          label: "B",
+          text: "Makan bento di mana?",
+          choices: ["Gambar 事務室 (Kantor)", "Gambar 食堂 (kantin)", "Gambar 会議室 (ruang rapat)"],
+                  correct: 0
+        }
+      ]
+  }
   // ===== 11 =====
-  {
-    hint: "Pengumuman meeting",
-    text: "Ada pengumuman panjang tentang persiapan meeting.<br>1. Apa yang harus dilakukan pada jam 10",
-    choices: ["gambar di cafe", "gambar di kantor polisi", "Gambar di uketsuke"],
-    correct: 2
-  },
+  
 
   // ===== 12 =====
-  {
-    hint: "Makan bento",
-    text: "Makan bento di mana?",
-    choices: ["gambar ruang rapat", "gambar kantin", "gambar kantor"],
-    correct: 0
-  }
+  
  
   // ===== 13 =====
 ];
 const questionsSession4 = [
 
   // ===== SOAL 1 =====
+  {
+     image: "",
+      imageWidth: 480,
+      type: "double",
+      hint: "Email dari si A buat si B... Ngasih tau ke si B apa? Si B habis itu disuruh kemana?",
+      questions: [
+        {
+          label: "A",
+          text: "Kalo dapat telpon dari?",
+          choices: [
+            "1. たなかさんから電話がある",
+            "2. やまださんから電話がある",
+            "3. さとうさんから電話がある"
+          ],
+          correct: 1
+        },
+        {
+          label: "B",
+          text: "sehabis makan siang Yamada-san disuruh pergi ke mana?",
+          choices: [
+            "1. やまださんのじむしょ (Kantor)",
+            "2. やまださんのとしょかん (Perpustakaan)",
+            "3. やまださんのかいぎしつ (Ruang rapat)"
+          ],
+          correct: 0
+        }
+      ]
+    },
 {
          image: "",
           imageWidth: 480,
           type: "double",
-           hint: "Messenger お誕⽣日おめでとう <br> lalu jawab pertanyaan A dan B",
+           hint: "Messenger お誕⽣日おめでとう",
           questions: [
             {
               label: "A",
               text: "sedang melakukan apa?",
               choices: [
-                      "Gambar kue ulang tahun",
-                      "Gambar Wisuda",
-                      "Gambar Nikahan"
+              "Gambar kue ulang tahun",
+              "Gambar Wisuda",
+              "Gambar Nikahan"
               ],
               correct: 0
             },
             {
               label: "B",
               text: "Hari ini pergi ke pesta?",
-              choices: ["gambar piknik", "gambar Pesta", "gambar bakar"],
-                    correct: 1
-           
+             choices: [
+                "ピクニック (piknik)",
+                "パーティー (pesta) ",
+                "バーベキュー (bakar / barbeque)"
+            ],
+              correct: 1
             }
           ]
         },
   
 
   // ===== 14 =====
-
+{
+     image: "",
+      imageWidth: 480,
+      type: "double",
+      hint: "",
+      questions: [
+        {
+          label: "A",
+          text: "",
+          choices: [
+            "1. ",
+            "2. メール書きます。日本語を話します",
+            "3. "
+          ],
+          correct: 1
+        },
+        {
+          label: "B",
+          text: "はじめてその人は何時行きますか？",
+          choices: [
+            "1. 9:30",
+            "2. 10.00",
+            "3. 11.30"
+          ],
+          correct: 0
+        }
+      ]
+    },
   // ===== 15 =====
-  {
-    hint: "Telepon",
-    text: "Ngasih tau kalau ada telefon.<br> 1. Telfon dari siapa  ",
-    choices: ["リファルーさん", "山田さん", "田中さん"],
-    correct: 1
-  },
+  
 
   // ===== 16 =====
-  {
-    hint: "Yamada-san disuruh ke mana?",
-    text: "Yamada-san disuruh pergi ke mana?",
-    choices: ["じむしつ", "としょかん", "かいぎしつ"],
-    correct: 0
-  },
-
+  
   // ===== 17 =====
     {
      image: "",
@@ -953,7 +893,7 @@ const questionsSession4 = [
         },
         {
           label: "B",
-          text: "di lantai 3F sampe jam berapa?",
+          text: "di lantai 3F から / mulai jam berapa?",
           choices: [
             "1. 10.00",
             "2. 11.00",
@@ -963,7 +903,35 @@ const questionsSession4 = [
         }
       ]
     },
-
+{
+         image: "",
+          imageWidth: 480,
+          type: "double",
+          hint: " Tentang himbauan gempa<br> lalu jawab pertanyaan A dan B",
+          questions: [
+            {
+              label: "A",
+              text: "Persiapan buah²an untuk berpa lama?",
+              choices: [
+                      "1週間",
+                      "2週間",
+                      "3週間"
+              ],
+              correct: 0
+            },
+            {
+              label: "B",
+              text: "ketika jishin(gempah) apa yg harus dilakukan jika tinggal didekat laut?",
+              choices: [
+                "1. 何も食べません",
+                "2. なにももってないで、すぐにたかいところににげます",
+                "3. 何も飲みません"
+               
+              ],
+              correct: 1
+            }
+          ]
+        },
   // ===== 19 =====
   {
        image: "",
@@ -973,7 +941,7 @@ const questionsSession4 = [
         questions: [
           {
             label: "A",
-            text: "kenapa saudara niko membeli mesin pembersih debu itu?",
+            text: "kenapa dia beli vacum cleaner?",
             choices: [
                     "友達からいいといいました",
                     "ともだちからやすいといったから",
@@ -986,69 +954,22 @@ const questionsSession4 = [
             text: "hal apa yg di sesali setelah beli vacum cleaner ?",
             choices: [
               "1. サイズは大きです",
-              "2. サイズ は あまり 大きくないこと"
+              "2. たかいです",
+              "3. いいです"
              
             ],
             correct: 0
           }
         ]
-      },
+      }
 
   // ===== 20 =====
-{
-       image: "",
-        imageWidth: 480,
-        type: "double",
-        hint: "Ada brosur event tentang kelas kaiwa bahasa jepang <br> lalu jawab pertanyaan A dan B",
-        questions: [
-          {
-            label: "A",
-            text: "Apa yang dilakukan di Waiwai Cafe?",
-                choices: ["勉強します", "泳ぎます", "日本語を話しています"],
-                correct: 2
-          },
-          {
-            label: "B",
-            text: "orang yg baru pertama kali datang jam berapa?",
-            choices: ["19:27", "19:45", "09:45"],
-                correct: 2
-          }
-        ]
-},
+
 
       
       
   // ===== 23 =====
-  {
-         image: "",
-          imageWidth: 480,
-          type: "double",
-          hint: " Tentang himbauan gempa<br> lalu jawab pertanyaan A dan B",
-          questions: [
-            {
-              label: "A",
-              text: "persiapan makanannya sebaiknya untuk berapa hari?",
-              choices: [
-                      "1週間",
-                      "2週間",
-                      "3週間"
-              ],
-              correct: 0
-            },
-            {
-              label: "B",
-              text: "ketika jishin apa yg harus dilakukan jika tinggal didekat laut?",
-              choices: [
-                "1. 何も食べません",
-                "2. なにももってないで、すぐにたかいところににげます",
-                "3. 何も飲みません"
-               
-              ],
-              correct: 1
-            }
-          ]
-        },
-
+  
   // ===== 24 =====
   
 ];
