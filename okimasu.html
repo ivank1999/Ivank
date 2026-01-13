@@ -1566,27 +1566,26 @@ if (sessionIndex === sessions.length - 1 && allSessionsCompleted()) {
 function finishExam() {
   let correctCount = 0;
 
+  // 🔥 HITUNG NILAI HANYA SESI 1–3
   for (let sIndex = 0; sIndex < 3; sIndex++) {
-  const session = sessions[sIndex];
+    const session = sessions[sIndex];
 
-  session.forEach((q, i) => {
-    const ans = allAnswers[sIndex][i];
+    session.forEach((q, i) => {
+      const ans = allAnswers[sIndex][i];
 
-    if (q.type === "double") {
-      q.questions.forEach((sq, j) => {
-        if (ans && ans[j] === sq.correct) {
+      if (q.type === "double") {
+        q.questions.forEach((sq, j) => {
+          if (ans && ans[j] === sq.correct) {
+            correctCount++;
+          }
+        });
+      } else {
+        if (ans === q.correct) {
           correctCount++;
         }
-      });
-    } else {
-      if (ans === q.correct) correctCount++;
-    }
-  });
-} else {
-        if (ans === q.correct) correctCount++;
       }
     });
-  });
+  }
 
   const TOTAL_QUESTIONS = 36;
   const MAX_SCORE = 250;
@@ -1602,13 +1601,11 @@ function finishExam() {
   examFinished = true;
   examFinishedGlobal = true;
 
-  // 🔥 SYNC JAWABAN SESI AKTIF
   answers = allAnswers[sessionIndex];
 
-  // 🔥 AKTIFKAN MODE REVIEW
   updateSidebar();
   loadQuestion(current);
-  
+
   const resultDiv = document.getElementById("result");
   resultDiv.style.display = "block";
   resultDiv.innerHTML = `
@@ -1619,7 +1616,6 @@ function finishExam() {
   `;
 
   finishBtn.disabled = true;
- // 🔥 tombol navigasi review
   prevBtn.style.display = "inline-block";
   nextBtn.style.display = "inline-block";
 }
