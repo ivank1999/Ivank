@@ -1161,6 +1161,13 @@ const questionsSession4 = [
     `
   }
 ];
+let allAnswers = [
+  [], // sesi 1
+  [], // sesi 2
+  [], // sesi 3
+  []  // sesi 4
+];
+let examFinishedGlobal = false;
 let current = 0;
 let answers = Array(questions.length).fill(null);
 let examFinished = false;
@@ -1216,10 +1223,17 @@ function startSession() {
     return;
   }
   current = 0;
-  answers = Array(questions.length).fill(null);
-  examFinished = false;
-
-  document.getElementById("result").style.display = "none";
+  answers = allAnswers[sessionIndex];
+  
+  if (!answers || answers.length === 0) {
+    answers = Array(questions.length).fill(null);
+    allAnswers[sessionIndex] = answers;
+  }
+  examFinished = examFinishedGlobal;
+  
+  if (!examFinishedGlobal) {
+    document.getElementById("result").style.display = "none";
+  }
 
   finishBtn.style.display = "none";
   finishBtn.disabled = false;
@@ -1235,7 +1249,20 @@ function startSession() {
   });
 
   updateTitle();
+  
+  // 🔥 load soal pertama dulu
   loadQuestion(0);
+  
+  // 🔥 BARU masuk mode review kalau ujian sudah selesai
+  if (examFinishedGlobal) {
+    examFinished = true;
+  
+    updateSidebar();
+    loadQuestion(current);
+  
+    prevBtn.style.display = "inline-block";
+    nextBtn.style.display = "inline-block";
+  }
 }
 function toggleSessionMenu() {
   const menu = document.getElementById("sessionMenu");
@@ -1480,23 +1507,7 @@ function updateSidebar() {
     }
   });
 }/* CEK SELESAI */
-function checkFinish() {
-  const selesai = questions.every((q, i) => {
-    if (q.type === "double") {
-      return (
-        Array.isArray(answers[i]) &&
-        answers[i].length === q.questions.length &&
-        answers[i].every(a => a !== undefined)
-      );
-    } else {
-      return answers[i] !== null;
-    }
-  });
 
-  if (selesai) {
-    finishBtn.style.display = "inline-block";
-  }
-}
 function resetExam() {
   examFinished = false;
   current = 0;
@@ -1534,37 +1545,94 @@ function showJP(id){
 }
 
 /* SELESAI */
-function finishExam() {
-  let score = 0;
-
-  questions.forEach((q, i) => {
+function checkFinish() {
+  const selesai = questions.every((q, i) => {
     if (q.type === "double") {
-      q.questions.forEach((sq, j) => {
-        if (answers[i] && answers[i][j] === sq.correct) {
-          score++;
-        }
-      });
+      return (
+        Array.isArray(answers[i]) &&
+        answers[i].length === q.questions.length &&
+        answers[i].every(a => a !== undefined)
+      );
     } else {
-      if (answers[i] === q.correct) score++;
+      return answers[i] !== null;
     }
   });
 
-  examFinished = true; // 🔥 MASUK MODE REVIEW
-  updateSidebar();
-  loadQuestion(current); // refresh tampilan soal
+if (sessionIndex === sessions.length - 1 && allSessionsCompleted()) {
+    finishBtn.style.display = "inline-block";
+  }
+}
+/* SELESAI */
+function finishExam() {
+  let correctCount = 0;
 
+  sessions.forEach((session, sIndex) => {
+    session.forEach((q, i) => {
+      const ans = allAnswers[sIndex][i];
+
+      if (q.type === "double") {
+        q.questions.forEach((sq, j) => {
+          if (ans && ans[j] === sq.correct) {
+            correctCount++;
+          }
+        });
+      } else {
+        if (ans === q.correct) correctCount++;
+      }
+    });
+  });
+
+  const TOTAL_QUESTIONS = 36;
+  const MAX_SCORE = 250;
+  const POINT_PER_QUESTION = MAX_SCORE / TOTAL_QUESTIONS;
+
+  let finalScore = Math.round(correctCount * POINT_PER_QUESTION);
+
+  const status =
+    finalScore >= 200
+      ? "<span style='color:green'>LULUS</span>"
+      : "<span style='color:red'>TIDAK LULUS</span>";
+
+  examFinished = true;
+  examFinishedGlobal = true;
+
+  // 🔥 SYNC JAWABAN SESI AKTIF
+  answers = allAnswers[sessionIndex];
+
+  // 🔥 AKTIFKAN MODE REVIEW
+  updateSidebar();
+  loadQuestion(current);
+  
   const resultDiv = document.getElementById("result");
   resultDiv.style.display = "block";
   resultDiv.innerHTML = `
-    UJIAN SELESAI<br><br>
-    NILAI ANDA: <span style="color:red">${score}</span> / 
-  ${questions.length}`;
+    <b>UJIAN SELESAI</b><br><br>
+    Jawaban Benar: ${correctCount} / ${TOTAL_QUESTIONS}<br>
+    Nilai Akhir: <span style="color:blue">${finalScore}</span> / 250<br><br>
+    Status: <b>${status}</b>
+  `;
 
   finishBtn.disabled = true;
-  /* 🔥 tampilkan tombol navigasi */
-    prevBtn.style.display = "inline-block";
-    nextBtn.style.display = "inline-block";
-  
+ // 🔥 tombol navigasi review
+  prevBtn.style.display = "inline-block";
+  nextBtn.style.display = "inline-block";
+}
+function allSessionsCompleted() {
+  return sessions.every((session, sIndex) =>
+    session.every((q, i) => {
+      const ans = allAnswers[sIndex][i];
+
+      if (q.type === "double") {
+        return (
+          Array.isArray(ans) &&
+          ans.length === q.questions.length &&
+          ans.every(a => a !== undefined)
+        );
+      } else {
+        return ans !== null && ans !== undefined;
+      }
+    })
+  );
 }
 function goBackMenu() {
   window.location.href = "https://ivank1999.github.io/Ivank/kisikisijfta2.html";
