@@ -1566,17 +1566,23 @@ if (sessionIndex === sessions.length - 1 && allSessionsCompleted()) {
 function finishExam() {
   let correctCount = 0;
 
-  sessions.forEach((session, sIndex) => {
-    session.forEach((q, i) => {
-      const ans = allAnswers[sIndex][i];
+  for (let sIndex = 0; sIndex < 3; sIndex++) {
+  const session = sessions[sIndex];
 
-      if (q.type === "double") {
-        q.questions.forEach((sq, j) => {
-          if (ans && ans[j] === sq.correct) {
-            correctCount++;
-          }
-        });
-      } else {
+  session.forEach((q, i) => {
+    const ans = allAnswers[sIndex][i];
+
+    if (q.type === "double") {
+      q.questions.forEach((sq, j) => {
+        if (ans && ans[j] === sq.correct) {
+          correctCount++;
+        }
+      });
+    } else {
+      if (ans === q.correct) correctCount++;
+    }
+  });
+} else {
         if (ans === q.correct) correctCount++;
       }
     });
@@ -1618,21 +1624,29 @@ function finishExam() {
   nextBtn.style.display = "inline-block";
 }
 function allSessionsCompleted() {
-  return sessions.every((session, sIndex) =>
-    session.every((q, i) => {
+  for (let sIndex = 0; sIndex < 3; sIndex++) {
+    const session = sessions[sIndex];
+
+    for (let i = 0; i < session.length; i++) {
+      const q = session[i];
       const ans = allAnswers[sIndex][i];
 
       if (q.type === "double") {
-        return (
-          Array.isArray(ans) &&
-          ans.length === q.questions.length &&
-          ans.every(a => a !== undefined)
-        );
+        if (
+          !Array.isArray(ans) ||
+          ans.length !== q.questions.length ||
+          ans.some(a => a === undefined)
+        ) {
+          return false;
+        }
       } else {
-        return ans !== null && ans !== undefined;
+        if (ans === null || ans === undefined) {
+          return false;
+        }
       }
-    })
-  );
+    }
+  }
+  return true;
 }
 function goBackMenu() {
   window.location.href = "https://ivank1999.github.io/Ivank/kisikisijfta2.html";
